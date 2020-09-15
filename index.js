@@ -55,7 +55,7 @@ function createWindow() {
     win.setMenu(null)
 
     win.webContents.on('did-finish-load', async ()=>{
-        await win.show()
+        win.show()
     })
 
     ipcMain.on('webtitlechange', (event, args) => {
