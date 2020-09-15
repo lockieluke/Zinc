@@ -1,0 +1,30 @@
+{
+  "name": "webby",
+  "version": "1.0.0",
+  "description": "Your dream browser",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo Testing",
+    "build": "cd scripts && build-win.bat"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lockieluke/webby.git"
+  },
+  "author": "Lockie Luke",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lockieluke/webby/issues"
+  },
+  "homepage": "https://github.com/lockieluke/webby#readme",
+  "devDependencies": {
+    "electron": "^10.0.0-beta.23",
+    "typescript": "^4.0.2",
+    "v8-compile-cache": "^2.1.1"
+  },
+  "dependencies": {
+    "electron-store": "^6.0.0",
+    "electron-window-manager": "^1.0.6",
+    "pouchdb-node": "^7.2.2"
+  }
+}
