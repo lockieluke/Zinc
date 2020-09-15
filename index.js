@@ -1,6 +1,7 @@
 const {app, BrowserWindow, ipcMain, globalShortcut, BrowserView, shell, Menu, MenuItem} = require('electron')
 const {registerProtocols} = require('./index/components/protocol/index')
 const windowManager = require('electron-window-manager')
+const isDev = require('electron-is-dev');
 
 let menuShown = false
 let view = null
@@ -29,13 +30,16 @@ function createWindow() {
             enableRemoteModule: true,
             nodeIntegrationInSubFrames: true,
             scrollBounce: true,
-            devTools: true,
+            devTools: isDev,
             allowRunningInsecureContent: true,
             backgroundThrottling: true,
             webgl: true,
             autoplayPolicy: 'no-user-gesture-required'
         },
+        minHeight: 80,
+        minWidth: 180
     })
+
 
     const electron = require('electron')
     const session = electron.session
@@ -431,6 +435,11 @@ ipcMain.on('about', (event, args)=>{
 ipcMain.on('reloadpage', (event, args)=>{
     closeMenu()
     BrowserWindow.getFocusedWindow().webContents.send('reloadpage', args)
+})
+
+ipcMain.on('navi-history', ()=>{
+    closeMenu()
+    BrowserWindow.getFocusedWindow().webContents.send('navi-history')
 })
 
 function closeAllWindows() {

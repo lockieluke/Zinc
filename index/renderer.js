@@ -38,6 +38,10 @@ require('electron').ipcRenderer.on('reloadpage', (event, args)=>{
     reloadWebView(tabprocessesindentifier['tab-' + focusedtab], args)
 })
 
+require('electron').ipcRenderer.on('navi-history', ()=>{
+    newTabOperation('webby://history')
+})
+
 require('electron').ipcRenderer.on('home', (event, args)=>{
     navigateTO("webby://newtab")
 })
@@ -112,13 +116,14 @@ require('electron').ipcRenderer.on('saveimg', (event, args)=>{
     const dialog = require('electron').remote.dialog
     const currentview = BrowserView.fromId(webviewids[tabprocessesindentifier['tab-' + focusedtab]])
 
-    const saveDialog = dialog.showSaveDialogSync({
+    const saveDialog = dialog.showSaveDialogSync(win ,{
         title: "Save As",
         buttonLabel: "Save",
         defaultPath: '~/' + args[0]
     })
 
     if (saveDialog != undefined) {
+        console.log("Saving image from " + args[0])
         // remove Base64 stuff from the Image
         toDataURL(args[0], function (dataURL) {
             require('fs').writeFile(saveDialog, new Buffer(dataURL.replace(/^data:image\/\w+;base64,/, ""), 'base64'), function (err) {
@@ -271,46 +276,29 @@ function newTabOperation(url) {
         .replace(/ Electron\\?.([^\s]+)/g, '')
         .replace(/Chrome\\?.([^\s]+)/g, 'Chrome/85.0.4183.83');
     const win = require('electron').remote.getCurrentWindow()
-    win.addBrowserView(webview)
+    win.setBrowserView(webview)
     webviewids[tabcounter] = webview.id
     console.log("Changed WebView ID to " + webview.id)
-
     if (url.startsWith('webby://')) {
-        webview.webContents.loadFile('newtab/index.html')
-        ipcRenderer.send('webview:load', webview.id)
+        const {getURL} = require('./components/webby-urls/index')
+        webview.webContents.loadFile(getURL(url.replace('webby://', '')))
     } else {
         webview.webContents.loadURL(url)
-        ipcRenderer.send('webview:load', webview.id)
     }
-    webview.webContents.enableDeviceEmulation({
-        screenPosition: "desktop",
-    })
+    ipcRenderer.send('webview:load', webview.id)
     webview.setBackgroundColor('#ffffff')
     focusOntoTab(tabprocessesindentifier[newtab.id])
-    webview.webContents.on('dom-ready', ()=>{
-        document.getElementById('tabtitle-' + tabprocessesindentifier[newtab.id]).innerText = webview.webContents.getTitle()
-        updateBackForwardButton()
-        if (newtab.id === 'tab-' + focusedtab) {
-            ipcRenderer.send('webtitlechange', webview.webContents.getTitle())
-        }
-        taburls[tabprocessesindentifier[newtab.id]] = webview.webContents.getURL()
-        newtab.title = webview.webContents.getTitle()
+    webview.webContents.on('did-finish-load' || 'page-title-updated' || 'did-frame-finish-load', ()=>{
+        const {storeHistory} = require('./components/history/index')
+        renewTabTitle(webview.webContents.getTitle() , newtab.id, webview)
+        storeHistory(webview.webContents.getTitle(), webview.webContents.getURL(), new Date().getHours() + ':' + new Date().getMinutes(), new Date().getFullYear() + ';' + new Date().getMonth() + ';' + new Date().getDay())
     })
-    webview.webContents.on('did-start-loading', ()=>{
-        document.getElementById('tabtitle-' + tabprocessesindentifier[newtab.id]).innerText = "Loading"
-    })
-    webview.webContents.on('page-title-updated', ()=>{
-        document.getElementById('tabtitle-' + tabprocessesindentifier[newtab.id]).innerText = webview.webContents.getTitle()
-        updateBackForwardButton()
-        if (newtab.id === 'tab-' + focusedtab) {
-            ipcRenderer.send('webtitlechange', webview.webContents.getTitle())
-        }
-        taburls[tabprocessesindentifier[newtab.id]] = webview.webContents.getURL()
-        newtab.title = webview.webContents.getTitle()
+    webview.webContents.on('will-redirect', ()=>{
+        renewTabTitle("Loading", newtab.id, webview)
     })
     const dialog = require('electron').remote.dialog
-    webview.webContents.session.setPermissionRequestHandler((webContents, permission, callback, details) => {
-        const permdialog = dialog.showMessageBoxSync(require('electron').remote.getCurrentWindow(), {
+    webview.webContents.session.setPermissionRequestHandler(async (webContents, permission, callback, details) => {
+        const permdialog = await dialog.showMessageBox(require('electron').remote.getCurrentWindow(), {
             title: "webby",
             message: webContents.getURL() + " would like to have " + permission + " permission.  Approving permissions to untrusted websites may lead to unpredictable security issue.",
             buttons: [
@@ -333,6 +321,17 @@ function newTabOperation(url) {
     addEventListenerToTabs()
     tabcount++
     tabcounter++
+}
+
+function renewTabTitle(title, tabid, webview) {
+    const {ipcRenderer} = require('electron')
+    document.getElementById('tabtitle-' + tabprocessesindentifier[tabid]).innerText = title
+    updateBackForwardButton()
+    if (tabid === 'tab-' + focusedtab) {
+        ipcRenderer.send('webtitlechange', webview.webContents.getTitle())
+    }
+    taburls[tabprocessesindentifier[newtab.id]] = webview.webContents.getURL()
+    document.getElementById(tabid).title = webview.webContents.getTitle()
 }
 
 function resizeWebview() {
@@ -479,9 +478,10 @@ function reloadWebView(uniqueid, withCache = true) {
 }
 
 function navigateTO(url) {
+    const {getURL} = require('./components/webby-urls/index')
     const {remote} = require('electron')
     if (url.startsWith('webby://')) {
-        remote.BrowserView.fromId(webviewids[tabprocessesindentifier['tab-' + focusedtab]]).webContents.loadFile('newtab/index.html')
+        remote.BrowserView.fromId(webviewids[tabprocessesindentifier['tab-' + focusedtab]]).webContents.loadFile(getURL(url.replace('webby://', '')))
     } else {
         remote.BrowserView.fromId(webviewids[tabprocessesindentifier['tab-' + focusedtab]]).webContents.loadURL(url)
     }

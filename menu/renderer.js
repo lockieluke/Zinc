@@ -31,6 +31,12 @@ reloadBtn.addEventListener('click', ()=>{
     ipcRenderer.send('reloadpage', !optioned)
 })
 
+const historyBtn = document.getElementById('history')
+
+historyBtn.addEventListener('click', ()=>{
+    ipcRenderer.send('navi-history')
+})
+
 document.body.addEventListener('keydown', (event)=>{
     if (event.key === "Alt") {
         event.preventDefault()

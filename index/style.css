@@ -3,6 +3,10 @@ body {
     padding: 0
 }
 
+.syscontrols {
+    overflow-y: hidden;
+}
+
 #titlebar {
     height: 30px;
     width: 100%;
