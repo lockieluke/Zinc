@@ -118,3 +118,7 @@ dist
 
 #exports
 builds/
+
+# Editor
+.idea
+.vscode
