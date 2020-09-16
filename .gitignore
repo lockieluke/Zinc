@@ -118,3 +118,6 @@ dist
 
 #exports
 builds/
+
+#.idea
+.idea

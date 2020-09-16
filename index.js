@@ -1,4 +1,4 @@
-const {app, BrowserWindow, ipcMain, globalShortcut, BrowserView, shell, Menu, MenuItem} = require('electron')
+const {app, BrowserWindow, ipcMain, globalShortcut, BrowserView, shell, Menu, MenuItem, NativeImage} = require('electron')
 const {registerProtocols} = require('./index/components/protocol/index')
 const windowManager = require('electron-window-manager')
 const isDev = require('electron-is-dev');
@@ -37,7 +37,8 @@ function createWindow() {
             autoplayPolicy: 'no-user-gesture-required'
         },
         minHeight: 80,
-        minWidth: 180
+        minWidth: 180,
+        icon: __dirname + '/Logo.png'
     })
 
 
@@ -426,8 +427,9 @@ ipcMain.on('about', (event, args)=>{
     closeMenu()
     app.setAboutPanelOptions({
         applicationName: "webby",
-        applicationVersion: '1.0',
+        applicationVersion: '0.1.0',
         authors: "Lockie Luke",
+        iconPath: __dirname + '/Logo.png',
     })
     app.showAboutPanel()
 })
