@@ -170,4 +170,8 @@ const getJSON = function(url, callback) {
         }
     };
     xhr.send();
+<<<<<<< HEAD:newtab/renderer.js
 };
+=======
+};
+>>>>>>> f65b48f659eb02098b2ee393ef4a36d9ad8ddcdb:pages/newtab/renderer.js
