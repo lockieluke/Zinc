@@ -1,4 +1,5 @@
-const {app, BrowserWindow, ipcMain, globalShortcut, BrowserView, shell, Menu, MenuItem, NativeImage} = require('electron')
+const {app, BrowserWindow, ipcMain, globalShortcut, BrowserView, shell, Menu, MenuItem} = require('electron')
+const electronLocalshortcut = require('electron-localshortcut');
 const {registerProtocols} = require('./index/components/protocol/index')
 const windowManager = require('electron-window-manager')
 const isDev = require('electron-is-dev');
@@ -38,7 +39,7 @@ function createWindow() {
         },
         minHeight: 80,
         minWidth: 180,
-        icon: __dirname + '/Logo.png'
+        icon: __dirname + '/artwork/Logo.png'
     })
 
 
@@ -183,148 +184,13 @@ ipcMain.on('contextmenu', (event, args)=>{
 })
 
 ipcMain.on('textcontextmenu', (event, args)=>{
-    const currentwin = BrowserWindow.getFocusedWindow()
-    let menu = new Menu()
-
-    if (process.platform === 'win32') {
-        menu.append(new MenuItem({
-            label: "Emoji",
-            sublabel: "Win+Period",
-            acceleratorWorksWhenHidden: true,
-            click: function() {
-                app.showEmojiPanel()
-            }
-        }))
-    }
-
-    menu.append(new MenuItem({
-        type: 'separator'
-    }))
-
-    menu.append(new MenuItem({
-        label: "Undo",
-        accelerator: 'CommandOrControl+Z',
-        click: function() {
-            currentwin.webContents.send('undo')
-        }
-    }))
-
-    menu.append(new MenuItem({
-        label: "Redo",
-        accelerator: 'CommandOrControl+Shift+Z',
-        click: function () {
-            currentwin.webContents.send('redo')
-        }
-    }))
-
-    menu.append(new MenuItem({
-        type: 'separator'
-    }))
-
-    menu.append(new MenuItem({
-        label: "Cut",
-        accelerator: 'CommandOrControl+X',
-        click: function () {
-            currentwin.webContents.send('cut')
-        }
-    }))
-
-    menu.append(new MenuItem({
-        label: "Copy",
-        accelerator: 'CommandOrControl+C',
-        click: function () {
-            currentwin.webContents.send('copy')
-        }
-    }))
-
-    menu.append(new MenuItem({
-        label: "Paste",
-        accelerator: 'CommandOrControl+V',
-        click: function () {
-            currentwin.webContents.send('paste')
-        }
-    }))
-
-    menu.append(new MenuItem({
-        label: "Select All",
-        accelerator: 'CommandOrControl+A',
-        click: function () {
-            currentwin.webContents.send('selectall')
-        }
-    }))
-
-    menu.append(new MenuItem({
-        type: 'separator'
-    }))
-
-    menu.append(new MenuItem({
-        label: "Inspect Element",
-        accelerator: 'CommandOrControl+Alt+Shift+I',
-        click: function () {
-            currentwin.webContents.send('inspect-eli-cu', args)
-        }
-    }))
-
-    menu.popup({
-        window: currentwin
-    })
-
-    menu.once('menu-will-close', ()=>{
-        menu = null
-    })
+    const {textContextMenu} = require(__dirname + '/main/components/menu/index')
+    textContextMenu()
 })
 
 ipcMain.on('imagecontextmenu', (event, args)=>{
-    const currentwin = BrowserWindow.getFocusedWindow()
-    let menu = new Menu()
-
-    menu.append(new MenuItem({
-        label: "Open image in new tab",
-        click: function () {
-            currentwin.webContents.send('open-img-newtab', args[2])
-        }
-    }))
-
-    menu.append(new MenuItem({
-        label: "Save image as...",
-        click: function () {
-            currentwin.webContents.send('saveimg', [args[2]])
-        }
-    }))
-
-    menu.append(new MenuItem({
-        label: "Copy image",
-        click: function () {
-            currentwin.webContents.send('copyimg')
-        }
-    }))
-
-    menu.append(new MenuItem({
-        label: "Copy image URL",
-        click: function () {
-            currentwin.webContents.send('copyimg-url')
-        }
-    }))
-
-    menu.append(new MenuItem({
-        type: 'separator'
-    }))
-
-    menu.append(new MenuItem({
-        label: "Inspect Element",
-        accelerator: 'CommandOrControl+Alt+Shift+I',
-        click: function () {
-            currentwin.webContents.send('inspect-eli-cu', args)
-        }
-    }))
-
-    menu.popup({
-        window: currentwin
-    })
-
-    menu.once('menu-will-close', ()=>{
-        menu = null
-    })
+    const {imageContextMenu} = require(__dirname + '/main/components/menu/index')
+    imageContextMenu()
 })
 
 ipcMain.on('minimize', ()=>{
@@ -429,7 +295,7 @@ ipcMain.on('about', (event, args)=>{
         applicationName: "webby",
         applicationVersion: '0.1.0',
         authors: "Lockie Luke",
-        iconPath: __dirname + '/Logo.png',
+        iconPath: __dirname + 'artwork/Logo.png',
     })
     app.showAboutPanel()
 })

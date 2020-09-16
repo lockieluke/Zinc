@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "electron-is-dev": "^1.2.0",
+    "electron-localshortcut": "^3.2.1",
     "electron-store": "^6.0.0",
     "electron-window-manager": "^1.0.6",
     "pouchdb-node": "^7.2.2"

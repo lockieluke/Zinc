@@ -11,6 +11,10 @@
     animation: expandLine 0.3s;
 }
 
+#histories {
+    padding: 30px 0;
+}
+
 .history-item {
     width: 75%;
     height: 60px;
@@ -21,12 +25,14 @@
     transition: background-color 0.3s;
     box-shadow:0px 0px 5px #a4a4a4;
     min-width: 310px;
+    opacity: 0;
 }
 
 .history-item h3 {
     position: absolute;
     font-family: sans-serif;
     margin: 10px 20px;
+    width: 500px;
 }
 
 .history-item h5 {
@@ -35,29 +41,50 @@
     margin: 35px 20px;
     color: #8d8d91;
     font-weight: lighter;
-}
-
-.history-item button {
-    position: absolute;
-    outline: none;
-    border: none;
-    padding: 5px 5px;
-    margin: 20px 60%;
+    width: 70%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: fade;
 }
 
 .history-item:hover {
     background-color: #b5b5b5;
 }
 
+#clearhist {
+    position: absolute;
+    top: 7%;
+    right: 5%;
+    outline: none;
+    border: none;
+    width: 100px;
+    height: 50px;
+    animation: fadeIn 0.3s;
+    border-radius: 15px;
+    background-color: #007aff;
+    color: white;
+    font-family: sans-serif;
+    padding: 10px 10px;
+    transition: background-color 0.3s;
+}
+
+#clearhist:hover {
+    background-color: #0066cb;
+}
+
 @keyframes fadeIn {
     0% {
         opacity: 0;
         transform: scale(0.985) translateX(-30px);
+        visibility: visible;
+        opacity: 0;
     }
 
     100% {
         opacity: 1;
         transform: scale(1) translateX(0%);
+        visibility: visible;
+        opacity: 1;
     }
 }
 

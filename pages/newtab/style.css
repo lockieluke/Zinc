@@ -1,22 +1,30 @@
 body {
     margin: 0;
     padding: 0;
-    background-size: 500% 500%;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
     -webkit-user-drag: none;
     user-select: none;
-    display: none;
-    background-size: cover;
 }
 
-@keyframes fadeIn {
+#backgroundimage {
+    width: 100vw;
+    height: 100vh;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    z-index: 0;
+    display: block;
+    position: fixed;
+    margin: 0;
+    animation: blurIn 0.7s;
+}
+
+@keyframes blurIn {
     from {
-        opacity: 0;
+        filter: blur(2px);
     }
 
     to {
-        opacity: 1;
+        filter: blur(0px);
     }
 }
 
@@ -32,8 +40,9 @@ body {
     transform: translate(-50%, -50%);
     border-radius: 7px;
     box-shadow:0px 0px 25px #737373;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, width 0.3s, height 0.3s;
     opacity: 1;
+    z-index: 1;
 }
 
 .locationbox:hover {

@@ -1,16 +1,18 @@
-document.body.onload = async () => {
-    document.body.style.display = 'block';
-    getJSON('http://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=en-US', function (err, data) {
-        const bingdomain = 'https://www.bing.com' + data.images[0].url
-        document.body.style.backgroundImage = 'url("' + bingdomain + '")'
+document.body.onload = async function() {
+    document.body.style.display = 'block'
+
+    await getJSON('http://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=en-US', function (err, data) {
+        const backurl = data.images[0].url
+        const fullurl = 'https://www.bing.com/' + backurl
+        document.body.style.backgroundImage = 'url("' + fullurl + '")'
     })
-};
+}
 
-const searchfield = document.getElementById('searchfield');
-let suggestions = [];
-let focusedSuggestion = 0;
+const searchfield = document.getElementById('searchfield')
+let suggestions = []
+let focusedsuggestion = 0
 
-searchfield.addEventListener('input', (event) => {
+searchfield.addEventListener('input', (event)=>{
     if (searchfield.value !== '') {
         const autocompletefield = document.createElement('div')
         autocompletefield.className = 'autocomplete'
@@ -35,7 +37,7 @@ searchfield.addEventListener('input', (event) => {
             suggestionItem.id = 'suggestion-' + i
             document.getElementById('autocomplete').appendChild(suggestionItem)
         }
-        focusedSuggestion = -1
+        focusedsuggestion = -1
         resetAutoSuggestions()
         initListenersForSuggestions()
         hightlightURLs()
@@ -44,42 +46,42 @@ searchfield.addEventListener('input', (event) => {
         suggestionChildren.innerHTML = ""
         document.getElementById('autocomplete').remove()
     }
-});
+})
 
-searchfield.addEventListener('keydown', (event) => {
-    if (!(event.key in ["Enter", "ArrowUp", "ArrowDown"])) return
-    if (event.key == 'Enter')
-        return checkIfQueryOrURL(searchfield.value);
-    event.preventDefault()
+searchfield.addEventListener('keydown', (event)=>{
     if (event.key === 'ArrowUp') {
-        if (focusedSuggestion == 0) {
-            focusedSuggestion = suggestions.length;
+        event.preventDefault()
+        if (focusedsuggestion == 0) {
+            focusedsuggestion = suggestions.length
         } else {
-            focusedSuggestion--;
+            focusedsuggestion--
         }
+        resetAutoSuggestions()
+        document.getElementById('autocomplete').children.item(focusedsuggestion).style.backgroundColor = '#bebebe'
+        searchfield.value = document.getElementById('autocomplete').children.item(focusedsuggestion).innerText
+        hightlightURLs()
     } else if (event.key === 'ArrowDown') {
         event.preventDefault()
-        if (focusedSuggestion == suggestions.length)
-            focusedSuggestion = 0;
-        else
-            focusedSuggestion++;
+        if (focusedsuggestion == suggestions.length) {
+            focusedsuggestion = 0
+        } else {
+            focusedsuggestion++
+        }
+        resetAutoSuggestions()
+        document.getElementById('autocomplete').children.item(focusedsuggestion).style.backgroundColor = '#bebebe'
+        searchfield.value = document.getElementById('autocomplete').children.item(focusedsuggestion).innerText
+        hightlightURLs()
+    } else if (event.key == 'Enter') {
+        checkIfQueryOrURL(searchfield.value)
     }
-    resetAutoSuggestions()
-    document.getElementById('autocomplete').children.item(focusedSuggestion).style.backgroundColor = '#bebebe'
-    searchfield.value = document.getElementById('autocomplete').children.item(focusedSuggestion).innerText
-    hightlightURLs();
-});
+})
 
-/**
- * Change the Url of the window to either:
- * - the url (term)
- * - google search url
- * @param {string} term search query or url
- */
 function checkIfQueryOrURL(term) {
     if (isURL(term)) {
-        const newurl = term.includes('://') ? `http://${term}` : term;
+        const newurl = term.indexOf('://') === -1 ? `http://${term}` : term;
         window.location.href = prefixHttp(newurl)
+    } else if (term == 'about:blank') {
+        window.location.href = 'about:blank'
     } else {
         window.location.href = 'https://www.google.com/search?q=' + term
     }
@@ -87,9 +89,9 @@ function checkIfQueryOrURL(term) {
 
 function initListenersForSuggestions() {
     for (let i = 0; i < suggestions.length; i++) {
-        document.getElementById('suggestion-' + i).addEventListener('click', (event) => {
+        document.getElementById('suggestion-' + i).addEventListener('click', (event)=>{
             window.location.href = 'http://www.google.com/search?q=' + event.target.innerText
-        });
+        })
     }
 }
 
@@ -119,20 +121,20 @@ function readGoogleSuggestion() {
     request.open("GET", 'https://clients1.google.com/complete/search?hl=en&output=toolbar&q=' + searchfield.value, true);
     request.responseType = 'document';
     request.overrideMimeType('text/xml');
-    request.onload = () => {
+    request.onload = function () {
         if (request.readyState === request.DONE) {
             if (request.status === 200) {
-                const searchSuggestions = request.responseXML.getElementsByTagName('CompleteSuggestion');
-                let readableSuggestions = [];
+                const searchSuggestions = request.responseXML.getElementsByTagName('CompleteSuggestion')
+                let readableSuggestions = []
                 for (let i = 0; i < searchSuggestions.length; i++) {
-                    const suggestion = searchSuggestions.item(i).innerHTML;
-                    let readableSuggestion = "";
+                    const suggestion = searchSuggestions.item(i).innerHTML
+                    let readableSuggestion = ""
                     for (let j = 18; j < suggestion.length - 3; j++) {
-                        readableSuggestion += suggestion.charAt(j);
+                        readableSuggestion += suggestion.charAt(j)
                     }
-                    readableSuggestions.push(readableSuggestion);
+                    readableSuggestions.push(readableSuggestion)
                 }
-                suggestions = readableSuggestions;
+                suggestions = readableSuggestions
             }
         } else {
             return null
@@ -142,26 +144,21 @@ function readGoogleSuggestion() {
 }
 
 function validURL(str) {
-    const pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
-        '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
-        '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
-        '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
-        '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
-        '(\\#[-a-z\\d_]*)?$', 'i'); // fragment locator
+    const pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+        '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+        '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+        '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+        '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+        '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
     return !!pattern.test(str);
 }
 
-/**
- * get the JSON from a website just like curl
- * add callback using .then()
- * @param {String} url url of the website where the json can be get
- */
 const getJSON = function(url, callback) {
     const xhr = new XMLHttpRequest();
     xhr.open('GET', url, true);
     xhr.responseType = 'json';
     xhr.onload = function() {
-        const status = xhr.status;
+        var status = xhr.status;
         if (status === 200) {
             callback(null, xhr.response);
         } else {
