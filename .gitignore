@@ -119,5 +119,11 @@ dist
 #exports
 builds/
 
+<<<<<<< HEAD
 #.idea
 .idea
+=======
+# Editor
+.idea
+.vscode
+>>>>>>> 901c02318c0c66aeca7b23d2bd11027b2e20c18a
