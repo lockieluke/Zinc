@@ -1,10 +1,9 @@
 document.body.onload = async () => {
     document.body.style.display = 'block';
-    getJSON('http://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=en-US').then((status, res) => {
-        const backurl = res.images[0].url;
-        const fullurl = `https://www.bing.com/${backurl}`;
-        document.body.style.backgroundImage = `url("${fullurl}")`;
-    });
+    getJSON('http://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=en-US', function (err, data) {
+        const bingdomain = 'https://www.bing.com' + data.images[0].url
+        document.body.style.backgroundImage = 'url("' + bingdomain + '")'
+    })
 };
 
 const searchfield = document.getElementById('searchfield');
@@ -157,18 +156,17 @@ function validURL(str) {
  * add callback using .then()
  * @param {String} url url of the website where the json can be get
  */
-const getJSON = async url => {
-    return new Promise((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        xhr.open('GET', url, true);
-        xhr.responseType = 'json';
-        xhr.onload = () => {
-            if (xhr.status === 200) {
-                resolve(null, xhr.response);
-            } else {
-                reject(xhr.status, xhr.response);
-            }
-        };
-        xhr.send();
-    });
+const getJSON = function(url, callback) {
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', url, true);
+    xhr.responseType = 'json';
+    xhr.onload = function() {
+        const status = xhr.status;
+        if (status === 200) {
+            callback(null, xhr.response);
+        } else {
+            callback(status, xhr.response);
+        }
+    };
+    xhr.send();
 };
