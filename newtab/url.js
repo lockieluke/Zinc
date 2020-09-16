@@ -7,7 +7,7 @@ function isURL(input) {
     return pattern.test(`http://${input}`);
 };
 
-function matchesPattern (pattern, url) {
+function matchesPattern(pattern, url) {
     if (pattern === '<all_urls>') {
         return true;
     }
@@ -19,23 +19,16 @@ function matchesPattern (pattern, url) {
 };
 
 function getDomain(url) {
-    let hostname = url;
+    let host = url;
+    if (host.startsWith('http://') || host.startsWith('https://'))
+        host = host.split('://')[1];
 
-    if (hostname.includes('http://') || hostname.includes('https://')) {
-        hostname = hostname.split('://')[1];
-    }
+    if (url.includes('?'))
+        host = host.split('?')[0];
 
-    if (hostname.includes('?')) {
-        hostname = hostname.split('?')[0];
-    }
+    host = host.includes('://') ? `${host.split('://')[0]}://${host.split('/')[2]}` : host.split('/')[0];
 
-    if (hostname.includes('://')) {
-        hostname = `${hostname.split('://')[0]}://${hostname.split('/')[2]}`;
-    } else {
-        hostname = hostname.split('/')[0];
-    }
-
-    return hostname;
+    return url;
 };
 
 function prefixHttp(url) {
