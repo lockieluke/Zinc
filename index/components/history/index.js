@@ -20,7 +20,7 @@ function clearHistory() {
     store.clear()
 }
 
-function readHistory(callback) {
+async function readHistory(callback) {
     if (store.has('history-site-length')) {
         const length = store.get('history-site-length')
         let title = []
@@ -29,10 +29,10 @@ function readHistory(callback) {
         let date = []
 
         for (let i = 0; i < parseInt(length.toString()); i++) {
-            title.push(store.get('history-site-title-' + i.toString()))
-            url.push(store.get('history-site-url-' + i.toString()))
-            time.push(store.get('history-site-time-' + i.toString()))
-            date.push(store.get('history-site-date-' + i.toString()))
+            title.push(await store.get('history-site-title-' + i.toString()))
+            url.push(await store.get('history-site-url-' + i.toString()))
+            time.push(await store.get('history-site-time-' + i.toString()))
+            date.push(await store.get('history-site-date-' + i.toString()))
         }
 
         callback(title, url, time, date)

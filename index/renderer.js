@@ -169,27 +169,13 @@ function init() {
     newTabOperation("webby://newtab")
 }
 
-require('electron').remote.globalShortcut.register('CommandOrControl+T', ()=>{
-    if (require('electron').remote.getCurrentWindow().isFocused()) {
-        newTabOperation("webby://newtab")
-    }
-})
-
-require('electron').remote.globalShortcut.register('CommandOrControl+W', ()=>{
-    if (require('electron').remote.getCurrentWindow().isFocused()) {
-        if (!closelocked) {
-            closeFocusedTabNew()
-        }
-    }
-})
-
 document.getElementById('newtab').addEventListener('click', ()=>{
     newTabOperation("webby://newtab")
 })
 
 document.getElementById('closetab').addEventListener('click', ()=>{
     if (!closelocked) {
-        closeFocusedTabNew()
+        closeFocusedTab()
     }
 })
 
@@ -257,24 +243,17 @@ function newTabOperation(url) {
     const {ipcRenderer} = require('electron')
     const webview = new BrowserView({
         webPreferences: {
-            nodeIntegration: false,
-            contextIsolation: true,
-            sandbox: true,
-            enableRemoteModule: false,
-            plugins: true,
-            nativeWindowOpen: true,
-            webSecurity: true,
-            javascript: true,
+            nodeIntegration: url.startsWith('webby://'),
+            contextIsolation: !url.startsWith('webby://'),
+            enableRemoteModule: url.startsWith('webby://'),
             preload: require('path').join(__dirname, 'preload.js'),
-            autoplayPolicy: 'no-user-gesture-required',
-            allowRunningInsecureContent: true,
         }
     })
-    webview.webContents.setFrameRate(60)
-    webview.webContents.userAgent = webview.webContents.userAgent
-        .replace(/ Webby\\?.([^\s]+)/g, '')
-        .replace(/ Electron\\?.([^\s]+)/g, '')
-        .replace(/Chrome\\?.([^\s]+)/g, 'Chrome/85.0.4183.83');
+    webview.webContents.userAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.102 Safari/537.36'
+    // webview.webContents.userAgent = webview.webContents.userAgent
+    //     .replace(/ Webby\\?.([^\s]+)/g, '')
+    //     .replace(/ Electron\\?.([^\s]+)/g, '')
+    //     .replace(/Chrome\\?.([^\s]+)/g, 'Chrome/85.0.4183.83');
     const win = require('electron').remote.getCurrentWindow()
     win.setBrowserView(webview)
     webviewids[tabcounter] = webview.id
@@ -292,6 +271,9 @@ function newTabOperation(url) {
         const {storeHistory} = require('./components/history/index')
         renewTabTitle(webview.webContents.getTitle() , newtab.id, webview)
         storeHistory(webview.webContents.getTitle(), webview.webContents.getURL(), new Date().getHours() + ':' + new Date().getMinutes(), new Date().getFullYear() + ';' + new Date().getMonth() + ';' + new Date().getDay())
+    })
+    webview.webContents.on('page-title-updated', ()=>{
+        renewTabTitle(webview.webContents.getTitle() , newtab.id, webview)
     })
     webview.webContents.on('will-redirect', ()=>{
         renewTabTitle("Loading", newtab.id, webview)
@@ -317,7 +299,6 @@ function newTabOperation(url) {
                 break
         }
     })
-
     addEventListenerToTabs()
     tabcount++
     tabcounter++
@@ -358,7 +339,7 @@ function resizeWebview() {
     }
 }
 
-function closeFocusedTabNew() {
+function closeFocusedTab() {
     if (tabcount > 1) {
         closelocked = true
         let closingtabdom = document.getElementById('tab-' + focusedtab)
@@ -379,13 +360,10 @@ function closeFocusedTabNew() {
             tabprocessesindentifier = temptabpro
             releaseWebView(olduniqueid)
 
-            const tablastdomid = tabcount - 1
-            const tabnextdomid = tabcount + 1
-
-            if (document.getElementById('tab-' + tablastdomid)) {
-                focusOntoTab(tabprocessesindentifier['tab-' + tablastdomid])
+            if (document.getElementById('tab-' + (focusedtab - 1)) != null) {
+                document.getElementById('tab-' + (focusedtab - 1)).click()
             } else {
-                focusOntoTab(tabprocessesindentifier['tab-' + tabnextdomid])
+                document.getElementById('tab-' + (focusedtab)).click()
             }
 
             closelocked = false
@@ -410,7 +388,6 @@ function addEventListenerToTabs() {
 
 function focusOntoTab(uniqueid) {
     const BrowserView = require('electron').remote.BrowserView
-    const win = require('electron').remote.BrowserWindow.getFocusedWindow()
     const switchingview = BrowserView.fromId(webviewids[uniqueid])
     console.log("Switching to tab " + switchingview + " and with webview id " + webviewids[uniqueid])
     // win.removeBrowserView(BrowserView.fromId(webviewids[tabprocessesindentifier['tab-' + focusedtab]]))
@@ -427,7 +404,6 @@ function focusOntoTab(uniqueid) {
     addEventListenerToTabs()
     document.getElementById('tab-' + focusedtab).style.color = '#00b6ff'
     ipcRenderer.send('webtitlechange', BrowserView.fromId(webviewids[uniqueid]).webContents.getTitle())
-    win.focus();
 }
 
 function resetFocusState() {
