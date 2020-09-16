@@ -1,25 +1,26 @@
-const closeBtn = document.getElementById('closebtn')
+const electron = require('electron');
+const { send } = require('process');
 
+const ipcRenderer = electron.ipcRenderer;
+
+
+const closeBtn = document.getElementById('closebtn')
 closeBtn.addEventListener('click', ()=>{
-    const ipcRenderer = require('electron').ipcRenderer
-    ipcRenderer.send('close')
-})
+    ipcRenderer.send('close');
+});
 
 const maxBtn = document.getElementById('maxbtn')
-
 maxBtn.addEventListener('click', ()=>{
-    const ipcRenderer = require('electron').ipcRenderer
-    ipcRenderer.send('togglemax')
-})
+    ipcRenderer.send('togglemax');
+});
 
 const minBtn = document.getElementById('minBtn')
 
 minBtn.addEventListener('click', ()=>{
-    const ipcRenderer = require('electron').ipcRenderer
-    ipcRenderer.send('minimize')
+    ipcRenderer.send('minimize');
 })
 
-const win = require('electron').remote.getCurrentWindow()
+const win = electron.remote.getCurrentWindow()
 
 win.addListener('maximize', async ()=>{
     await resizeWebview()

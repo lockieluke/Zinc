@@ -296,7 +296,7 @@ ipcMain.on('about', (event, args)=>{
         applicationVersion: '0.1.0',
         authors: "Lockie Luke",
         iconPath: __dirname + 'artwork/Logo.png',
-    })
+    });
     app.showAboutPanel()
 })
 

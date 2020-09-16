@@ -153,11 +153,11 @@ function validURL(str) {
     return !!pattern.test(str);
 }
 
-const getJSON = function(url, callback) {
+const getJSON = (url, callback) => {
     const xhr = new XMLHttpRequest();
     xhr.open('GET', url, true);
     xhr.responseType = 'json';
-    xhr.onload = function() {
+    xhr.onload = () => {
         var status = xhr.status;
         if (status === 200) {
             callback(null, xhr.response);
