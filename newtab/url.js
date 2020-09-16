@@ -28,7 +28,7 @@ function getDomain(url) {
 
     host = host.includes('://') ? `${host.split('://')[0]}://${host.split('/')[2]}` : host.split('/')[0];
 
-    return url;
+    return host;
 };
 
 function prefixHttp(url) {
