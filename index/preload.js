@@ -1,13 +1,9 @@
-const {ipcRenderer} = require('electron')
+const electron = require('electron');
+const ipcRenderer = electron.ipcRenderer;
 
-let hovered = null
-let hoveringtext = false
-let hoveringimage = false
-let hoveringimagedom = null
-let mouseX = 0
-let mouseY = 0
+let hovered = hoveringimagedom = null, hoveringtext = hoveringimage = false, mouseX = mouseY = 0;
 
-document.addEventListener('contextmenu', (event)=>{
+document.addEventListener('contextmenu', event => {
     event.preventDefault()
 
     if (hoveringtext) {
@@ -17,9 +13,9 @@ document.addEventListener('contextmenu', (event)=>{
     } else {
         ipcRenderer.send('contextmenu', [mouseX, mouseY])
     }
-})
+});
 
-document.addEventListener('mousemove', (event)=>{
+document.addEventListener('mousemove', event => {
     hovered = event.target
 
     if (event.target instanceof HTMLInputElement) {
@@ -35,21 +31,9 @@ document.addEventListener('mousemove', (event)=>{
         hoveringimage = false
         hoveringimagedom = null
     }
-})
+});
 
-document.addEventListener('mousemove', (event)=>{
+document.addEventListener('mousemove', event => {
     mouseX = event.pageX
     mouseY = event.pageY
-})
-
-function getDataUrl(img) {
-    // Create canvas
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    // Set width and height
-    canvas.width = img.width;
-    canvas.height = img.height;
-    // Draw the image
-    ctx.drawImage(img, 0, 0);
-    return canvas.toDataURL('image/jpeg');
-}
+});
