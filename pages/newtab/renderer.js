@@ -80,9 +80,7 @@ function checkIfQueryOrURL(term) {
     if (isURL(term)) {
         const newurl = term.indexOf('://') === -1 ? `http://${term}` : term;
         window.location.href = prefixHttp(newurl)
-    } else if (term == 'about:blank') {
-        window.location.href = 'about:blank'
-    } else {
+    } else if (term !== 'about:blank') {
         window.location.href = 'https://www.google.com/search?q=' + term
     }
 }

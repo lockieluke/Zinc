@@ -4,6 +4,7 @@ function isURL(input) {
     if (pattern.test(input)) {
         return true;
     }
+
     return pattern.test(`http://${input}`);
 };
 
