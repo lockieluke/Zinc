@@ -41,7 +41,7 @@ function createWindow() {
         minWidth: 180,
         icon: __dirname + '/artwork/Logo.png'
     })
-
+    const nativeTheme = require('electron').nativeTheme
 
     const electron = require('electron')
     const session = electron.session
@@ -185,12 +185,12 @@ ipcMain.on('contextmenu', (event, args)=>{
 
 ipcMain.on('textcontextmenu', (event, args)=>{
     const {textContextMenu} = require(__dirname + '/main/components/menu/index')
-    textContextMenu()
+    textContextMenu(args)
 })
 
 ipcMain.on('imagecontextmenu', (event, args)=>{
     const {imageContextMenu} = require(__dirname + '/main/components/menu/index')
-    imageContextMenu()
+    imageContextMenu(args)
 })
 
 ipcMain.on('minimize', ()=>{

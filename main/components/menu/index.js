@@ -1,6 +1,6 @@
-const {BrowserWindow, Menu, MenuItem, app} = require('electron')
+const {BrowserWindow, Menu, MenuItem, app, clipboard} = require('electron')
 
-function textContextMenu () {
+function textContextMenu (args) {
     const currentwin = BrowserWindow.getFocusedWindow()
     let menu = new Menu()
 
@@ -92,7 +92,7 @@ function textContextMenu () {
     })
 }
 
-function imageContextMenu() {
+function imageContextMenu(args) {
     const currentwin = BrowserWindow.getFocusedWindow()
     let menu = new Menu()
 
@@ -120,7 +120,7 @@ function imageContextMenu() {
     menu.append(new MenuItem({
         label: "Copy image URL",
         click: function () {
-            currentwin.webContents.send('copyimg-url')
+            clipboard.writeText(args[2])
         }
     }))
 

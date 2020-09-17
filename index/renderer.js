@@ -270,7 +270,7 @@ function newTabOperation(url) {
     webview.webContents.on('did-finish-load' || 'page-title-updated' || 'did-frame-finish-load', ()=>{
         const {storeHistory} = require('./components/history/index')
         renewTabTitle(webview.webContents.getTitle() , newtab.id, webview)
-        storeHistory(webview.webContents.getTitle(), webview.webContents.getURL(), new Date().getHours() + ':' + new Date().getMinutes(), new Date().getFullYear() + ';' + new Date().getMonth() + ';' + new Date().getDay())
+        storeHistory(webview.webContents.getTitle(), webview.webContents.getURL(), new Date().getHours() + ':' + new Date().getMinutes(), new Date().getFullYear() + ';' + (new Date().getMonth() + 1) + ';' + new Date().getDate())
     })
     webview.webContents.on('page-title-updated', ()=>{
         renewTabTitle(webview.webContents.getTitle() , newtab.id, webview)
