@@ -1,6 +1,6 @@
 const electron = require("electron");
-const { app, BrowserWindow, ipcMain, globalShortcut, BrowserView, shell, Menu, MenuItem } = electron
-const { registerProtocols } = require('./index/components/protocol/index')
+const { app, BrowserWindow, ipcMain, globalShortcut, BrowserView, shell, Menu, MenuItem } = electron;
+const { registerProtocols } = require('./index/components/protocol/index');
 const windowManager = require('electron-window-manager');
 const isDev = require('electron-is-dev');
 
