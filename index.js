@@ -1,8 +1,8 @@
-const {app, BrowserWindow, ipcMain, globalShortcut, BrowserView, shell, Menu, MenuItem} = require('electron')
-const {registerProtocols} = require('./index/components/protocol/index')
+const { app, BrowserWindow, ipcMain, globalShortcut, BrowserView, shell, Menu, MenuItem } = require('electron')
+const { registerProtocols } = require('./index/components/protocol/index')
 const windowManager = require('electron-window-manager')
 const isDev = require('electron-is-dev');
-const {textContextMenu, imageContextMenu, defContextMenu, anchorContextMenu} = require(__dirname + '/main/components/menu/index')
+const { textContextMenu, imageContextMenu, defContextMenu, anchorContextMenu } = require(__dirname + '/main/components/menu/index')
 
 let menuShown = false
 let view = null
@@ -48,9 +48,9 @@ async function createWindow() {
     const filter = {
         urls: ["http://*/*", "https://*/*"]
     }
-    session.defaultSession.webRequest.onBeforeSendHeaders(filter, (details,callback)=> {
+    session.defaultSession.webRequest.onBeforeSendHeaders(filter, (details, callback) => {
         details.requestHeaders['DNT'] = "1";
-        callback({cancel: false, requestHeaders: details.requestHeaders})
+        callback({ cancel: false, requestHeaders: details.requestHeaders })
     })
 
     app.setAsDefaultProtocolClient('webby')
@@ -59,45 +59,28 @@ async function createWindow() {
 
     win.setMenu(null)
 
-    win.webContents.on('did-finish-load', async ()=>{
+    win.webContents.on('did-finish-load', async () => {
         win.show()
     })
 
-<<<<<<< HEAD
     ipcMain.on('webtitlechange', async (_event, args) => {
-=======
-    ipcMain.on('webtitlechange', (event, args) => {
->>>>>>> 58ddcdbca585226d4ff47b69f36b319a9fb1292f
         win.focus()
         win.title = "webby - " + args.toString()
     })
 
-<<<<<<< HEAD
     ipcMain.on('webview:load', async (_event, args) => {
         BrowserView.fromId(args).webContents.on('new-window', (event, url) => {
-=======
-    ipcMain.on('webview:load', (event, args) => {
-        BrowserView.fromId(args).webContents.on('new-window', (event, url)=>{
->>>>>>> 58ddcdbca585226d4ff47b69f36b319a9fb1292f
             event.preventDefault()
             BrowserWindow.getFocusedWindow().webContents.send('new-tab', url)
         })
     })
 
-<<<<<<< HEAD
     ipcMain.on('home', async (_event, _args) => {
-=======
-    ipcMain.on('home', (event, args)=>{
->>>>>>> 58ddcdbca585226d4ff47b69f36b319a9fb1292f
         closeMenu()
         BrowserWindow.getFocusedWindow().webContents.send('home')
     })
 
-<<<<<<< HEAD
     globalShortcut.register("CommandOrControl+Shift+I", async () => {
-=======
-    globalShortcut.register("CommandOrControl+Shift+I", ()=>{
->>>>>>> 58ddcdbca585226d4ff47b69f36b319a9fb1292f
         const currentwin = BrowserWindow.getFocusedWindow()
         if (currentwin.isFocused()) {
             currentwin.webContents.openDevTools({
@@ -120,14 +103,10 @@ async function closeMenu() {
         view = null
         menuShown = false
         window.focus();
-    } catch {}
+    } catch { }
 }
 
-<<<<<<< HEAD
 ipcMain.on('togglemax', async () => {
-=======
-ipcMain.on('togglemax', ()=>{
->>>>>>> 58ddcdbca585226d4ff47b69f36b319a9fb1292f
     const currentwin = BrowserWindow.getFocusedWindow()
     if (currentwin.isMaximized()) {
         currentwin.unmaximize()
@@ -136,119 +115,33 @@ ipcMain.on('togglemax', ()=>{
     }
 })
 
-<<<<<<< HEAD
 ipcMain.on('contextmenu', async (_event, args) => {
-    const currentwin = BrowserWindow.getFocusedWindow()
-    let menu = new Menu()
-
-    menu.append(new MenuItem({
-        label: "Back",
-        click: async () => {
-            currentwin.webContents.send('back')
-        },
-        accelerator: 'Alt+Left'
-    }))
-
-    menu.append(new MenuItem({
-        label: "Forward",
-        click: async () => {
-            currentwin.webContents.send('forward')
-        },
-        accelerator: 'Alt+Right'
-    }))
-
-    menu.append(new MenuItem({
-        label: "Reload",
-        click: async () => {
-            currentwin.webContents.send('reloadpage')
-        },
-        accelerator: "CommandOrControl+R"
-    }))
-
-    menu.append(new MenuItem({
-        type: 'separator'
-    }))
-
-    menu.append(new MenuItem({
-        label: "Save as...",
-        click: async () => {
-            currentwin.webContents.send('savepage')
-        },
-        accelerator: "CommandOrControl+S"
-    }))
-
-    menu.append(new MenuItem({
-        label: "Print...",
-        click: async () => {
-            currentwin.webContents.send('print')
-        },
-        accelerator: "CommandOrControl+P"
-    }))
-
-    menu.append(new MenuItem({
-        type: 'separator'
-    }))
-
-    menu.append(new MenuItem({
-        label: "Inspect Element",
-        click: async () => {
-            currentwin.webContents.send('inspect-eli-cu', args)
-        },
-        accelerator: "CommandOrControl+Alt+Shift+I"
-    }))
-
-    menu.popup({ window: currentwin })
-
-    menu.once('menu-will-close', async () => {
-        menu = null
-    })
-=======
-ipcMain.on('contextmenu', (event, args)=>{
     defContextMenu(args)
->>>>>>> 58ddcdbca585226d4ff47b69f36b319a9fb1292f
 })
 
-ipcMain.on('textcontextmenu', (event, args)=>{
+ipcMain.on('textcontextmenu', async (_event, args) => {
     textContextMenu(args)
 })
 
-<<<<<<< HEAD
-ipcMain.on('textcontextmenu', async (_event, _args) => {
-    const { textContextMenu } = require(__dirname + '/main/components/menu/index')
-    textContextMenu()
-})
-
-ipcMain.on('imagecontextmenu', async (_event, _args) => {
-    const { imageContextMenu } = require(__dirname + '/main/components/menu/index')
-    imageContextMenu()
-})
-
-ipcMain.on('minimize', async () => {
-    BrowserWindow.getFocusedWindow().minimize()
-})
-
-ipcMain.on('close', async () => {
-=======
-ipcMain.on('imagecontextmenu', (event, args)=>{
+ipcMain.on('imagecontextmenu', async (_event, args) => {
     imageContextMenu(args)
 })
 
-ipcMain.on('anchorcontextmenu', (event, args)=>{
+ipcMain.on('anchorcontextmenu', async (_event, args) => {
     anchorContextMenu(args)
 })
 
-ipcMain.on('minimize', ()=>{
+ipcMain.on('minimize', () => {
     BrowserWindow.getFocusedWindow().minimize()
 })
 
-ipcMain.on('close', ()=>{
->>>>>>> 58ddcdbca585226d4ff47b69f36b319a9fb1292f
+ipcMain.on('close', () => {
     try {
         BrowserWindow.getFocusedWindow().close()
-    } catch {}
+    } catch { }
 })
 
-ipcMain.on('menu:open', async ()=>{
+ipcMain.on('menu:open', async () => {
     if (view != null) return
 
     if (view == null) {
@@ -280,7 +173,7 @@ ipcMain.on('menu:open', async ()=>{
 
     view.webContents.loadFile('menu/index.html')
 
-    view.webContents.on('dom-ready', async ()=>{
+    view.webContents.on('dom-ready', async () => {
         const currentwin = BrowserWindow.getFocusedWindow()
         menuShown = true
         await view.show()
@@ -295,53 +188,29 @@ ipcMain.on('menu:open', async ()=>{
         }
     })
 
-    view.addListener('blur', ()=>{
+    view.addListener('blur', () => {
         closeMenu()
     })
 })
 
-ipcMain.on('newtab', async ()=>{
+ipcMain.on('newtab', async () => {
     closeMenu()
     BrowserWindow.getFocusedWindow().webContents.send('new-tab', 'webby://newtab')
 })
 
-<<<<<<< HEAD
 ipcMain.on('newwin', async () => {
     shell.openPath(app.getPath('exe'))
 })
 
 ipcMain.on('closetab', async (_event, args) => {
-=======
-ipcMain.on('newwin', ()=>{
-    shell.openPath(app.getPath('exe')).then()
-})
-
-ipcMain.on('closetab', (event, args) => {
->>>>>>> 58ddcdbca585226d4ff47b69f36b319a9fb1292f
     const currentwin = BrowserWindow.getFocusedWindow()
     try {
         currentwin.removeBrowserView(BrowserView.fromId(args[0]))
         currentwin.addBrowserView(BrowserView.fromId(args[1]))
-    } catch {}
+    } catch { }
 })
 
-<<<<<<< HEAD
 ipcMain.on('quit', async (_event, args) => {
-    if (args) {
-        closeMenu()
-        BrowserWindow.getFocusedWindow().close()
-        delete BrowserWindow.getFocusedWindow()
-    } else {
-        closeMenu()
-        closeAllWindows()
-        app.quit()
-        process.exit(0)
-    }
-})
-
-ipcMain.on('about', async (_event, _args) => {
-=======
-ipcMain.on('quit', (event, args)=>{
     switch (args) {
         case false:
             closeMenu()
@@ -358,8 +227,7 @@ ipcMain.on('quit', (event, args)=>{
     }
 })
 
-ipcMain.on('about', (event, args)=>{
->>>>>>> 58ddcdbca585226d4ff47b69f36b319a9fb1292f
+ipcMain.on('about', (_event, _args) => {
     closeMenu()
     app.setAboutPanelOptions({
         applicationName: "webby",
@@ -370,20 +238,12 @@ ipcMain.on('about', (event, args)=>{
     app.showAboutPanel()
 })
 
-<<<<<<< HEAD
 ipcMain.on('reloadpage', async (_event, args) => {
-=======
-ipcMain.on('reloadpage', (event, args)=>{
->>>>>>> 58ddcdbca585226d4ff47b69f36b319a9fb1292f
     closeMenu()
     BrowserWindow.getFocusedWindow().webContents.send('reloadpage', args)
 })
 
-<<<<<<< HEAD
 ipcMain.on('navi-history', async () => {
-=======
-ipcMain.on('navi-history', ()=>{
->>>>>>> 58ddcdbca585226d4ff47b69f36b319a9fb1292f
     closeMenu()
     BrowserWindow.getFocusedWindow().webContents.send('navi-history')
 })
@@ -396,23 +256,15 @@ function closeAllWindows() {
 
 app.whenReady().then(createWindow)
 
-app.whenReady().then(()=>{
+app.whenReady().then(() => {
     registerProtocols()
 })
 
-<<<<<<< HEAD
 app.on('ready', async () => {
-=======
-app.on('ready', ()=>{
->>>>>>> 58ddcdbca585226d4ff47b69f36b319a9fb1292f
     windowManager.init()
 })
 
-<<<<<<< HEAD
 app.on('window-all-closed', async () => {
-=======
-app.on('window-all-closed', ()=>{
->>>>>>> 58ddcdbca585226d4ff47b69f36b319a9fb1292f
     if (process.platform !== 'darwin') {
         closeMenu()
         closeAllWindows()
@@ -422,11 +274,7 @@ app.on('window-all-closed', ()=>{
     }
 })
 
-<<<<<<< HEAD
 app.on('will-quit', async () => {
-=======
-app.on('will-quit', ()=>{
->>>>>>> 58ddcdbca585226d4ff47b69f36b319a9fb1292f
     closeMenu()
     closeAllWindows()
     app.quit()
@@ -434,11 +282,7 @@ app.on('will-quit', ()=>{
     app.exit(0)
 })
 
-<<<<<<< HEAD
 app.on('activate', async () => {
-=======
-app.on('activate', ()=>{
->>>>>>> 58ddcdbca585226d4ff47b69f36b319a9fb1292f
     if (BrowserWindow.getAllWindows().length === 0)
         shell.openPath(app.getPath('exe'))
 })

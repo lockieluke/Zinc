@@ -17,27 +17,6 @@ document.addEventListener('contextmenu', async event => {
     }
 });
 
-<<<<<<< HEAD
-document.addEventListener('mousemove', async event => {
-    hovered = event.target
-
-    if (event.target instanceof HTMLInputElement) {
-        hoveringtext = true
-    } else {
-        hoveringtext = false
-    }
-
-    if (event.target instanceof HTMLImageElement || event.target instanceof HTMLPictureElement) {
-        hoveringimage = true
-        hoveringimagedom = event.target
-    } else {
-        hoveringimage = false
-        hoveringimagedom = null
-    }
-});
-=======
->>>>>>> 58ddcdbca585226d4ff47b69f36b319a9fb1292f
-
 document.addEventListener('mousemove', async event => {
     mouseX = event.pageX
     mouseY = event.pageY
