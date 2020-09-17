@@ -145,4 +145,103 @@ function imageContextMenu(args) {
     })
 }
 
-module.exports = {textContextMenu, imageContextMenu}
+function defContextMenu(args) {
+    const currentwin = BrowserWindow.getFocusedWindow()
+    let menu = new Menu()
+
+    menu.append(new MenuItem({
+        label: "Back",
+        click: function() {
+            currentwin.webContents.send('back')
+        },
+        accelerator: 'Alt+Left'
+    }))
+
+    menu.append(new MenuItem({
+        label: "Forward",
+        click: function() {
+            currentwin.webContents.send('forward')
+        },
+        accelerator: 'Alt+Right'
+    }))
+
+    menu.append(new MenuItem({
+        label: "Reload",
+        click: function() {
+            currentwin.webContents.send('reloadpage')
+        },
+        accelerator: "CommandOrControl+R"
+    }))
+
+    menu.append(new MenuItem({
+        type: 'separator'
+    }))
+
+    menu.append(new MenuItem({
+        label: "Save as...",
+        click: function() {
+            currentwin.webContents.send('savepage')
+        },
+        accelerator: "CommandOrControl+S"
+    }))
+
+    menu.append(new MenuItem({
+        label: "Print...",
+        click: function() {
+            currentwin.webContents.send('print')
+        },
+        accelerator: "CommandOrControl+P"
+    }))
+
+    menu.append(new MenuItem({
+        type: 'separator'
+    }))
+
+    menu.append(new MenuItem({
+        label: "Inspect Element",
+        click: function() {
+            currentwin.webContents.send('inspect-eli-cu', args)
+        },
+        accelerator: "CommandOrControl+Alt+Shift+I"
+    }))
+
+    menu.popup({window: currentwin})
+
+    menu.once('menu-will-close', ()=>{
+        menu = null
+    })
+}
+
+function anchorContextMenu() {
+    const currentwin = BrowserWindow.getFocusedWindow()
+    let menu = new Menu()
+
+    menu.append(new MenuItem({
+        label: "Open link in new tab",
+        sublabel: "Control+Click"
+    }))
+
+    menu.append(new MenuItem({
+        type: 'separator'
+    }))
+
+    menu.append(new MenuItem({
+        label: "Copy link"
+    }))
+
+    menu.append(new MenuItem({
+        type: 'separator'
+    }))
+
+    menu.append(new MenuItem({
+        label: "Inspect Element"
+    }))
+
+    menu.popup({window: currentwin})
+
+    menu.once('menu-will-close', ()=>{
+        menu = null
+    })
+}
+
+module.exports = {textContextMenu, imageContextMenu, defContextMenu, anchorContextMenu}

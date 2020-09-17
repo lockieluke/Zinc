@@ -1,20 +1,23 @@
-const electron = require('electron');
-const ipcRenderer = electron.ipcRenderer;
+const {ipcRenderer} = require('electron');
 
-let hovered = hoveringimagedom = null, hoveringtext = hoveringimage = false, mouseX = mouseY = 0;
+let mouseX = 0
+let mouseY = 0
 
 document.addEventListener('contextmenu', async event => {
     event.preventDefault()
 
-    if (hoveringtext) {
+    if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement) {
         ipcRenderer.send('textcontextmenu', [mouseX, mouseY])
-    } else if (hoveringimage) {
+    } else if (event.target instanceof HTMLImageElement || event.target instanceof HTMLPictureElement) {
         ipcRenderer.send('imagecontextmenu', [mouseX, mouseY, event.target.src])
+    } else if (event.target.hasAttribute('href')) {
+        ipcRenderer.send('anchorcontextmenu', [mouseX, mouseY])
     } else {
         ipcRenderer.send('contextmenu', [mouseX, mouseY])
     }
 });
 
+<<<<<<< HEAD
 document.addEventListener('mousemove', async event => {
     hovered = event.target
 
@@ -32,6 +35,8 @@ document.addEventListener('mousemove', async event => {
         hoveringimagedom = null
     }
 });
+=======
+>>>>>>> 58ddcdbca585226d4ff47b69f36b319a9fb1292f
 
 document.addEventListener('mousemove', async event => {
     mouseX = event.pageX
