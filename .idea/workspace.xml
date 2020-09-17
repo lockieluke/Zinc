@@ -23,10 +23,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="01958276-8a03-40b9-835e-783247464cd3" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index/preload.js" beforeDir="false" afterPath="$PROJECT_DIR$/index/preload.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/index/renderer.js" beforeDir="false" afterPath="$PROJECT_DIR$/index/renderer.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/components/menu/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/main/components/menu/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/newtab/renderer.js" beforeDir="false" afterPath="$PROJECT_DIR$/pages/newtab/renderer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/newtab/url.js" beforeDir="false" afterPath="$PROJECT_DIR$/pages/newtab/url.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -126,6 +132,7 @@
       <workItem from="1600226496553" duration="2366000" />
       <workItem from="1600233774446" duration="5495000" />
       <workItem from="1600244638962" duration="12640000" />
+      <workItem from="1600301896456" duration="916000" />
     </task>
     <servers />
   </component>

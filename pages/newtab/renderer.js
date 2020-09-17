@@ -1,16 +1,16 @@
-document.body.onload = async function() {
-    document.body.style.display = 'block'
-
-    await getJSON('http://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=en-US', function (err, data) {
+document.body.onload = async () => {
+    document.body.style.display = 'block';
+    getJSON('http://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=en-US', (_err, data) => {
         const backurl = data.images[0].url
-        const fullurl = 'https://www.bing.com/' + backurl
-        document.body.style.backgroundImage = 'url("' + fullurl + '")'
+        const fullurl = `https://www.bing.com/${backurl}`
+        document.body.style.backgroundImage = `url("${fullurl}")`
     })
 }
 
-const searchfield = document.getElementById('searchfield')
-let suggestions = []
-let focusedsuggestion = 0
+
+const searchfield = document.getElementById('searchfield');
+let suggestions = [];
+let focusedSuggestion = 0;
 
 searchfield.addEventListener('input', (event)=>{
     if (searchfield.value !== '') {
@@ -153,11 +153,11 @@ function validURL(str) {
     return !!pattern.test(str);
 }
 
-const getJSON = function(url, callback) {
+const getJSON = (url, callback) => {
     const xhr = new XMLHttpRequest();
     xhr.open('GET', url, true);
     xhr.responseType = 'json';
-    xhr.onload = function() {
+    xhr.onload = () => {
         var status = xhr.status;
         if (status === 200) {
             callback(null, xhr.response);
