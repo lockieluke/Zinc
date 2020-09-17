@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo Testing",
-    "build": "cd scripts && build-win.bat"
+    "build": "cd scripts && build-win.bat",
+    "start": "electron ."
   },
   "repository": {
     "type": "git",

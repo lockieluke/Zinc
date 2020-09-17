@@ -1,4 +1,4 @@
-const {ipcRenderer} = require('electron')
+const {ipcRenderer, remote} = require('electron')
 
 const closeBtn = document.getElementById('closebtn')
 closeBtn.addEventListener('click', async () => {
