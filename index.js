@@ -9,7 +9,7 @@ let menuShown = false, view = null;
 app.commandLine.appendSwitch('--enable-transparent-visuals');
 app.commandLine.appendSwitch('--enable-parallel-downloading');
 
-function createWindow() {
+async function createWindow() {
     const win = new BrowserWindow({
         width: 1280,
         height: 720,
@@ -40,7 +40,6 @@ function createWindow() {
         minWidth: 180,
         icon: __dirname + '/artwork/Logo.png'
     })
-    const nativeTheme = require('electron').nativeTheme
 
     const session = electron.session
 
@@ -62,24 +61,24 @@ function createWindow() {
         win.show()
     })
 
-    ipcMain.on('webtitlechange', (_event, args) => {
+    ipcMain.on('webtitlechange', async (_event, args) => {
         win.focus()
         win.title = "webby - " + args.toString()
     })
 
-    ipcMain.on('webview:load', (_event, args) => {
+    ipcMain.on('webview:load', async (_event, args) => {
         BrowserView.fromId(args).webContents.on('new-window', (event, url) => {
             event.preventDefault()
             BrowserWindow.getFocusedWindow().webContents.send('new-tab', url)
         })
     })
 
-    ipcMain.on('home', (_event, _args) => {
+    ipcMain.on('home', async (_event, _args) => {
         closeMenu()
         BrowserWindow.getFocusedWindow().webContents.send('home')
     })
 
-    globalShortcut.register("CommandOrControl+Shift+I", () => {
+    globalShortcut.register("CommandOrControl+Shift+I", async () => {
         const currentwin = BrowserWindow.getFocusedWindow()
         if (currentwin && currentwin.isFocused()) {
             currentwin.webContents.openDevTools({
@@ -95,7 +94,7 @@ function createWindow() {
     })
 }
 
-function closeMenu() {
+async function closeMenu() {
     try {
         view.close()
         view.destroy()
@@ -105,7 +104,7 @@ function closeMenu() {
     } catch { }
 }
 
-ipcMain.on('togglemax', () => {
+ipcMain.on('togglemax', async () => {
     const currentwin = BrowserWindow.getFocusedWindow()
     if (currentwin.isMaximized()) {
         currentwin.unmaximize()
@@ -114,13 +113,13 @@ ipcMain.on('togglemax', () => {
     }
 })
 
-ipcMain.on('contextmenu', (_event, args) => {
+ipcMain.on('contextmenu', async (_event, args) => {
     const currentwin = BrowserWindow.getFocusedWindow()
     let menu = new Menu()
 
     menu.append(new MenuItem({
         label: "Back",
-        click:  () => {
+        click: async () => {
             currentwin.webContents.send('back')
         },
         accelerator: 'Alt+Left'
@@ -128,7 +127,7 @@ ipcMain.on('contextmenu', (_event, args) => {
 
     menu.append(new MenuItem({
         label: "Forward",
-        click: () => {
+        click: async () => {
             currentwin.webContents.send('forward')
         },
         accelerator: 'Alt+Right'
@@ -136,7 +135,7 @@ ipcMain.on('contextmenu', (_event, args) => {
 
     menu.append(new MenuItem({
         label: "Reload",
-        click: () => {
+        click: async () => {
             currentwin.webContents.send('reloadpage')
         },
         accelerator: "CommandOrControl+R"
@@ -148,7 +147,7 @@ ipcMain.on('contextmenu', (_event, args) => {
 
     menu.append(new MenuItem({
         label: "Save as...",
-        click: () => {
+        click: async () => {
             currentwin.webContents.send('savepage')
         },
         accelerator: "CommandOrControl+S"
@@ -156,7 +155,7 @@ ipcMain.on('contextmenu', (_event, args) => {
 
     menu.append(new MenuItem({
         label: "Print...",
-        click: () => {
+        click: async () => {
             currentwin.webContents.send('print')
         },
         accelerator: "CommandOrControl+P"
@@ -168,7 +167,7 @@ ipcMain.on('contextmenu', (_event, args) => {
 
     menu.append(new MenuItem({
         label: "Inspect Element",
-        click: () => {
+        click: async () => {
             currentwin.webContents.send('inspect-eli-cu', args)
         },
         accelerator: "CommandOrControl+Alt+Shift+I"
@@ -176,27 +175,27 @@ ipcMain.on('contextmenu', (_event, args) => {
 
     menu.popup({ window: currentwin })
 
-    menu.once('menu-will-close', () => {
+    menu.once('menu-will-close', async () => {
         menu = null
     })
 })
 
 
-ipcMain.on('textcontextmenu', (_event, _args) => {
+ipcMain.on('textcontextmenu', async (_event, _args) => {
     const { textContextMenu } = require(__dirname + '/main/components/menu/index')
     textContextMenu()
 })
 
-ipcMain.on('imagecontextmenu', (_event, _args) => {
+ipcMain.on('imagecontextmenu', async (_event, _args) => {
     const { imageContextMenu } = require(__dirname + '/main/components/menu/index')
     imageContextMenu()
 })
 
-ipcMain.on('minimize', () => {
+ipcMain.on('minimize', async () => {
     BrowserWindow.getFocusedWindow().minimize()
 })
 
-ipcMain.on('close', () => {
+ipcMain.on('close', async () => {
     try {
         BrowserWindow.getFocusedWindow().close()
     } catch { }
@@ -255,11 +254,11 @@ ipcMain.on('newtab', async () => {
     BrowserWindow.getFocusedWindow().webContents.send('new-tab', 'webby://newtab')
 })
 
-ipcMain.on('newwin', () => {
+ipcMain.on('newwin', async () => {
     shell.openPath(app.getPath('exe'))
 })
 
-ipcMain.on('closetab', (_event, args) => {
+ipcMain.on('closetab', async (_event, args) => {
     const currentwin = BrowserWindow.getFocusedWindow()
     try {
         currentwin.removeBrowserView(BrowserView.fromId(args[0]))
@@ -267,7 +266,7 @@ ipcMain.on('closetab', (_event, args) => {
     } catch { }
 })
 
-ipcMain.on('quit', (_event, args) => {
+ipcMain.on('quit', async (_event, args) => {
     if (args) {
         closeMenu()
         BrowserWindow.getFocusedWindow().close()
@@ -280,7 +279,7 @@ ipcMain.on('quit', (_event, args) => {
     }
 })
 
-ipcMain.on('about', (_event, _args) => {
+ipcMain.on('about', async (_event, _args) => {
     closeMenu()
     app.setAboutPanelOptions({
         applicationName: "webby",
@@ -291,12 +290,12 @@ ipcMain.on('about', (_event, _args) => {
     app.showAboutPanel()
 })
 
-ipcMain.on('reloadpage', (_event, args) => {
+ipcMain.on('reloadpage', async (_event, args) => {
     closeMenu()
     BrowserWindow.getFocusedWindow().webContents.send('reloadpage', args)
 })
 
-ipcMain.on('navi-history', () => {
+ipcMain.on('navi-history', async () => {
     closeMenu()
     BrowserWindow.getFocusedWindow().webContents.send('navi-history')
 })
@@ -311,11 +310,11 @@ app.whenReady().then(createWindow)
 
 app.whenReady().then(registerProtocols)
 
-app.on('ready', () => {
+app.on('ready', async () => {
     windowManager.init()
 });
 
-app.on('window-all-closed', () => {
+app.on('window-all-closed', async () => {
     if (process.platform !== 'darwin') {
         closeMenu()
         closeAllWindows()
@@ -325,7 +324,7 @@ app.on('window-all-closed', () => {
     }
 });
 
-app.on('will-quit', () => {
+app.on('will-quit', async () => {
     closeMenu()
     closeAllWindows()
     app.quit()
@@ -333,7 +332,7 @@ app.on('will-quit', () => {
     app.exit(0)
 });
 
-app.on('activate', () => {
+app.on('activate', async () => {
     if (BrowserWindow.getAllWindows().length === 0)
         shell.openPath(app.getPath('exe'))
 });

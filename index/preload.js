@@ -3,7 +3,7 @@ const ipcRenderer = electron.ipcRenderer;
 
 let hovered = hoveringimagedom = null, hoveringtext = hoveringimage = false, mouseX = mouseY = 0;
 
-document.addEventListener('contextmenu', event => {
+document.addEventListener('contextmenu', async event => {
     event.preventDefault()
 
     if (hoveringtext) {
@@ -15,7 +15,7 @@ document.addEventListener('contextmenu', event => {
     }
 });
 
-document.addEventListener('mousemove', event => {
+document.addEventListener('mousemove', async event => {
     hovered = event.target
 
     if (event.target instanceof HTMLInputElement) {
@@ -33,7 +33,7 @@ document.addEventListener('mousemove', event => {
     }
 });
 
-document.addEventListener('mousemove', event => {
+document.addEventListener('mousemove', async event => {
     mouseX = event.pageX
     mouseY = event.pageY
 });
