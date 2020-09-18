@@ -52,13 +52,13 @@ function createWindow() {
     ipcMain.on('webview:load', async (_event, args) => {
         BrowserView.fromId(args).webContents.on('new-window', (event, url) => {
             event.preventDefault()
-            BrowserWindow.getFocusedWindow().webContents.send('new-tab', url)
+            BrowserWindow.getAllWindows()[0].webContents.send('new-tab', url)
         })
     })
 
     ipcMain.on('home', async (_event, _args) => {
         closeMenu()
-        BrowserWindow.getFocusedWindow().webContents.send('home')
+        BrowserWindow.getAllWindows()[0].webContents.send('home')
     })
 }
 
@@ -68,7 +68,7 @@ ipcMain.on('menu:open', async () => {
 
 ipcMain.on('newtab', () => {
     closeMenu()
-    BrowserWindow.getFocusedWindow().webContents.send('new-tab', 'zinc://newtab')
+    BrowserWindow.getAllWindows()[0].webContents.send('new-tab', 'zinc://newtab')
 })
 
 ipcMain.on('newwin', () => {
@@ -91,7 +91,7 @@ ipcMain.on('quit', (_event, args) => {
 
         case true:
             closeMenu()
-            BrowserWindow.getFocusedWindow().close()
+            BrowserWindow.getAllWindows()[0].close()
             break
     }
     process.exit(0)
@@ -124,7 +124,7 @@ ipcMain.on('navi-history', () => {
     }
 })
 
-app.whenReady().then(function () {
+app.whenReady().then(() => {
     createWindow()
 
 
@@ -133,10 +133,8 @@ app.whenReady().then(function () {
     })
 })
 
-app.on('window-all-closed', function () {
+app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') app.quit()
 })
 
-app.on('will-quit', () => {
-    closeMenu()
-})
+app.on('will-quit', closeMenu)
