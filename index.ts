@@ -1,6 +1,8 @@
-import {BrowserWindow, app, nativeTheme, ipcMain, BrowserView, shell} from 'electron';
+import electron = require("electron");
+import { BrowserWindow, app, nativeTheme, ipcMain, BrowserView, shell, MenuItem, ipcRenderer } from 'electron';
 import * as isDev from 'electron-is-dev'
-import {closeMenu, openMenu} from './main/components/menu/index'
+import { closeMenu, openMenu } from './main/components/menu/index'
+import electronIsDev = require('electron-is-dev');
 require(__dirname + '/main/components/ipcEvents/index')
 
 function createWindow() {
@@ -25,18 +27,22 @@ function createWindow() {
         icon: __dirname + '/artwork/Zinc.png'
     })
 
-    nativeTheme.themeSource = 'light'
-
-    app.setAsDefaultProtocolClient('zinc')
+    // menu =>
+    const menu = new electron.Menu()
+    menu.append(new MenuItem({
+        label: 'quit',
+        accelerator: 'CmdorCtrl+P',
+        click: () => { ipcRenderer.send("quit", false) }
+    }));
 
     nativeTheme.themeSource = 'light'
 
     app.setAsDefaultProtocolClient('zinc')
     win.loadFile('index/index.html')
-    win.setMenu(null)
+    win.setMenu(menu);
 
     win.webContents.on('did-finish-load', async () => {
-        await win.show()
+        win.show()
     })
 
     ipcMain.on('webtitlechange', async (_event, args) => {
@@ -104,12 +110,18 @@ ipcMain.on('about', (_event, _args) => {
 
 ipcMain.on('reloadpage', (_event, args) => {
     closeMenu()
-    BrowserWindow.getFocusedWindow().webContents.send('reloadpage', args)
+    var win = BrowserWindow.getAllWindows()[0]
+    if (win) {
+        win.webContents.send('reloadpage', args)
+    }
 })
 
 ipcMain.on('navi-history', () => {
     closeMenu()
-    BrowserWindow.getFocusedWindow().webContents.send('navi-history')
+    var win = BrowserWindow.getAllWindows()[0]
+    if (win) {
+        win.webContents.send('navi-history')
+    }
 })
 
 app.whenReady().then(function () {

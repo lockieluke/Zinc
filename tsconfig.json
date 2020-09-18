@@ -2,7 +2,8 @@
     "compilerOptions": {
         "target": "ESNext",
         "lib": ["DOM"],
-        "module": "CommonJS"
+        "module": "CommonJS",
+        "sourceMap": true,
     },
     "exclude": ["node_modules"]
 }

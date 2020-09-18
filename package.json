@@ -1,12 +1,12 @@
 {
   "name": "zinc",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Your dream browser",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
     "test": "echo Testing",
     "build": "cd scripts && build-win.bat",
-    "start": "electron ."
+    "start": "electron10 ."
   },
   "repository": {
     "type": "git",

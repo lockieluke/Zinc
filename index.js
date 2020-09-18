@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const electron = require("electron");
 const electron_1 = require("electron");
 const isDev = require("electron-is-dev");
 const index_1 = require("./main/components/menu/index");
@@ -25,14 +26,19 @@ function createWindow() {
         minWidth: 180,
         icon: __dirname + '/artwork/Zinc.png'
     });
-    electron_1.nativeTheme.themeSource = 'light';
-    electron_1.app.setAsDefaultProtocolClient('zinc');
+    // menu =>
+    const menu = new electron.Menu();
+    menu.append(new electron_1.MenuItem({
+        label: 'quit',
+        accelerator: 'CmdorCtrl+P',
+        click: () => { electron_1.ipcRenderer.send("quit", false); }
+    }));
     electron_1.nativeTheme.themeSource = 'light';
     electron_1.app.setAsDefaultProtocolClient('zinc');
     win.loadFile('index/index.html');
-    win.setMenu(null);
+    win.setMenu(menu);
     win.webContents.on('did-finish-load', async () => {
-        await win.show();
+        win.show();
     });
     electron_1.ipcMain.on('webtitlechange', async (_event, args) => {
         win.title = "Zinc - " + args.toString();
@@ -90,11 +96,17 @@ electron_1.ipcMain.on('about', (_event, _args) => {
 });
 electron_1.ipcMain.on('reloadpage', (_event, args) => {
     index_1.closeMenu();
-    electron_1.BrowserWindow.getFocusedWindow().webContents.send('reloadpage', args);
+    var win = electron_1.BrowserWindow.getAllWindows()[0];
+    if (win) {
+        win.webContents.send('reloadpage', args);
+    }
 });
 electron_1.ipcMain.on('navi-history', () => {
     index_1.closeMenu();
-    electron_1.BrowserWindow.getFocusedWindow().webContents.send('navi-history');
+    var win = electron_1.BrowserWindow.getAllWindows()[0];
+    if (win) {
+        win.webContents.send('navi-history');
+    }
 });
 electron_1.app.whenReady().then(function () {
     createWindow();
@@ -110,3 +122,4 @@ electron_1.app.on('window-all-closed', function () {
 electron_1.app.on('will-quit', () => {
     index_1.closeMenu();
 });
+//# sourceMappingURL=index.js.map
