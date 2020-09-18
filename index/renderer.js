@@ -1,30 +1,10 @@
 const {ipcRenderer, remote} = require('electron')
+require('./components/wincontrols/index')
+require('./components/shortcuts/index')
 
-const closeBtn = document.getElementById('closebtn')
-closeBtn.addEventListener('click', async () => {
-    ipcRenderer.send('close');
+ipcRenderer.on('navi-history', async () => {
+    newTabOperation('zinc://history');
 });
-
-const maxBtn = document.getElementById('maxbtn')
-maxBtn.addEventListener('click', async () => {
-    ipcRenderer.send('togglemax');
-});
-
-const minBtn = document.getElementById('minBtn')
-
-minBtn.addEventListener('click', async () => {
-    ipcRenderer.send('minimize');
-})
-
-const win = require('electron').remote.getCurrentWindow()
-
-win.addListener('maximize', async ()=>{
-    await resizeWebview()
-})
-
-win.addListener('resize', async ()=>{
-    await resizeWebview()
-})
 
 ipcRenderer.on('new-tab', async (_event, args) => {
     newTabOperation(args)
@@ -33,10 +13,6 @@ ipcRenderer.on('new-tab', async (_event, args) => {
 
 ipcRenderer.on('reloadpage', async (_event, args) => {
     reloadWebView(tabprocessesindentifier['tab-' + focusedtab], args);
-});
-
-ipcRenderer.on('navi-history', async () => {
-    newTabOperation('zinc://history');
 });
 
 ipcRenderer.on('home', async (_event, _args) => {
@@ -109,6 +85,7 @@ ipcRenderer.on('open-img-newtab', async (_event, args) => {
 
 ipcRenderer.on('saveimg', async (_event, args) => {
     const dialog = remote.dialog
+    const win = remote.getCurrentWindow()
     const saveDialog = dialog.showSaveDialogSync(win, {
         title: "Save As",
         buttonLabel: "Save",
@@ -240,7 +217,7 @@ async function newTabOperation(url) {
         }
     })
     webview.webContents.userAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.102 Safari/537.36'
-    const win = require('electron').remote.getCurrentWindow()
+    const win = remote.getCurrentWindow()
     win.setBrowserView(webview)
     webviewids[tabcounter] = webview.id
     console.log("Changed WebView ID to " + webview.id)
@@ -267,7 +244,7 @@ async function newTabOperation(url) {
     const dialog = require('electron').remote.dialog
     webview.webContents.session.setPermissionRequestHandler(async (webContents, permission, callback, details) => {
         const permdialog = await dialog.showMessageBox(require('electron').remote.getCurrentWindow(), {
-            title: "webby",
+            title: "Zinc",
             message: webContents.getURL() + " would like to have " + permission + " permission.  Approving permissions to untrusted websites may lead to unpredictable security issue.",
             buttons: [
                 "Deny",
@@ -302,7 +279,6 @@ function renewTabTitle(title, tabid, webview) {
 }
 
 function resizeWebview() {
-    const {remote} = require('electron')
     const currentwebview = remote.BrowserView.fromId(webviewids[tabprocessesindentifier['tab-' + focusedtab]])
     switch (remote.getCurrentWindow().isMaximized()) {
         case true:
@@ -363,7 +339,6 @@ function closeFocusedTab() {
 function addEventListenerToTabs() {
     for (let i = 0; i < tabcount; i++) {
         const currenthandlingtab = document.getElementById('tab-' + i)
-        let currentprocessid = tabprocessesindentifier[currenthandlingtab.id]
         currenthandlingtab.addEventListener('click', (event)=>{
             focusOntoTab(tabprocessesindentifier[currenthandlingtab.id])
             resizeWebview()
@@ -376,9 +351,6 @@ function focusOntoTab(uniqueid) {
     const BrowserView = require('electron').remote.BrowserView
     const switchingview = BrowserView.fromId(webviewids[uniqueid])
     console.log("Switching to tab " + switchingview + " and with webview id " + webviewids[uniqueid])
-    // win.removeBrowserView(BrowserView.fromId(webviewids[tabprocessesindentifier['tab-' + focusedtab]]))
-    // win.addBrowserView(switchingview)
-    
     ipcRenderer.send('closetab', [
         webviewids[tabprocessesindentifier['tab-' + focusedtab]],
         webviewids[uniqueid]
@@ -460,3 +432,5 @@ function getKeyByValue(object, value) {
         return null
     }
 }
+
+module.exports = {closeFocusedTab, newTabOperation}
