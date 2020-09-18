@@ -1,4 +1,3 @@
-# webby
-Probably the last browser you will ever have to use...
+# Zinc
 
-Powered by the Electron framework
+Zinc is a cross-platform browser that is based on the Chromium browser engine which is aimed to be fast and low resources consumption.

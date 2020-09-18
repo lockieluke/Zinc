@@ -1,5 +1,5 @@
 {
-  "name": "webby",
+  "name": "zinc",
   "version": "1.0.0",
   "description": "Your dream browser",
   "main": "index.js",
@@ -10,14 +10,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/lockieluke/webby.git"
+    "url": "git+https://github.com/lockieluke/zinc.git"
   },
   "author": "Lockie Luke",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/lockieluke/webby/issues"
+    "url": "https://github.com/lockieluke/zinc/issues"
   },
-  "homepage": "https://github.com/lockieluke/webby#readme",
+  "homepage": "https://github.com/lockieluke/zinc#readme",
   "devDependencies": {
     "electron": "^10.1.2",
     "typescript": "^4.0.2",

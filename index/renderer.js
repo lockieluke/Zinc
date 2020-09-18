@@ -36,11 +36,11 @@ ipcRenderer.on('reloadpage', async (_event, args) => {
 });
 
 ipcRenderer.on('navi-history', async () => {
-    newTabOperation('webby://history');
+    newTabOperation('zinc://history');
 });
 
 ipcRenderer.on('home', async (_event, _args) => {
-    navigateTO("webby://newtab");
+    navigateTO("zinc://newtab");
 });
 
 ipcRenderer.on('back', ()=>{
@@ -159,11 +159,11 @@ window.onload = async function () {
 }
 
 function init() {
-    newTabOperation("webby://newtab")
+    newTabOperation("zinc://newtab")
 }
 
 document.getElementById('newtab').addEventListener('click', ()=>{
-    newTabOperation("webby://newtab")
+    newTabOperation("zinc://newtab")
 })
 
 document.getElementById('closetab').addEventListener('click', ()=>{
@@ -233,24 +233,20 @@ async function newTabOperation(url) {
     const BrowserView = remote.BrowserView
     const webview = new BrowserView({
         webPreferences: {
-            nodeIntegration: url.startsWith('webby://'),
-            contextIsolation: !url.startsWith('webby://'),
-            enableRemoteModule: url.startsWith('webby://'),
+            nodeIntegration: url.startsWith('zinc://'),
+            contextIsolation: !url.startsWith('zinc://'),
+            enableRemoteModule: url.startsWith('zinc://'),
             preload: require('path').join(__dirname, 'preload.js'),
         }
     })
     webview.webContents.userAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.102 Safari/537.36'
-    // webview.webContents.userAgent = webview.webContents.userAgent
-    //     .replace(/ Webby\\?.([^\s]+)/g, '')
-    //     .replace(/ Electron\\?.([^\s]+)/g, '')
-    //     .replace(/Chrome\\?.([^\s]+)/g, 'Chrome/85.0.4183.83');
     const win = require('electron').remote.getCurrentWindow()
     win.setBrowserView(webview)
     webviewids[tabcounter] = webview.id
     console.log("Changed WebView ID to " + webview.id)
-    if (url.startsWith('webby://')) {
-        const {getURL} = require('./components/webby-urls/index')
-        webview.webContents.loadFile(getURL(url.replace('webby://', '')))
+    if (url.startsWith('zinc://')) {
+        const {getURL} = require('./components/zinc-urls/index')
+        webview.webContents.loadFile(getURL(url.replace('zinc://', '')))
     } else {
         webview.webContents.loadURL(url)
     }
@@ -444,7 +440,7 @@ function reloadWebView(uniqueid, withCache = true) {
 }
 
 function navigateTO(url) {
-    const {getURL} = require('./components/webby-urls/index')
+    const {getURL} = require('./components/zinc-urls/index')
     const {remote} = require('electron')
     if (url.startsWith('webby://')) {
         remote.BrowserView.fromId(webviewids[tabprocessesindentifier['tab-' + focusedtab]]).webContents.loadFile(getURL(url.replace('webby://', '')))

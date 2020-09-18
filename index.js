@@ -18,7 +18,7 @@ async function createWindow() {
         center: true,
         transparent: false,
         show: false,
-        title: "webby",
+        title: "Zinc",
         frame: false,
         hasShadow: true,
         backgroundColor: '#ffffff',
@@ -196,7 +196,7 @@ ipcMain.on('menu:open', async () => {
 
 ipcMain.on('newtab', async () => {
     closeMenu()
-    BrowserWindow.getFocusedWindow().webContents.send('new-tab', 'webby://newtab')
+    BrowserWindow.getFocusedWindow().webContents.send('new-tab', 'zinc://newtab')
 })
 
 ipcMain.on('newwin', async () => {
@@ -231,9 +231,9 @@ ipcMain.on('quit', async (_event, args) => {
 ipcMain.on('about', (_event, _args) => {
     closeMenu()
     app.setAboutPanelOptions({
-        applicationName: "webby",
+        applicationName: "Zinc",
         applicationVersion: '0.1.0',
-        authors: "Lockie Luke",
+        authors: "Zinc DevTeam",
         iconPath: __dirname + 'artwork/Logo.png',
     })
     app.showAboutPanel()
