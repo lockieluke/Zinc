@@ -120,5 +120,5 @@ dist
 builds/
 
 # Editor
-.idea
-.vscode
+.idea/
+.vscode/
