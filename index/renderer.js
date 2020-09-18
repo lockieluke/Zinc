@@ -1,6 +1,5 @@
 const {ipcRenderer, remote} = require('electron')
 require('./components/wincontrols/index')
-require('./components/shortcuts/index')
 
 ipcRenderer.on('navi-history', async () => {
     newTabOperation('zinc://history');
