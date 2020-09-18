@@ -1,49 +1,35 @@
 const electron = require("electron");
-const { app, BrowserWindow, ipcMain, globalShortcut, BrowserView, shell, Menu, MenuItem } = electron;
-const { registerProtocols } = require('./index/components/protocol/index');
-const windowManager = require('electron-window-manager');
+const { app, BrowserWindow, ipcMain, BrowserView, shell} = electron;
+const { registerProtocols } = require(__dirname + '/index/components/protocol/index');
 const isDev = require('electron-is-dev');
-const { textContextMenu, imageContextMenu, defContextMenu, anchorContextMenu } = require(__dirname + '/main/components/menu/index')
+const {closeMenu, openMenu} = require(__dirname + '/main/components/menu/index')
+require(__dirname + '/main/components/ipcEvents/index')
 
-let menuShown = false
-let view = null
+// app.commandLine.appendSwitch('--enable-transparent-visuals');
+// app.commandLine.appendSwitch('--enable-parallel-downloading');
 
-app.commandLine.appendSwitch('--enable-transparent-visuals');
-app.commandLine.appendSwitch('--enable-parallel-downloading');
-
-async function createWindow() {
+function createWindow() {
     const win = new BrowserWindow({
         width: 1280,
         height: 720,
         center: true,
-        transparent: false,
         show: false,
         title: "Zinc",
         frame: false,
-        hasShadow: true,
         backgroundColor: '#ffffff',
-        resizable: true,
-        autoHideMenuBar: false,
-        paintWhenInitiallyHidden: true,
         webPreferences: {
-            spellcheck: true,
             nodeIntegration: true,
             webviewTag: true,
             enableRemoteModule: true,
             nodeIntegrationInSubFrames: true,
-            scrollBounce: true,
             devTools: isDev,
-            allowRunningInsecureContent: true,
-            backgroundThrottling: true,
             webgl: true,
-            autoplayPolicy: 'no-user-gesture-required'
         },
         minHeight: 80,
         minWidth: 180,
         icon: __dirname + '/artwork/Logo.png'
     })
 
-    const electron = require('electron')
     const session = electron.session
 
     const filter = {
@@ -54,19 +40,16 @@ async function createWindow() {
         callback({ cancel: false, requestHeaders: details.requestHeaders })
     })
 
-    app.setAsDefaultProtocolClient('webby')
-
+    app.setAsDefaultProtocolClient('zinc')
     win.loadFile('index/index.html')
-
     win.setMenu(null)
 
     win.webContents.on('did-finish-load', async () => {
-        win.show()
+        await win.show()
     })
 
     ipcMain.on('webtitlechange', async (_event, args) => {
-        win.focus()
-        win.title = "webby - " + args.toString()
+        win.title = "Zinc - " + args.toString()
     })
 
     ipcMain.on('webview:load', async (_event, args) => {
@@ -80,130 +63,22 @@ async function createWindow() {
         closeMenu()
         BrowserWindow.getFocusedWindow().webContents.send('home')
     })
-
-    globalShortcut.register("CommandOrControl+Shift+I", async () => {
-        const currentwin = BrowserWindow.getFocusedWindow()
-        if (currentwin.isFocused()) {
-            currentwin.webContents.openDevTools({
-                activate: true,
-                mode: "detach"
-            })
-        } else if (menuShown) {
-            view.webContents.openDevTools({
-                activate: true,
-                mode: "detach"
-            })
-        }
-    })
 }
-
-async function closeMenu() {
-    try {
-        view.close()
-        view.destroy()
-        view = null
-        menuShown = false
-        window.focus();
-    } catch { }
-}
-
-ipcMain.on('togglemax', async () => {
-    const currentwin = BrowserWindow.getFocusedWindow()
-    if (currentwin.isMaximized()) {
-        currentwin.unmaximize()
-    } else {
-        currentwin.maximize()
-    }
-})
-
-ipcMain.on('contextmenu', async (_event, args) => {
-    defContextMenu(args)
-})
-
-ipcMain.on('textcontextmenu', async (_event, args) => {
-    textContextMenu(args)
-})
-
-ipcMain.on('imagecontextmenu', async (_event, args) => {
-    imageContextMenu(args)
-})
-
-ipcMain.on('anchorcontextmenu', async (_event, args) => {
-    anchorContextMenu(args)
-})
-
-ipcMain.on('minimize', () => {
-    BrowserWindow.getFocusedWindow().minimize()
-})
-
-ipcMain.on('close', () => {
-    try {
-        BrowserWindow.getFocusedWindow().close()
-    } catch { }
-})
 
 ipcMain.on('menu:open', async () => {
-    if (view != null) return
-
-    if (view == null) {
-        view = new BrowserWindow({
-            title: "Menu",
-            modal: true,
-            opacity: 0.9,
-            skipTaskbar: true,
-            parent: 'top',
-            width: 300,
-            height: 300,
-            center: false,
-            transparent: true,
-            frame: false,
-            resizable: false,
-            paintWhenInitiallyHidden: true,
-            maximizable: false,
-            closable: false,
-            movable: false,
-            titleBarStyle: 'hidden',
-            show: false,
-            webPreferences: {
-                nodeIntegration: true
-            }
-        })
-    }
-
-    app.allowRendererProcessReuse = false
-
-    view.webContents.loadFile('menu/index.html')
-
-    view.webContents.on('dom-ready', async () => {
-        const currentwin = BrowserWindow.getFocusedWindow()
-        menuShown = true
-        await view.show()
-        switch (currentwin.isMaximized()) {
-            case true:
-                view.setPosition(currentwin.getPosition()[0] + 10, currentwin.getPosition()[1] + 35)
-                break
-
-            case false:
-                view.setPosition(currentwin.getPosition()[0], currentwin.getPosition()[1] + 25)
-                break
-        }
-    })
-
-    view.addListener('blur', () => {
-        closeMenu()
-    })
+    openMenu()
 })
 
-ipcMain.on('newtab', async () => {
+ipcMain.on('newtab', () => {
     closeMenu()
     BrowserWindow.getFocusedWindow().webContents.send('new-tab', 'zinc://newtab')
 })
 
-ipcMain.on('newwin', async () => {
+ipcMain.on('newwin', () => {
     shell.openPath(app.getPath('exe'))
 })
 
-ipcMain.on('closetab', async (_event, args) => {
+ipcMain.on('closetab', (_event, args) => {
     const currentwin = BrowserWindow.getFocusedWindow()
     try {
         currentwin.removeBrowserView(BrowserView.fromId(args[0]))
@@ -211,13 +86,10 @@ ipcMain.on('closetab', async (_event, args) => {
     } catch { }
 })
 
-ipcMain.on('quit', async (_event, args) => {
+ipcMain.on('quit', (_event, args) => {
     switch (args) {
         case false:
             closeMenu()
-            closeAllWindows()
-            app.quit()
-            process.exit(0)
             break
 
         case true:
@@ -226,6 +98,7 @@ ipcMain.on('quit', async (_event, args) => {
             delete BrowserWindow.getFocusedWindow()
             break
     }
+    process.exit(0)
 })
 
 ipcMain.on('about', (_event, _args) => {
@@ -234,56 +107,38 @@ ipcMain.on('about', (_event, _args) => {
         applicationName: "Zinc",
         applicationVersion: '0.1.0',
         authors: "Zinc DevTeam",
-        iconPath: __dirname + 'artwork/Logo.png',
+        iconPath: __dirname + '/artwork/Logo.png',
     })
     app.showAboutPanel()
 })
 
-ipcMain.on('reloadpage', async (_event, args) => {
+ipcMain.on('reloadpage', (_event, args) => {
     closeMenu()
     BrowserWindow.getFocusedWindow().webContents.send('reloadpage', args)
 })
 
-ipcMain.on('navi-history', async () => {
+ipcMain.on('navi-history', () => {
     closeMenu()
     BrowserWindow.getFocusedWindow().webContents.send('navi-history')
 })
 
-function closeAllWindows() {
-    for (let i = 0; i < BrowserWindow.getAllWindows().length; i++) {
-        BrowserWindow.getAllWindows()[i].close()
-    }
-}
+app.whenReady().then(function () {
+    createWindow()
 
-app.whenReady().then(createWindow)
+
+    app.on('activate', () => {
+        if (BrowserWindow.getAllWindows().length === 0 && process.platform === 'darwin') shell.openPath(app.getPath('exe'))
+    })
+})
 
 app.whenReady().then(() => {
     registerProtocols()
 })
 
-app.on('ready', async () => {
-    windowManager.init()
+app.on('window-all-closed', function () {
+    if (process.platform !== 'darwin') app.quit()
 })
 
-app.on('window-all-closed', async () => {
-    if (process.platform !== 'darwin') {
-        closeMenu()
-        closeAllWindows()
-        app.quit()
-        process.abort()
-        app.exit(0)
-    }
-})
-
-app.on('will-quit', async () => {
+app.on('will-quit', () => {
     closeMenu()
-    closeAllWindows()
-    app.quit()
-    process.abort()
-    app.exit(0)
-})
-
-app.on('activate', async () => {
-    if (BrowserWindow.getAllWindows().length === 0)
-        shell.openPath(app.getPath('exe'))
 })

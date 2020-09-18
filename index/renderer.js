@@ -267,7 +267,7 @@ async function newTabOperation(url) {
     const dialog = require('electron').remote.dialog
     webview.webContents.session.setPermissionRequestHandler(async (webContents, permission, callback, details) => {
         const permdialog = await dialog.showMessageBox(require('electron').remote.getCurrentWindow(), {
-            title: "webby",
+            title: "Zinc",
             message: webContents.getURL() + " would like to have " + permission + " permission.  Approving permissions to untrusted websites may lead to unpredictable security issue.",
             buttons: [
                 "Deny",
