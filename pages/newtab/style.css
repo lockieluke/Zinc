@@ -11,6 +11,7 @@ body {
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-position: center;
+    background-size: 100% 100%;
     z-index: 0;
     display: block;
     position: fixed;
@@ -105,11 +106,11 @@ body {
 }
 
 @keyframes fadeIn {
-    0% {
+    from {
         opacity: 0;
     }
 
-    100% {
+    to {
         opacity: 1;
     }
 }

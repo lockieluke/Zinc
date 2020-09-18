@@ -1,15 +1,11 @@
-const electron = require("electron");
-const { app, BrowserWindow, ipcMain, BrowserView, shell} = electron;
-const { registerProtocols } = require(__dirname + '/index/components/protocol/index');
-const isDev = require('electron-is-dev');
-const {closeMenu, openMenu} = require(__dirname + '/main/components/menu/index')
-require(__dirname + '/main/components/ipcEvents/index')
-
-// app.commandLine.appendSwitch('--enable-transparent-visuals');
-// app.commandLine.appendSwitch('--enable-parallel-downloading');
-
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const electron_1 = require("electron");
+const isDev = require("electron-is-dev");
+const index_1 = require("./main/components/menu/index");
+require(__dirname + '/main/components/ipcEvents/index');
 function createWindow() {
-    const win = new BrowserWindow({
+    const win = new electron_1.BrowserWindow({
         width: 1280,
         height: 720,
         center: true,
@@ -27,118 +23,90 @@ function createWindow() {
         },
         minHeight: 80,
         minWidth: 180,
-        icon: __dirname + '/artwork/Logo.png'
-    })
-
-    const session = electron.session
-
-    const filter = {
-        urls: ["http://*/*", "https://*/*"]
-    }
-    session.defaultSession.webRequest.onBeforeSendHeaders(filter, (details, callback) => {
-        details.requestHeaders['DNT'] = "1";
-        callback({ cancel: false, requestHeaders: details.requestHeaders })
-    })
-
-    app.setAsDefaultProtocolClient('zinc')
-    win.loadFile('index/index.html')
-    win.setMenu(null)
-
+        icon: __dirname + '/artwork/Zinc.png'
+    });
+    electron_1.nativeTheme.themeSource = 'light';
+    electron_1.app.setAsDefaultProtocolClient('zinc');
+    electron_1.nativeTheme.themeSource = 'light';
+    electron_1.app.setAsDefaultProtocolClient('zinc');
+    win.loadFile('index/index.html');
+    win.setMenu(null);
     win.webContents.on('did-finish-load', async () => {
-        await win.show()
-    })
-
-    ipcMain.on('webtitlechange', async (_event, args) => {
-        win.title = "Zinc - " + args.toString()
-    })
-
-    ipcMain.on('webview:load', async (_event, args) => {
-        BrowserView.fromId(args).webContents.on('new-window', (event, url) => {
-            event.preventDefault()
-            BrowserWindow.getFocusedWindow().webContents.send('new-tab', url)
-        })
-    })
-
-    ipcMain.on('home', async (_event, _args) => {
-        closeMenu()
-        BrowserWindow.getFocusedWindow().webContents.send('home')
-    })
+        await win.show();
+    });
+    electron_1.ipcMain.on('webtitlechange', async (_event, args) => {
+        win.title = "Zinc - " + args.toString();
+    });
+    electron_1.ipcMain.on('webview:load', async (_event, args) => {
+        electron_1.BrowserView.fromId(args).webContents.on('new-window', (event, url) => {
+            event.preventDefault();
+            electron_1.BrowserWindow.getFocusedWindow().webContents.send('new-tab', url);
+        });
+    });
+    electron_1.ipcMain.on('home', async (_event, _args) => {
+        index_1.closeMenu();
+        electron_1.BrowserWindow.getFocusedWindow().webContents.send('home');
+    });
 }
-
-ipcMain.on('menu:open', async () => {
-    openMenu()
-})
-
-ipcMain.on('newtab', () => {
-    closeMenu()
-    BrowserWindow.getFocusedWindow().webContents.send('new-tab', 'zinc://newtab')
-})
-
-ipcMain.on('newwin', () => {
-    shell.openPath(app.getPath('exe'))
-})
-
-ipcMain.on('closetab', (_event, args) => {
-    const currentwin = BrowserWindow.getFocusedWindow()
+electron_1.ipcMain.on('menu:open', async () => {
+    index_1.openMenu();
+});
+electron_1.ipcMain.on('newtab', () => {
+    index_1.closeMenu();
+    electron_1.BrowserWindow.getFocusedWindow().webContents.send('new-tab', 'zinc://newtab');
+});
+electron_1.ipcMain.on('newwin', () => {
+    electron_1.shell.openPath(electron_1.app.getPath('exe'));
+});
+electron_1.ipcMain.on('closetab', (_event, args) => {
+    const currentwin = electron_1.BrowserWindow.getFocusedWindow();
     try {
-        currentwin.removeBrowserView(BrowserView.fromId(args[0]))
-        currentwin.addBrowserView(BrowserView.fromId(args[1]))
-    } catch { }
-})
-
-ipcMain.on('quit', (_event, args) => {
+        currentwin.removeBrowserView(electron_1.BrowserView.fromId(args[0]));
+        currentwin.addBrowserView(electron_1.BrowserView.fromId(args[1]));
+    }
+    catch { }
+});
+electron_1.ipcMain.on('quit', (_event, args) => {
     switch (args) {
         case false:
-            closeMenu()
-            break
-
+            index_1.closeMenu();
+            break;
         case true:
-            closeMenu()
-            BrowserWindow.getFocusedWindow().close()
-            delete BrowserWindow.getFocusedWindow()
-            break
+            index_1.closeMenu();
+            electron_1.BrowserWindow.getFocusedWindow().close();
+            break;
     }
-    process.exit(0)
-})
-
-ipcMain.on('about', (_event, _args) => {
-    closeMenu()
-    app.setAboutPanelOptions({
+    process.exit(0);
+});
+electron_1.ipcMain.on('about', (_event, _args) => {
+    index_1.closeMenu();
+    electron_1.app.setAboutPanelOptions({
         applicationName: "Zinc",
         applicationVersion: '0.1.0',
-        authors: "Zinc DevTeam",
-        iconPath: __dirname + '/artwork/Logo.png',
-    })
-    app.showAboutPanel()
-})
-
-ipcMain.on('reloadpage', (_event, args) => {
-    closeMenu()
-    BrowserWindow.getFocusedWindow().webContents.send('reloadpage', args)
-})
-
-ipcMain.on('navi-history', () => {
-    closeMenu()
-    BrowserWindow.getFocusedWindow().webContents.send('navi-history')
-})
-
-app.whenReady().then(function () {
-    createWindow()
-
-
-    app.on('activate', () => {
-        if (BrowserWindow.getAllWindows().length === 0 && process.platform === 'darwin') shell.openPath(app.getPath('exe'))
-    })
-})
-
-app.whenReady().then(() => {
-    registerProtocols()
-})
-
-app.on('window-all-closed', function () {
-    if (process.platform !== 'darwin') app.quit()
-})
-
-app.on('will-quit', () => {
-    closeMenu()
-})
+        authors: ["Zinc DevTeam"],
+        iconPath: __dirname + '/artwork/Zinc.png',
+    });
+    electron_1.app.showAboutPanel();
+});
+electron_1.ipcMain.on('reloadpage', (_event, args) => {
+    index_1.closeMenu();
+    electron_1.BrowserWindow.getFocusedWindow().webContents.send('reloadpage', args);
+});
+electron_1.ipcMain.on('navi-history', () => {
+    index_1.closeMenu();
+    electron_1.BrowserWindow.getFocusedWindow().webContents.send('navi-history');
+});
+electron_1.app.whenReady().then(function () {
+    createWindow();
+    electron_1.app.on('activate', () => {
+        if (electron_1.BrowserWindow.getAllWindows().length === 0 && process.platform === 'darwin')
+            electron_1.shell.openPath(electron_1.app.getPath('exe'));
+    });
+});
+electron_1.app.on('window-all-closed', function () {
+    if (process.platform !== 'darwin')
+        electron_1.app.quit();
+});
+electron_1.app.on('will-quit', () => {
+    index_1.closeMenu();
+});
