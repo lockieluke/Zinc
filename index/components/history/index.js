@@ -17,7 +17,13 @@ function storeHistory(title, url, time, date) {
 }
 
 function clearHistory() {
-    store.clear()
+    for (let i = 0; i < parseInt(store.get('history-site-length')); i++) {
+        store.delete('history-site-title-' + i)
+        store.delete('history-site-url-' + i)
+        store.delete('history-site-time-' + i)
+        store.delete('history-site-date-' + i)
+    }
+    store.delete('history-site-length')
 }
 
 async function readHistory(callback) {
