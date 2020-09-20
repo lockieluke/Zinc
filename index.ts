@@ -31,7 +31,7 @@ function createWindow() {
     const menu = new electron.Menu()
     menu.append(new MenuItem({
         label: 'quit',
-        accelerator: 'CmdorCtrl+P',
+        accelerator: 'CmdorCtrl+Q',
         click: () => { ipcRenderer.send("quit", false) }
     }));
 
@@ -76,7 +76,7 @@ ipcMain.on('newwin', () => {
 })
 
 ipcMain.on('closetab', (_event, args) => {
-    const currentwin = BrowserWindow.getFocusedWindow()
+    const currentwin = BrowserWindow.getAllWindows()[0]
     try {
         currentwin.removeBrowserView(BrowserView.fromId(args[0]))
         currentwin.addBrowserView(BrowserView.fromId(args[1]))

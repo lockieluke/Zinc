@@ -46,12 +46,12 @@ function createWindow() {
     electron_1.ipcMain.on('webview:load', async (_event, args) => {
         electron_1.BrowserView.fromId(args).webContents.on('new-window', (event, url) => {
             event.preventDefault();
-            electron_1.BrowserWindow.getFocusedWindow().webContents.send('new-tab', url);
+            electron_1.BrowserWindow.getAllWindows()[0].webContents.send('new-tab', url);
         });
     });
     electron_1.ipcMain.on('home', async (_event, _args) => {
         index_1.closeMenu();
-        electron_1.BrowserWindow.getFocusedWindow().webContents.send('home');
+        electron_1.BrowserWindow.getAllWindows()[0].webContents.send('home');
     });
 }
 electron_1.ipcMain.on('menu:open', async () => {
@@ -59,7 +59,7 @@ electron_1.ipcMain.on('menu:open', async () => {
 });
 electron_1.ipcMain.on('newtab', () => {
     index_1.closeMenu();
-    electron_1.BrowserWindow.getFocusedWindow().webContents.send('new-tab', 'zinc://newtab');
+    electron_1.BrowserWindow.getAllWindows()[0].webContents.send('new-tab', 'zinc://newtab');
 });
 electron_1.ipcMain.on('newwin', () => {
     electron_1.shell.openPath(electron_1.app.getPath('exe'));
@@ -79,7 +79,7 @@ electron_1.ipcMain.on('quit', (_event, args) => {
             break;
         case true:
             index_1.closeMenu();
-            electron_1.BrowserWindow.getFocusedWindow().close();
+            electron_1.BrowserWindow.getAllWindows()[0].close();
             break;
     }
     process.exit(0);
@@ -108,18 +108,16 @@ electron_1.ipcMain.on('navi-history', () => {
         win.webContents.send('navi-history');
     }
 });
-electron_1.app.whenReady().then(function () {
+electron_1.app.whenReady().then(() => {
     createWindow();
     electron_1.app.on('activate', () => {
         if (electron_1.BrowserWindow.getAllWindows().length === 0 && process.platform === 'darwin')
             electron_1.shell.openPath(electron_1.app.getPath('exe'));
     });
 });
-electron_1.app.on('window-all-closed', function () {
+electron_1.app.on('window-all-closed', () => {
     if (process.platform !== 'darwin')
         electron_1.app.quit();
 });
-electron_1.app.on('will-quit', () => {
-    index_1.closeMenu();
-});
+electron_1.app.on('will-quit', index_1.closeMenu);
 //# sourceMappingURL=index.js.map
