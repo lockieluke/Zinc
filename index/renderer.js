@@ -1,4 +1,5 @@
-const {ipcRenderer, remote} = require('electron')
+const {ipcRenderer, remote} = require('electron');
+const { electron } = require('process');
 require('./components/wincontrols/index')
 
 ipcRenderer.on('navi-history', async () => {
@@ -240,7 +241,7 @@ async function newTabOperation(url) {
     webview.webContents.on('will-redirect', async () => {
         renewTabTitle("Loading", newtab.id, webview)
     })
-    const dialog = require('electron').remote.dialog
+    const dialog = electron.remote.dialog
     webview.webContents.session.setPermissionRequestHandler(async (webContents, permission, callback, details) => {
         const permdialog = await dialog.showMessageBox(require('electron').remote.getCurrentWindow(), {
             title: "Zinc",
