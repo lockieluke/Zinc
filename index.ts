@@ -37,6 +37,7 @@ function createWindow() {
 
     win.webContents.on('did-finish-load', async () => {
         await win.show()
+        require('./main/components/shortcuts/index')
     })
 
     ipcMain.on('webtitlechange', async (_event, args) => {
@@ -119,6 +120,10 @@ app.whenReady().then(function () {
     app.on('activate', () => {
         if (BrowserWindow.getAllWindows().length === 0 && process.platform === 'darwin') shell.openPath(app.getPath('exe'))
     })
+})
+
+app.on('will-finish-launching', ()=>{
+    console.log()
 })
 
 app.on('window-all-closed', function () {

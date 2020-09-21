@@ -1,5 +1,4 @@
 const {ipcRenderer, remote} = require('electron');
-const { electron } = require('process');
 require('./components/wincontrols/index')
 
 ipcRenderer.on('navi-history', async () => {
@@ -8,7 +7,7 @@ ipcRenderer.on('navi-history', async () => {
 
 ipcRenderer.on('new-tab', async (_event, args) => {
     newTabOperation(args)
-    addEventListenerToTabs()
+    // addEventListenerToTabs()
 })
 
 ipcRenderer.on('reloadpage', async (_event, args) => {
@@ -117,6 +116,12 @@ ipcRenderer.on('saveimg', async (_event, args) => {
         xhr.responseType = 'blob';
         xhr.send();
     }
+})
+
+ipcRenderer.on('webview-devtools', ()=>{
+    remote.BrowserView.fromId(webviewids[tabprocessesindentifier['tab-' + focusedtab]]).webContents.openDevTools({
+        mode: 'right'
+    })
 })
 
 let tabcount = 0
@@ -241,7 +246,7 @@ async function newTabOperation(url) {
     webview.webContents.on('will-redirect', async () => {
         renewTabTitle("Loading", newtab.id, webview)
     })
-    const dialog = electron.remote.dialog
+    const dialog = remote.dialog
     webview.webContents.session.setPermissionRequestHandler(async (webContents, permission, callback, details) => {
         const permdialog = await dialog.showMessageBox(require('electron').remote.getCurrentWindow(), {
             title: "Zinc",
@@ -252,6 +257,7 @@ async function newTabOperation(url) {
             ],
             type: 'question'
         })
+
         switch (permdialog) {
             case 0:
                 callback(false)

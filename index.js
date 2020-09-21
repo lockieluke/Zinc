@@ -33,6 +33,7 @@ function createWindow() {
     win.setMenu(null);
     win.webContents.on('did-finish-load', async () => {
         await win.show();
+        require('./main/components/shortcuts/index');
     });
     electron_1.ipcMain.on('webtitlechange', async (_event, args) => {
         win.title = "Zinc - " + args.toString();
@@ -102,6 +103,9 @@ electron_1.app.whenReady().then(function () {
         if (electron_1.BrowserWindow.getAllWindows().length === 0 && process.platform === 'darwin')
             electron_1.shell.openPath(electron_1.app.getPath('exe'));
     });
+});
+electron_1.app.on('will-finish-launching', () => {
+    console.log();
 });
 electron_1.app.on('window-all-closed', function () {
     if (process.platform !== 'darwin')

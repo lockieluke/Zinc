@@ -1,0 +1,1 @@
+require('./privacy-settings');
