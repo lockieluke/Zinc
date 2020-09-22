@@ -1,6 +1,6 @@
 echo Building for Linux x64
 cd ..
-call electron-packager . Webby --platform=linux --arch=x64 --asar --prune --icon="C:\Users\sherl\Documents\Proj\JavaScript\webby\artwork\Logo.ico"
+call electron-packager . Zinc --platform=linux --arch=x64 --asar --prune --icon="C:\Users\sherl\Documents\Proj\JavaScript\webby\artwork\Zinc.ico"
 echo Finished Building
 echo Copying build to builds folder
 cd scripts

@@ -1,4 +1,5 @@
-const {ipcRenderer, remote} = require('electron')
+const {ipcRenderer, remote} = require('electron');
+const isDev = require('electron-is-dev')
 require('./components/wincontrols/index')
 
 ipcRenderer.on('navi-history', async () => {
@@ -7,7 +8,7 @@ ipcRenderer.on('navi-history', async () => {
 
 ipcRenderer.on('new-tab', async (_event, args) => {
     newTabOperation(args)
-    addEventListenerToTabs()
+    // addEventListenerToTabs()
 })
 
 ipcRenderer.on('reloadpage', async (_event, args) => {
@@ -76,10 +77,15 @@ ipcRenderer.on('inspect-eli-cu', async (_event, args) => {
     currentview.webContents.inspectElement(args[0], args[1])
 })
 
-ipcRenderer.on('open-img-newtab', async (_event, args) => {
+ipcRenderer.on('open-newtab', async (_event, args) => {
     const BrowserView = require('electron').remote.BrowserView
+    const {validURL} = require('../universal/utils/urls/index')
     const currentview = BrowserView.fromId(webviewids[tabprocessesindentifier['tab-' + focusedtab]])
-    newTabOperation(args)
+    if (validURL(args)) {
+        newTabOperation(args)
+    } else {
+        newTabOperation(currentview.webContents.getURL() + args)
+    }
 })
 
 ipcRenderer.on('saveimg', async (_event, args) => {
@@ -95,7 +101,7 @@ ipcRenderer.on('saveimg', async (_event, args) => {
         console.log("Saving image from " + args[0])
         // remove Base64 stuff from the Image
         toDataURL(args[0], async dataURL => {
-            require('fs').writeFile(saveDialog, new Buffer(dataURL.replace(/^data:image\/\w+;base64,/, ""), 'base64'), function (err) {
+            require('fs').writeFile(saveDialog, Buffer.from(dataURL.replace(/^data:image\/\w+;base64,/, ""), 'base64'), function (err) {
                 if (err != null) {
                     console.log(err.message)
                 }
@@ -116,6 +122,12 @@ ipcRenderer.on('saveimg', async (_event, args) => {
         xhr.responseType = 'blob';
         xhr.send();
     }
+})
+
+ipcRenderer.on('webview-devtools', ()=>{
+    remote.BrowserView.fromId(webviewids[tabprocessesindentifier['tab-' + focusedtab]]).webContents.openDevTools({
+        mode: 'right'
+    })
 })
 
 let tabcount = 0
@@ -194,7 +206,7 @@ async function printPage() {
     currentview.webContents.print({});
 }
 
-async function newTabOperation(url) {
+function newTabOperation(url) {
     let newtab = document.createElement('div');
     newtab.className = 'tab';
     newtab.id = 'tab-' + tabcount;
@@ -229,36 +241,41 @@ async function newTabOperation(url) {
     ipcRenderer.send('webview:load', webview.id)
     webview.setBackgroundColor('#ffffff')
     focusOntoTab(tabprocessesindentifier[newtab.id])
-    webview.webContents.on('did-finish-load' || 'page-title-updated' || 'did-frame-finish-load', async () => {
+    webview.webContents.on('did-finish-load' || 'page-title-updated' || 'did-frame-finish-load', () => {
         const { storeHistory } = require('./components/history/index')
         renewTabTitle(webview.webContents.getTitle(), newtab.id, webview)
         storeHistory(webview.webContents.getTitle(), webview.webContents.getURL(), `${new Date().getHours()}:${new Date().getMinutes()}`, `${new Date().getFullYear()};${new Date().getMonth()};${new Date().getDate()}`)
     })
-    webview.webContents.on('page-title-updated', async () => {
+    webview.webContents.on('page-title-updated', () => {
         renewTabTitle(webview.webContents.getTitle(), newtab.id, webview)
     })
-    webview.webContents.on('will-redirect', async () => {
+    webview.webContents.on('will-redirect', () => {
         renewTabTitle("Loading", newtab.id, webview)
     })
-    const dialog = require('electron').remote.dialog
+    const dialog = remote.dialog
     webview.webContents.session.setPermissionRequestHandler(async (webContents, permission, callback, details) => {
-        const permdialog = await dialog.showMessageBox(require('electron').remote.getCurrentWindow(), {
-            title: "Zinc",
-            message: webContents.getURL() + " would like to have " + permission + " permission.  Approving permissions to untrusted websites may lead to unpredictable security issue.",
-            buttons: [
-                "Deny",
-                "Allow Anyway"
-            ],
-            type: 'question'
-        })
-        switch (permdialog) {
-            case 0:
-                callback(false)
-                break
-
-            case 1:
-                callback(true)
-                break
+        if (!isDev) {
+            const permdialog = await dialog.showMessageBox(require('electron').remote.getCurrentWindow(), {
+                title: "Zinc",
+                message: webContents.getURL() + " would like to have " + permission + " permission.  Approving permissions to untrusted websites may lead to unpredictable security issue.",
+                buttons: [
+                    "Deny",
+                    "Allow Anyway"
+                ],
+                type: 'question'
+            })
+    
+            switch (permdialog) {
+                case 0:
+                    callback(false)
+                    break
+    
+                case 1:
+                    callback(true)
+                    break
+            }
+        } else {
+            callback(true)
         }
     })
     addEventListenerToTabs()
@@ -413,8 +430,8 @@ function reloadWebView(uniqueid, withCache = true) {
 function navigateTO(url) {
     const {getURL} = require('./components/zinc-urls/index')
     const {remote} = require('electron')
-    if (url.startsWith('webby://')) {
-        remote.BrowserView.fromId(webviewids[tabprocessesindentifier['tab-' + focusedtab]]).webContents.loadFile(getURL(url.replace('webby://', '')))
+    if (url.startsWith('zinc://')) {
+        remote.BrowserView.fromId(webviewids[tabprocessesindentifier['tab-' + focusedtab]]).webContents.loadFile(getURL(url.replace('zinc://', '')))
     } else {
         remote.BrowserView.fromId(webviewids[tabprocessesindentifier['tab-' + focusedtab]]).webContents.loadURL(url)
     }

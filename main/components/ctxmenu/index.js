@@ -99,7 +99,7 @@ function imageContextMenu(args) {
     menu.append(new MenuItem({
         label: "Open image in new tab",
         click: function () {
-            currentwin.webContents.send('open-img-newtab', args[2])
+            currentwin.webContents.send('open-newtab', args[2])
         }
     }))
 
@@ -212,13 +212,17 @@ function defContextMenu(args) {
     })
 }
 
-function anchorContextMenu() {
+function anchorContextMenu(args) {
     const currentwin = BrowserWindow.getFocusedWindow()
     let menu = new Menu()
 
     menu.append(new MenuItem({
         label: "Open link in new tab",
-        sublabel: "Control+Click"
+        sublabel: "Control+Click",
+        accelerator: '',
+        click: function() {
+            currentwin.webContents.send('open-newtab', args[2])
+        }
     }))
 
     menu.append(new MenuItem({
@@ -226,7 +230,10 @@ function anchorContextMenu() {
     }))
 
     menu.append(new MenuItem({
-        label: "Copy link"
+        label: "Copy link",
+        click: function () {
+            clipboard.writeText(args[2])
+        }
     }))
 
     menu.append(new MenuItem({
@@ -234,7 +241,10 @@ function anchorContextMenu() {
     }))
 
     menu.append(new MenuItem({
-        label: "Inspect Element"
+        label: "Inspect Element",
+        click: function () {
+            currentwin.webContents.send('inspect-eli-cu', args)
+        }
     }))
 
     menu.popup({window: currentwin})
