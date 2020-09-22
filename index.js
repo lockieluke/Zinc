@@ -4,6 +4,14 @@ const electron_1 = require("electron");
 const isDev = require("electron-is-dev");
 const index_1 = require("./main/components/menu/index");
 require(__dirname + '/main/components/ipcEvents/index');
+let countup;
+let timer;
+if (isDev) {
+    countup = 0;
+    timer = setInterval(function () {
+        countup++;
+    }, 1);
+}
 function createWindow() {
     const win = new electron_1.BrowserWindow({
         width: 1280,
@@ -19,11 +27,11 @@ function createWindow() {
             enableRemoteModule: true,
             nodeIntegrationInSubFrames: true,
             devTools: isDev,
-            webgl: true,
+            v8CacheOptions: 'bypassHeatCheckAndEagerCompile'
         },
         minHeight: 80,
         minWidth: 180,
-        icon: __dirname + '/artwork/Zinc.png'
+        icon: __dirname + '/artwork/Zinc.png',
     });
     electron_1.nativeTheme.themeSource = 'light';
     electron_1.app.setAsDefaultProtocolClient('zinc');
@@ -34,9 +42,21 @@ function createWindow() {
     win.webContents.on('did-finish-load', async () => {
         await win.show();
         require('./main/components/shortcuts/index');
+        win.webContents.setFrameRate(60);
+        win.on('resize', () => {
+            win.webContents.setFrameRate(60);
+        });
+        win.on('will-resize', () => {
+            win.webContents.setFrameRate(1);
+        });
+        win.once('show', () => {
+            if (isDev) {
+                console.log("Launched Zinc in  " + String(countup));
+            }
+        });
     });
     electron_1.ipcMain.on('webtitlechange', async (_event, args) => {
-        win.title = "Zinc - " + args.toString();
+        win.title = "Zinc - " + String(args);
     });
     electron_1.ipcMain.on('webview:load', async (_event, args) => {
         electron_1.BrowserView.fromId(args).webContents.on('new-window', (event, url) => {
@@ -103,9 +123,6 @@ electron_1.app.whenReady().then(function () {
         if (electron_1.BrowserWindow.getAllWindows().length === 0 && process.platform === 'darwin')
             electron_1.shell.openPath(electron_1.app.getPath('exe'));
     });
-});
-electron_1.app.on('will-finish-launching', () => {
-    console.log();
 });
 electron_1.app.on('window-all-closed', function () {
     if (process.platform !== 'darwin')

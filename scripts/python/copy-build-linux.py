@@ -19,12 +19,12 @@ def copytree(src: str, dst: str, symlinks:bool=False, ignore:bool=None):
     pass
 pass
 
-buildpath = Path.joinpath(Path(os.getcwd()).parent, 'Webby-linux-x64')
+buildpath = Path.joinpath(Path(os.getcwd()).parent, 'Zinc-linux-x64')
 
-os.mkdir('../builds/Webby-linux-x64')
-copytree(buildpath, Path.joinpath(Path(os.getcwd()).parent, 'builds', 'Webby-linux-x64'))
+os.mkdir('../builds/Zinc-linux-x64')
+copytree(buildpath, Path.joinpath(Path(os.getcwd()).parent, 'builds', 'Zinc-linux-x64'))
 
-stream = os.popen('cd .. && rmdir Webby-linux-x64 /S /Q')
+stream = os.popen('cd .. && rmdir Zinc-linux-x64 /S /Q')
 output = stream.read()
 print(output)
 print("Removed old build")

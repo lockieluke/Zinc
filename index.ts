@@ -3,6 +3,17 @@ import * as isDev from 'electron-is-dev'
 import {closeMenu, openMenu} from './main/components/menu/index'
 require(__dirname + '/main/components/ipcEvents/index')
 
+let countup: number
+let timer: NodeJS.Timeout
+
+if (isDev) {
+
+    countup = 0
+    timer = setInterval(function () {
+            countup++
+        }, 1)
+}
+
 function createWindow() {
     const win: BrowserWindow = new BrowserWindow({
         width: 1280,
@@ -18,11 +29,11 @@ function createWindow() {
             enableRemoteModule: true,
             nodeIntegrationInSubFrames: true,
             devTools: isDev,
-            webgl: true,
+            v8CacheOptions: 'bypassHeatCheckAndEagerCompile'
         },
         minHeight: 80,
         minWidth: 180,
-        icon: __dirname + '/artwork/Zinc.png'
+        icon: __dirname + '/artwork/Zinc.png',
     })
 
     nativeTheme.themeSource = 'light'
@@ -38,10 +49,24 @@ function createWindow() {
     win.webContents.on('did-finish-load', async () => {
         await win.show()
         require('./main/components/shortcuts/index')
+        win.webContents.setFrameRate(60)
+        win.on('resize', ()=>{
+            win.webContents.setFrameRate(60)
+        })
+
+        win.on('will-resize', ()=>{
+            win.webContents.setFrameRate(1)
+        })
+
+        win.once('show', ()=>{
+            if (isDev) {
+                console.log("Launched Zinc in  " + String(countup))
+            }
+        })
     })
 
     ipcMain.on('webtitlechange', async (_event, args) => {
-        win.title = "Zinc - " + args.toString()
+        win.title = "Zinc - " + String(args)
     })
 
     ipcMain.on('webview:load', async (_event, args) => {
@@ -120,10 +145,6 @@ app.whenReady().then(function () {
     app.on('activate', () => {
         if (BrowserWindow.getAllWindows().length === 0 && process.platform === 'darwin') shell.openPath(app.getPath('exe'))
     })
-})
-
-app.on('will-finish-launching', ()=>{
-    console.log()
 })
 
 app.on('window-all-closed', function () {
