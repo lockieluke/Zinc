@@ -30,7 +30,7 @@ function createWindow() {
     const menu = new electron.Menu();
     menu.append(new electron_1.MenuItem({
         label: 'quit',
-        accelerator: 'CmdorCtrl+P',
+        accelerator: 'CmdorCtrl+Q',
         click: () => { electron_1.ipcRenderer.send("quit", false); }
     }));
     electron_1.nativeTheme.themeSource = 'light';
@@ -65,7 +65,7 @@ electron_1.ipcMain.on('newwin', () => {
     electron_1.shell.openPath(electron_1.app.getPath('exe'));
 });
 electron_1.ipcMain.on('closetab', (_event, args) => {
-    const currentwin = electron_1.BrowserWindow.getFocusedWindow();
+    const currentwin = electron_1.BrowserWindow.getAllWindows()[0];
     try {
         currentwin.removeBrowserView(electron_1.BrowserView.fromId(args[0]));
         currentwin.addBrowserView(electron_1.BrowserView.fromId(args[1]));
