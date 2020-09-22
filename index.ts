@@ -1,8 +1,13 @@
 import electron = require("electron");
 import { BrowserWindow, app, nativeTheme, ipcMain, BrowserView, shell, MenuItem, ipcRenderer } from 'electron';
 import * as isDev from 'electron-is-dev'
+<<<<<<< HEAD
 import { closeMenu, openMenu } from './main/components/menu/index'
 import electronIsDev = require('electron-is-dev');
+=======
+import {closeMenu, openMenu} from './main/components/menu/index'
+import { sleep } from "./universal/utils/sleep/";
+>>>>>>> 67f4b57500610c4f844093e1684889c07fb48202
 require(__dirname + '/main/components/ipcEvents/index')
 
 let countup: number
@@ -36,6 +41,7 @@ function init() {
         minHeight: 80,
         minWidth: 180,
         icon: __dirname + '/artwork/Zinc.png',
+        opacity: 0
     })
 
     // menu =>
@@ -135,6 +141,7 @@ function init() {
     app.setAsDefaultProtocolClient('zinc')
     win.loadFile('index/index.html')
     win.setMenu(menu);
+    win.setSkipTaskbar(true)
 
     win.webContents.on('did-finish-load', async () => {
         win.show()
@@ -147,6 +154,14 @@ function init() {
         win.on('will-resize', () => {
             win.webContents.setFrameRate(1)
         })
+        win.setSkipTaskbar(false)
+        
+        let fadeIndex: number = 0
+        for (let i = 0; i < 10; i++) {
+            win.setOpacity(fadeIndex)
+            fadeIndex++
+            sleep(500)
+        }
 
         win.once('show', () => {
             if (isDev) {
