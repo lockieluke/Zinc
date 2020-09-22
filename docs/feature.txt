@@ -4,7 +4,6 @@
 - Let users to have full control on what the website can access
 - Improve the performance of webby
 - Introduce WebApp API which allows developers to make apps for webby without stress
-- Enable cross-platform potential
 - Tab Presets(Group tasks into a preset)
 - WebAutomation(Learn from users' bahaviors and automate them)
 - Super Low RAM usage (goal is under 100 MB)
