@@ -4,6 +4,7 @@ const electron = require("electron");
 const electron_1 = require("electron");
 const isDev = require("electron-is-dev");
 const index_1 = require("./main/components/menu/index");
+const sleep_1 = require("./universal/utils/sleep/");
 require(__dirname + '/main/components/ipcEvents/index');
 let countup;
 let timer;
@@ -140,7 +141,7 @@ function init() {
         for (let i = 0; i < 10; i++) {
             win.setOpacity(fadeIndex);
             fadeIndex++;
-            sleep(500);
+            sleep_1.sleep(500);
         }
         win.once('show', () => {
             if (isDev) {
