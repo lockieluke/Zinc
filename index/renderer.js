@@ -3,7 +3,8 @@ const electron = require("electron");
 const { remote, ipcRenderer } = electron;
 const isDev = require('electron-is-dev');
 const PrivacySettings = require('./components/settings/privacy-settings');
-const fs = require('fs')
+const fs = require('fs');
+const BrowserView = electron.remote.BrowserView;
 require('./components/wincontrols/index');
 
 ipcRenderer.on('navi-history', async () => {
@@ -24,42 +25,42 @@ ipcRenderer.on('forward', goForward);
 ipcRenderer.on('savepage', savePage);
 ipcRenderer.on('print', printPage);
 ipcRenderer.on('undo', async () => {
-    const BrowserView = remote.BrowserView
+    
     const currentview = BrowserView.fromId(webviewids[tabprocessesindentifier['tab-' + focusedtab]])
     currentview.webContents.executeJavaScript('document.execCommand("undo")')
 })
 ipcRenderer.on('redo', async () => {
-    const BrowserView = remote.BrowserView
+    
     const currentview = BrowserView.fromId(webviewids[tabprocessesindentifier['tab-' + focusedtab]])
     currentview.webContents.executeJavaScript('document.execCommand("redo")')
 })
 ipcRenderer.on('cut', async () => {
-    const BrowserView = remote.BrowserView
+    
     const currentview = BrowserView.fromId(webviewids[tabprocessesindentifier['tab-' + focusedtab]])
     currentview.webContents.cut()
 })
 ipcRenderer.on('copy', async () => {
-    const BrowserView = remote.BrowserView
+    
     const currentview = BrowserView.fromId(webviewids[tabprocessesindentifier['tab-' + focusedtab]])
     currentview.webContents.copy()
 })
 ipcRenderer.on('paste', async () => {
-    const BrowserView = remote.BrowserView
+    
     const currentview = BrowserView.fromId(webviewids[tabprocessesindentifier['tab-' + focusedtab]])
     currentview.webContents.paste()
 })
 ipcRenderer.on('selectall', async () => {
-    const BrowserView = remote.BrowserView
+    
     const currentview = BrowserView.fromId(webviewids[tabprocessesindentifier['tab-' + focusedtab]])
     currentview.webContents.selectAll()
 })
 ipcRenderer.on('inspect-eli-cu', async (_event, args) => {
-    const BrowserView = remote.BrowserView
+    
     const currentview = BrowserView.fromId(webviewids[tabprocessesindentifier['tab-' + focusedtab]])
     currentview.webContents.inspectElement(args[0], args[1])
 })
 ipcRenderer.on('open-newtab', async (_event, args) => {
-    const BrowserView = remote.BrowserView
+    
     const { validURL } = require('../universal/utils/urls/index')
     const currentview = BrowserView.fromId(webviewids[tabprocessesindentifier['tab-' + focusedtab]])
     if (validURL(args)) {
@@ -158,19 +159,19 @@ document.getElementById('menuBtn').addEventListener('click', async () => {
 })
 
 async function goBack() {
-    const BrowserView = remote.BrowserView
+    
     const currentview = BrowserView.fromId(webviewids[tabprocessesindentifier['tab-' + focusedtab]])
     currentview.webContents.goBack()
 }
 
 async function goForward() {
-    const BrowserView = remote.BrowserView
+    
     const currentview = BrowserView.fromId(webviewids[tabprocessesindentifier['tab-' + focusedtab]])
     currentview.webContents.goForward()
 }
 
 async function savePage() {
-    const BrowserView = remote.BrowserView;
+    ;
     const currentview = BrowserView.fromId(webviewids[tabprocessesindentifier['tab-' + focusedtab]]);
     const savePath = remote.dialog.showSaveDialogSync(remote.getCurrentWindow(), {
         buttonLabel: 'Save',
@@ -185,7 +186,7 @@ async function savePage() {
 }
 
 async function printPage() {
-    const BrowserView = remote.BrowserView;
+    ;
     const currentview = BrowserView.fromId(webviewids[tabprocessesindentifier['tab-' + focusedtab]]);
     currentview.webContents.print({});
 }
@@ -215,7 +216,7 @@ function newTabOperation(url) {
     console.log("Total Tab Count(start from 0): " + tabcount);
     tabprocessesindentifier[newtab.id] = tabcounter;
     focusedtab = parseInt(newtab.id.replace('tab-', ''));
-    const BrowserView = remote.BrowserView
+    
     const webview = new BrowserView({
         webPreferences: {
             nodeIntegration: url.startsWith('zinc://'),
@@ -251,7 +252,7 @@ function newTabOperation(url) {
     })
     // domain permissions
     const dialog = remote.dialog
-    const site = getDomain(webContents.getURL());
+    const site = getDomain(webview.webContents.getURL());
     webview.webContents.session.setPermissionRequestHandler(async (_webContents, perm, callback, _details) => {
         let permdialog;
         if (!isDev) {
@@ -353,7 +354,7 @@ function addEventListenerToTabs() {
 function focusOntoTab(uniqueid) {
     const BrowserView = require('electron').remote.BrowserView
     const switchingview = BrowserView.fromId(webviewids[uniqueid])
-    console.log("Switching to tab " + switchingview + " and with webview id " + webviewids[uniqueid])
+    console.log(`Switching to tab ${switchingview.id}`)
     ipcRenderer.send('closetab', [
         webviewids[tabprocessesindentifier['tab-' + focusedtab]],
         webviewids[uniqueid]
@@ -375,7 +376,7 @@ function resetFocusState() {
 }
 
 function updateBackForwardButton() {
-    const BrowserView = require('electron').remote.BrowserView
+    
     const currentview = BrowserView.fromId(webviewids[tabprocessesindentifier['tab-' + focusedtab]])
     if (currentview.webContents.canGoBack()) {
         document.getElementById('backBtn').style.color = 'black'
@@ -394,14 +395,14 @@ function updateBackForwardButton() {
 }
 
 function releaseWebView(uniqueid) {
-    const BrowserView = remote.BrowserView
+    
     remote.getCurrentWindow().removeBrowserView(BrowserView.fromId(webviewids[uniqueid]))
     BrowserView.fromId(webviewids[uniqueid]).destroy()
     delete BrowserView.fromId(webviewids[uniqueid])
 }
 
 function reloadWebView(uniqueid, withCache = true) {
-    const BrowserView = require('electron').remote.BrowserView
+    
     switch (withCache) {
         case true:
             BrowserView.fromId(webviewids[uniqueid]).webContents.reload()

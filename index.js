@@ -8,9 +8,80 @@ const sleep_1 = require("./universal/utils/sleep/");
 require(__dirname + '/main/components/ipcEvents/index');
 let countup;
 let timer;
+const menuTemplate = [
+    {
+        label: '&File',
+        submenu: [
+            {
+                accelerator: 'CmdOrCtrl+Q',
+                role: 'quit',
+            }
+        ]
+    },
+    {
+        label: '&Edit',
+        submenu: [
+            {
+                role: 'undo'
+            },
+            {
+                role: 'redo'
+            },
+            {
+                type: 'separator'
+            },
+            {
+                role: 'cut'
+            },
+            {
+                role: 'copy'
+            },
+            {
+                role: 'paste'
+            }
+        ]
+    },
+    {
+        label: '&View',
+        submenu: [
+            {
+                role: 'reload'
+            },
+            {
+                role: 'toggledevtools'
+            },
+            {
+                type: 'separator'
+            },
+            {
+                role: 'resetzoom'
+            },
+            {
+                role: 'zoomin'
+            },
+            {
+                role: 'zoomout'
+            },
+            {
+                type: 'separator'
+            },
+            {
+                role: 'togglefullscreen'
+            }
+        ]
+    },
+    {
+        role: '&Window',
+        submenu: [{ role: 'minimize' }, { role: 'close' }]
+    },
+    {
+        role: '&Help',
+        submenu: [{ label: 'Learn More' }]
+    }
+];
 if (isDev) {
     countup = 0;
-    timer = setInterval(function () {
+    timer = setInterval(() => {
         countup++;
     }, 1);
 }
@@ -24,6 +95,7 @@ function init() {
         frame: false,
         backgroundColor: '#ffffff',
         webPreferences: {
+            worldSafeExecuteJavaScript: true,
             nodeIntegration: true,
             webviewTag: true,
             enableRemoteModule: true,
@@ -36,92 +108,8 @@ function init() {
         icon: __dirname + '/artwork/Zinc.png',
         opacity: 0
     });
-    // menu =>
-    const menuTemplate = [
-        {
-            label: '&File',
-            submenu: [
-                {
-                    label: "Quit",
-                    accelerator: 'CmdOrCtrl+Q',
-                    role: 'quit',
-                }
-            ]
-        },
-        {
-            label: 'Edit',
-            submenu: [
-                {
-                    role: 'undo'
-                },
-                {
-                    role: 'redo'
-                },
-                {
-                    type: 'separator'
-                },
-                {
-                    role: 'cut'
-                },
-                {
-                    role: 'copy'
-                },
-                {
-                    role: 'paste'
-                }
-            ]
-        },
-        {
-            label: 'View',
-            submenu: [
-                {
-                    role: 'reload'
-                },
-                {
-                    role: 'toggledevtools'
-                },
-                {
-                    type: 'separator'
-                },
-                {
-                    role: 'resetzoom'
-                },
-                {
-                    role: 'zoomin'
-                },
-                {
-                    role: 'zoomout'
-                },
-                {
-                    type: 'separator'
-                },
-                {
-                    role: 'togglefullscreen'
-                }
-            ]
-        },
-        {
-            role: 'window',
-            submenu: [
-                {
-                    role: 'minimize'
-                },
-                {
-                    role: 'close'
-                }
-            ]
-        },
-        {
-            role: 'help',
-            submenu: [
-                {
-                    label: 'Learn More'
-                }
-            ]
-        }
-    ];
     var menu = electron.Menu.buildFromTemplate(menuTemplate);
-    electron_1.nativeTheme.themeSource = 'light';
+    electron_1.nativeTheme.themeSource = 'dark';
     electron_1.app.setAsDefaultProtocolClient('zinc');
     win.loadFile('index/index.html');
     win.setMenu(menu);
@@ -182,14 +170,9 @@ electron_1.ipcMain.on('closetab', (_event, args) => {
     catch { }
 });
 electron_1.ipcMain.on('quit', (_event, args) => {
-    switch (args) {
-        case false:
-            index_1.closeMenu();
-            break;
-        case true:
-            index_1.closeMenu();
-            electron_1.BrowserWindow.getAllWindows()[0].close();
-            break;
+    index_1.closeMenu();
+    if (args) {
+        electron_1.BrowserWindow.getAllWindows()[0].close();
     }
     process.exit(0);
 });

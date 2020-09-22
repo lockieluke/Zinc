@@ -6,12 +6,82 @@ import { sleep } from "./universal/utils/sleep/";
 require(__dirname + '/main/components/ipcEvents/index')
 
 let countup: number
-let timer: NodeJS.Timeout
+let timer: NodeJS.Timeout;
+const menuTemplate = [
+    {
+        label: '&File',
+        submenu: [
+            {
+                accelerator: 'CmdOrCtrl+Q',
+                role: 'quit',
+            }
+        ]
+    },
+    {
+        label: '&Edit',
+        submenu: [
+            {
+                role: 'undo'
+            },
+            {
+                role: 'redo'
+            },
+            {
+                type: 'separator'
+            },
+            {
+                role: 'cut'
+            },
+            {
+                role: 'copy'
+            },
+            {
+                role: 'paste'
+            }
+        ]
+    },
+    {
+        label: '&View',
+        submenu: [
+            {
+                role: 'reload'
+            },
+            {
+                role: 'toggledevtools'
+            },
+            {
+                type: 'separator'
+            },
+            {
+                role: 'resetzoom'
+            },
+            {
+                role: 'zoomin'
+            },
+            {
+                role: 'zoomout'
+            },
+            {
+                type: 'separator'
+            },
+            {
+                role: 'togglefullscreen'
+            }
+        ]
+    },
+    {
+        role: '&Window',
+        submenu: [{role: 'minimize'}, {role: 'close'}]
+    },
+    {
+        role: '&Help',
+        submenu: [{label: 'Learn More'}]
+    }
+]
 
 if (isDev) {
-
     countup = 0
-    timer = setInterval(function () {
+    timer = setInterval(() => {
         countup++
     }, 1)
 }
@@ -26,6 +96,7 @@ function init() {
         frame: false,
         backgroundColor: '#ffffff',
         webPreferences: {
+            worldSafeExecuteJavaScript: true,
             nodeIntegration: true,
             webviewTag: true,
             enableRemoteModule: true,
@@ -39,99 +110,9 @@ function init() {
         opacity: 0
     })
 
-    // menu =>
-    const menuTemplate = [
-        {
-            label: '&File',
-            submenu: [
-                {
-                    label: "Quit",
-                    accelerator: 'CmdOrCtrl+Q',
-                    role: 'quit',
-
-                }
-            ]
-        },
-        {
-            label: 'Edit',
-            submenu: [
-                {
-                    role: 'undo'
-                },
-                {
-                    role: 'redo'
-                },
-                {
-                    type: 'separator'
-                },
-                {
-                    role: 'cut'
-                },
-                {
-                    role: 'copy'
-                },
-                {
-                    role: 'paste'
-                }
-            ]
-        },
-
-        {
-            label: 'View',
-            submenu: [
-                {
-                    role: 'reload'
-                },
-                {
-                    role: 'toggledevtools'
-                },
-                {
-                    type: 'separator'
-                },
-                {
-                    role: 'resetzoom'
-                },
-                {
-                    role: 'zoomin'
-                },
-                {
-                    role: 'zoomout'
-                },
-                {
-                    type: 'separator'
-                },
-                {
-                    role: 'togglefullscreen'
-                }
-            ]
-        },
-
-        {
-            role: 'window',
-            submenu: [
-                {
-                    role: 'minimize'
-                },
-                {
-                    role: 'close'
-                }
-            ]
-        },
-
-        {
-            role: 'help',
-            submenu: [
-                {
-                    label: 'Learn More'
-                }
-            ]
-        }
-
-    ]
-
     var menu = electron.Menu.buildFromTemplate(menuTemplate);
 
-    nativeTheme.themeSource = 'light'
+    nativeTheme.themeSource = 'dark';
 
     app.setAsDefaultProtocolClient('zinc')
     win.loadFile('index/index.html')
@@ -204,15 +185,9 @@ ipcMain.on('closetab', (_event, args) => {
 })
 
 ipcMain.on('quit', (_event, args) => {
-    switch (args) {
-        case false:
-            closeMenu()
-            break
-
-        case true:
-            closeMenu()
-            BrowserWindow.getAllWindows()[0].close()
-            break
+    closeMenu()
+    if (args) {
+        BrowserWindow.getAllWindows()[0].close()
     }
     process.exit(0)
 })
@@ -246,7 +221,6 @@ ipcMain.on('navi-history', () => {
 
 app.whenReady().then(() => {
     init()
-
 
     app.on('activate', () => {
         if (BrowserWindow.getAllWindows().length === 0 && process.platform === 'darwin') shell.openPath(app.getPath('exe'))
