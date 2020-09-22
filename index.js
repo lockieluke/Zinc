@@ -13,7 +13,7 @@ if (isDev) {
         countup++;
     }, 1);
 }
-function createWindow() {
+function init() {
     const win = new electron_1.BrowserWindow({
         width: 1280,
         height: 720,
@@ -35,21 +35,96 @@ function createWindow() {
         icon: __dirname + '/artwork/Zinc.png',
     });
     // menu =>
-    const menu = new electron.Menu();
-    menu.append(new electron_1.MenuItem({
-        label: 'quit',
-        accelerator: 'CmdorCtrl+Q',
-        click: () => { electron_1.ipcRenderer.send("quit", false); }
-    }));
+    const menuTemplate = [
+        {
+            label: '&File',
+            submenu: [
+                {
+                    label: "Quit",
+                    accelerator: 'CmdOrCtrl+Q',
+                    role: 'quit',
+                }
+            ]
+        },
+        {
+            label: 'Edit',
+            submenu: [
+                {
+                    role: 'undo'
+                },
+                {
+                    role: 'redo'
+                },
+                {
+                    type: 'separator'
+                },
+                {
+                    role: 'cut'
+                },
+                {
+                    role: 'copy'
+                },
+                {
+                    role: 'paste'
+                }
+            ]
+        },
+        {
+            label: 'View',
+            submenu: [
+                {
+                    role: 'reload'
+                },
+                {
+                    role: 'toggledevtools'
+                },
+                {
+                    type: 'separator'
+                },
+                {
+                    role: 'resetzoom'
+                },
+                {
+                    role: 'zoomin'
+                },
+                {
+                    role: 'zoomout'
+                },
+                {
+                    type: 'separator'
+                },
+                {
+                    role: 'togglefullscreen'
+                }
+            ]
+        },
+        {
+            role: 'window',
+            submenu: [
+                {
+                    role: 'minimize'
+                },
+                {
+                    role: 'close'
+                }
+            ]
+        },
+        {
+            role: 'help',
+            submenu: [
+                {
+                    label: 'Learn More'
+                }
+            ]
+        }
+    ];
+    var menu = electron.Menu.buildFromTemplate(menuTemplate);
     electron_1.nativeTheme.themeSource = 'light';
     electron_1.app.setAsDefaultProtocolClient('zinc');
     win.loadFile('index/index.html');
     win.setMenu(menu);
     win.webContents.on('did-finish-load', async () => {
-<<<<<<< HEAD
         win.show();
-=======
-        await win.show();
         require('./main/components/shortcuts/index');
         win.webContents.setFrameRate(60);
         win.on('resize', () => {
@@ -63,7 +138,6 @@ function createWindow() {
                 console.log("Launched Zinc in  " + String(countup));
             }
         });
->>>>>>> f7b8da82bcbb3dfe071e61cb851f780ab4fd15d0
     });
     electron_1.ipcMain.on('webtitlechange', async (_event, args) => {
         win.title = "Zinc - " + String(args);
@@ -134,7 +208,7 @@ electron_1.ipcMain.on('navi-history', () => {
     }
 });
 electron_1.app.whenReady().then(() => {
-    createWindow();
+    init();
     electron_1.app.on('activate', () => {
         if (electron_1.BrowserWindow.getAllWindows().length === 0 && process.platform === 'darwin')
             electron_1.shell.openPath(electron_1.app.getPath('exe'));

@@ -1,130 +1,114 @@
-const {ipcRenderer, remote} = require('electron');
-const isDev = require('electron-is-dev')
-require('./components/wincontrols/index')
+const { settings } = require("cluster");
+const electron = require("electron");
+const { remote, ipcRenderer } = electron;
+const isDev = require('electron-is-dev');
+const PrivacySettings = require('./components/settings/privacy-settings');
+const fs = require('fs')
+require('./components/wincontrols/index');
 
 ipcRenderer.on('navi-history', async () => {
     newTabOperation('zinc://history');
 });
-
 ipcRenderer.on('new-tab', async (_event, args) => {
     newTabOperation(args)
     // addEventListenerToTabs()
 })
-
 ipcRenderer.on('reloadpage', async (_event, args) => {
     reloadWebView(tabprocessesindentifier['tab-' + focusedtab], args);
 });
-
 ipcRenderer.on('home', async (_event, _args) => {
     navigateTO("zinc://newtab");
 });
-
-ipcRenderer.on('back', ()=>{
-    goBack()
-})
-
-ipcRenderer.on('forward', ()=>{
-    goForward()
-})
-
-ipcRenderer.on('savepage', ()=>{
-    savePage()
-})
-
-ipcRenderer.on('print', ()=>{
-    printPage()
-})
-
+ipcRenderer.on('back', goBack);
+ipcRenderer.on('forward', goForward);
+ipcRenderer.on('savepage', savePage);
+ipcRenderer.on('print', printPage);
 ipcRenderer.on('undo', async () => {
-    const BrowserView = require('electron').remote.BrowserView
+    const BrowserView = remote.BrowserView
     const currentview = BrowserView.fromId(webviewids[tabprocessesindentifier['tab-' + focusedtab]])
     currentview.webContents.executeJavaScript('document.execCommand("undo")')
 })
-
 ipcRenderer.on('redo', async () => {
-    const BrowserView = require('electron').remote.BrowserView
+    const BrowserView = remote.BrowserView
     const currentview = BrowserView.fromId(webviewids[tabprocessesindentifier['tab-' + focusedtab]])
     currentview.webContents.executeJavaScript('document.execCommand("redo")')
 })
-
 ipcRenderer.on('cut', async () => {
-    const BrowserView = require('electron').remote.BrowserView
+    const BrowserView = remote.BrowserView
     const currentview = BrowserView.fromId(webviewids[tabprocessesindentifier['tab-' + focusedtab]])
     currentview.webContents.cut()
 })
-
 ipcRenderer.on('copy', async () => {
-    const BrowserView = require('electron').remote.BrowserView
+    const BrowserView = remote.BrowserView
     const currentview = BrowserView.fromId(webviewids[tabprocessesindentifier['tab-' + focusedtab]])
     currentview.webContents.copy()
 })
-
 ipcRenderer.on('paste', async () => {
-    const BrowserView = require('electron').remote.BrowserView
+    const BrowserView = remote.BrowserView
     const currentview = BrowserView.fromId(webviewids[tabprocessesindentifier['tab-' + focusedtab]])
     currentview.webContents.paste()
 })
-
 ipcRenderer.on('selectall', async () => {
-    const BrowserView = require('electron').remote.BrowserView
+    const BrowserView = remote.BrowserView
     const currentview = BrowserView.fromId(webviewids[tabprocessesindentifier['tab-' + focusedtab]])
     currentview.webContents.selectAll()
 })
-
 ipcRenderer.on('inspect-eli-cu', async (_event, args) => {
-    const BrowserView = require('electron').remote.BrowserView
+    const BrowserView = remote.BrowserView
     const currentview = BrowserView.fromId(webviewids[tabprocessesindentifier['tab-' + focusedtab]])
     currentview.webContents.inspectElement(args[0], args[1])
 })
-
 ipcRenderer.on('open-newtab', async (_event, args) => {
-    const BrowserView = require('electron').remote.BrowserView
-    const {validURL} = require('../universal/utils/urls/index')
+    const BrowserView = remote.BrowserView
+    const { validURL } = require('../universal/utils/urls/index')
     const currentview = BrowserView.fromId(webviewids[tabprocessesindentifier['tab-' + focusedtab]])
     if (validURL(args)) {
         newTabOperation(args)
     } else {
         newTabOperation(currentview.webContents.getURL() + args)
     }
+    newTabOperation((validURL(args) ? '' : currentview.webContents.getURL()) + args)
 })
-
 ipcRenderer.on('saveimg', async (_event, args) => {
     const dialog = remote.dialog
     const win = remote.getCurrentWindow()
     const saveDialog = dialog.showSaveDialogSync(win, {
-        title: "Save As",
+        title: "Zinc - Save Image As",
         buttonLabel: "Save",
         defaultPath: '~/' + args[0]
     })
+    const url = args[0];
 
     if (saveDialog) {
-        console.log("Saving image from " + args[0])
+        console.log("Saving image from " + url)
         // remove Base64 stuff from the Image
-        toDataURL(args[0], async dataURL => {
-            require('fs').writeFile(saveDialog, Buffer.from(dataURL.replace(/^data:image\/\w+;base64,/, ""), 'base64'), function (err) {
-                if (err != null) {
-                    console.log(err.message)
+        toDataURL(url).then(async dataURL => {
+            fs.writeFile(saveDialog, Buffer.from(dataURL.replace(/^data:image\/\w+;base64,/, ""), 'base64'), err => {
+                if (err) {
+                    console.error(err.message)
                 }
             })
-        })
+        });
     }
 
-    function toDataURL(url, callback) {
-        const xhr = new XMLHttpRequest();
-        xhr.onload = function() {
-            const reader = new FileReader();
-            reader.onloadend = function() {
-                callback(reader.result);
-            }
-            reader.readAsDataURL(xhr.response);
-        };
-        xhr.open('GET', url);
-        xhr.responseType = 'blob';
-        xhr.send();
+    function toDataURL(url) {
+        return new Promise((res, _rej) => {
+            const xhr = new XMLHttpRequest();
+            xhr.onload = () => {
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    res(reader.result);
+                }
+                reader.readAsDataURL(xhr.response);
+            };
+            xhr.open('GET', url);
+            xhr.responseType = 'blob';
+            xhr.send();
+        });
     }
 })
 
-ipcRenderer.on('webview-devtools', ()=>{
+ipcRenderer.on('webview-devtools', () => {
     remote.BrowserView.fromId(webviewids[tabprocessesindentifier['tab-' + focusedtab]]).webContents.openDevTools({
         mode: 'right'
     })
@@ -142,34 +126,34 @@ let closelocked
 let tabcounter = 0
 let focusedtab = 0
 
-window.onload = async function () {
-    await sleep(0).then(r => init())
-}
 
 function init() {
     newTabOperation("zinc://newtab")
 }
 
-document.getElementById('newtab').addEventListener('click', ()=>{
+window.onload = async () => {
+    sleep(0).then(init)
+}
+
+document.getElementById('newtab').addEventListener('click', () => {
     newTabOperation("zinc://newtab")
 })
 
-document.getElementById('closetab').addEventListener('click', ()=>{
+document.getElementById('closetab').addEventListener('click', () => {
     if (!closelocked) {
         closeFocusedTab()
     }
 })
 
-document.getElementById('backBtn').addEventListener('click', ()=>{
+document.getElementById('backBtn').addEventListener('click', () => {
     goBack()
 })
 
-document.getElementById('forwardBtn').addEventListener('click', ()=>{
+document.getElementById('forwardBtn').addEventListener('click', () => {
     goForward()
 })
 
-document.getElementById('menuBtn').addEventListener('click', async ()=>{
-    const {ipcRenderer} = require('electron')
+document.getElementById('menuBtn').addEventListener('click', async () => {
     ipcRenderer.send('menu:open')
 })
 
@@ -192,7 +176,7 @@ async function savePage() {
         buttonLabel: 'Save',
         title: "Save As",
         filters: [
-            {extensions: ['html', 'htm'], name: 'Webpage, Complete'}
+            { extensions: ['html', 'htm'], name: 'Webpage, Complete' }
         ],
         defaultPath: '~/' + currentview.webContents.getTitle(),
         properties: ['dontAddToRecent']
@@ -205,6 +189,19 @@ async function printPage() {
     const currentview = BrowserView.fromId(webviewids[tabprocessesindentifier['tab-' + focusedtab]]);
     currentview.webContents.print({});
 }
+
+function getDomain(url) {
+    let host = url;
+    if (host.startsWith('http://') || host.startsWith('https://'))
+        host = host.split('://')[1];
+
+    if (url.includes('?'))
+        host = host.split('?')[0];
+
+    host = host.includes('://') ? `${host.split('://')[0]}://${host.split('/')[2]}` : host.split('/')[0];
+
+    return host;
+};
 
 function newTabOperation(url) {
     let newtab = document.createElement('div');
@@ -233,7 +230,7 @@ function newTabOperation(url) {
     webviewids[tabcounter] = webview.id
     console.log("Changed WebView ID to " + webview.id)
     if (url.startsWith('zinc://')) {
-        const {getURL} = require('./components/zinc-urls/index')
+        const { getURL } = require('./components/zinc-urls/index')
         webview.webContents.loadFile(getURL(url.replace('zinc://', '')))
     } else {
         webview.webContents.loadURL(url)
@@ -252,39 +249,28 @@ function newTabOperation(url) {
     webview.webContents.on('will-redirect', () => {
         renewTabTitle("Loading", newtab.id, webview)
     })
+    // domain permissions
     const dialog = remote.dialog
-    webview.webContents.session.setPermissionRequestHandler(async (webContents, permission, callback, details) => {
+    const site = getDomain(webContents.getURL());
+    webview.webContents.session.setPermissionRequestHandler(async (_webContents, perm, callback, _details) => {
+        let permdialog;
         if (!isDev) {
-            const permdialog = await dialog.showMessageBox(require('electron').remote.getCurrentWindow(), {
-                title: "Zinc",
-                message: webContents.getURL() + " would like to have " + permission + " permission.  Approving permissions to untrusted websites may lead to unpredictable security issue.",
-                buttons: [
-                    "Deny",
-                    "Allow Anyway"
-                ],
+            permdialog = await dialog.showMessageBox(remote.getCurrentWindow(), {
+                title: "Zinc - Permissions",
+                message: `${site} would like to have ${perm} permission. Granting permissions to untrusted websites may lead to privacy / security issues.`,
+                buttons: ["Deny", "Allow Anyway"],
                 type: 'question'
-            })
-    
-            switch (permdialog) {
-                case 0:
-                    callback(false)
-                    break
-    
-                case 1:
-                    callback(true)
-                    break
-            }
-        } else {
-            callback(true)
+            });
+            PrivacySettings.saveSitePerm(site, permdialog, perm);
         }
-    })
+        callback(permdialog);
+    });
     addEventListenerToTabs()
     tabcount++
     tabcounter++
 }
 
 function renewTabTitle(title, tabid, webview) {
-    const {ipcRenderer} = require('electron')
     document.getElementById('tabtitle-' + tabprocessesindentifier[tabid]).innerText = title
     updateBackForwardButton()
     if (tabid === 'tab-' + focusedtab) {
@@ -319,17 +305,17 @@ function resizeWebview() {
 
 function closeFocusedTab() {
     if (tabcount > 1) {
+        var eTabs = document.getElementById('tabs');
         closelocked = true
         let closingtabdom = document.getElementById('tab-' + focusedtab)
         closingtabdom.style.animation = 'close-tab 0.3s forwards ease-out'
         closingtabdom.addEventListener('animationend', async () => {
             let olduniqueid = tabprocessesindentifier['tab-' + focusedtab]
-            let olddomid = closingtabdom.id
             delete tabprocessesindentifier['tab-' + focusedtab]
             closingtabdom.remove()
             console.log("Reordering tab children")
-            for (let i = 0; i < document.getElementById('tabs').children.length; i++) {
-                document.getElementById('tabs').children.item(i).id = 'tab-' + i
+            for (let i = 0; i < eTabs.children.length; i++) {
+                eTabs.children.item(i).id = 'tab-' + i
             };
             let temptabpro = {}
             for (let i = 0; i < Object.keys(tabprocessesindentifier).length; i++) {
@@ -338,24 +324,25 @@ function closeFocusedTab() {
             tabprocessesindentifier = temptabpro
             releaseWebView(olduniqueid)
 
-            if (document.getElementById('tab-' + (focusedtab - 1)) != null) {
-                document.getElementById('tab-' + (focusedtab - 1)).click()
+            let eLTab = document.getElementById('tab-' + (focusedtab - 1))
+            if (eLTab) {
+                eLTab.click()
             } else {
-                document.getElementById('tab-' + (focusedtab)).click()
+                closingtabdom.click()
             }
 
             closelocked = false
         })
         tabcount -= 1
     } else {
-        require('electron').remote.getCurrentWindow().close()
+        remote.getCurrentWindow().close()
     }
 }
 
 function addEventListenerToTabs() {
     for (let i = 0; i < tabcount; i++) {
         const currenthandlingtab = document.getElementById('tab-' + i)
-        currenthandlingtab.addEventListener('click', (event)=>{
+        currenthandlingtab.addEventListener('click', (_event) => {
             focusOntoTab(tabprocessesindentifier[currenthandlingtab.id])
             resizeWebview()
         })
@@ -428,8 +415,8 @@ function reloadWebView(uniqueid, withCache = true) {
 }
 
 function navigateTO(url) {
-    const {getURL} = require('./components/zinc-urls/index')
-    const {remote} = require('electron')
+    const { getURL } = require('./components/zinc-urls/index')
+    const { remote } = require('electron')
     if (url.startsWith('zinc://')) {
         remote.BrowserView.fromId(webviewids[tabprocessesindentifier['tab-' + focusedtab]]).webContents.loadFile(getURL(url.replace('zinc://', '')))
     } else {
@@ -444,9 +431,9 @@ function sleep(ms) {
 function getKeyByValue(object, value) {
     try {
         return Object.keys(object).find(key => object[key] === value);
-    } catch (e) {
+    } catch {
         return null
     }
 }
 
-module.exports = {closeFocusedTab, newTabOperation}
+module.exports = { closeFocusedTab, newTabOperation }

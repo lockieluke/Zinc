@@ -13,3 +13,4 @@ var Permissions;
     Permissions[Permissions["FullScreen"] = 7] = "FullScreen";
     Permissions[Permissions["OpenExternal"] = 8] = "OpenExternal";
 })(Permissions = exports.Permissions || (exports.Permissions = {}));
+//# sourceMappingURL=privacy-types.js.map

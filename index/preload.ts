@@ -1,4 +1,4 @@
-const {ipcRenderer} = require('electron');
+const { ipcRenderer } = require('electron');
 
 let mouseX: number = 0
 let mouseY: number = 0
@@ -6,7 +6,7 @@ let mouseY: number = 0
 document.addEventListener('contextmenu', async (event: MouseEvent) => {
     event.preventDefault()
 
-    const element: HTMLElement = <HTMLElement> event.target
+    const element: HTMLElement = <HTMLElement>event.target
 
     if (element.hasAttribute('href') || event.target instanceof HTMLAnchorElement) {
         ipcRenderer.send('anchorcontextmenu', [mouseX, mouseY, element.getAttribute('href').toString()])

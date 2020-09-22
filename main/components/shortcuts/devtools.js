@@ -13,3 +13,4 @@ function registerDevToolShortcuts() {
     });
 }
 exports.registerDevToolShortcuts = registerDevToolShortcuts;
+//# sourceMappingURL=devtools.js.map

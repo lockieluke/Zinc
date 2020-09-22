@@ -12,12 +12,12 @@ if (isDev) {
 
     countup = 0
     timer = setInterval(function () {
-            countup++
-        }, 1)
+        countup++
+    }, 1)
 }
 
-function createWindow() {
-    const win: BrowserWindow = new BrowserWindow({
+function init() {
+    const win = new BrowserWindow({
         width: 1280,
         height: 720,
         center: true,
@@ -39,12 +39,96 @@ function createWindow() {
     })
 
     // menu =>
-    const menu = new electron.Menu()
-    menu.append(new MenuItem({
-        label: 'quit',
-        accelerator: 'CmdorCtrl+Q',
-        click: () => { ipcRenderer.send("quit", false) }
-    }));
+    const menuTemplate = [
+        {
+            label: '&File',
+            submenu: [
+                {
+                    label: "Quit",
+                    accelerator: 'CmdOrCtrl+Q',
+                    role: 'quit',
+
+                }
+            ]
+        },
+        {
+            label: 'Edit',
+            submenu: [
+                {
+                    role: 'undo'
+                },
+                {
+                    role: 'redo'
+                },
+                {
+                    type: 'separator'
+                },
+                {
+                    role: 'cut'
+                },
+                {
+                    role: 'copy'
+                },
+                {
+                    role: 'paste'
+                }
+            ]
+        },
+
+        {
+            label: 'View',
+            submenu: [
+                {
+                    role: 'reload'
+                },
+                {
+                    role: 'toggledevtools'
+                },
+                {
+                    type: 'separator'
+                },
+                {
+                    role: 'resetzoom'
+                },
+                {
+                    role: 'zoomin'
+                },
+                {
+                    role: 'zoomout'
+                },
+                {
+                    type: 'separator'
+                },
+                {
+                    role: 'togglefullscreen'
+                }
+            ]
+        },
+
+        {
+            role: 'window',
+            submenu: [
+                {
+                    role: 'minimize'
+                },
+                {
+                    role: 'close'
+                }
+            ]
+        },
+
+        {
+            role: 'help',
+            submenu: [
+                {
+                    label: 'Learn More'
+                }
+            ]
+        }
+
+    ]
+
+    var menu = electron.Menu.buildFromTemplate(menuTemplate);
 
     nativeTheme.themeSource = 'light'
 
@@ -56,15 +140,15 @@ function createWindow() {
         win.show()
         require('./main/components/shortcuts/index')
         win.webContents.setFrameRate(60)
-        win.on('resize', ()=>{
+        win.on('resize', () => {
             win.webContents.setFrameRate(60)
         })
 
-        win.on('will-resize', ()=>{
+        win.on('will-resize', () => {
             win.webContents.setFrameRate(1)
         })
 
-        win.once('show', ()=>{
+        win.once('show', () => {
             if (isDev) {
                 console.log("Launched Zinc in  " + String(countup))
             }
@@ -151,7 +235,7 @@ ipcMain.on('navi-history', () => {
 })
 
 app.whenReady().then(() => {
-    createWindow()
+    init()
 
 
     app.on('activate', () => {

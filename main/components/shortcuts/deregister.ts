@@ -1,5 +1,5 @@
 import { BrowserWindow, globalShortcut } from "electron";
 
-BrowserWindow.getFocusedWindow().on('blur', ()=>{
+BrowserWindow.getAllWindows()[0].on('blur', () => {
     globalShortcut.unregisterAll()
 })

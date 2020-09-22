@@ -101,3 +101,4 @@ function getPermTypeAsString(permission) {
             throw new Error('Invalid Permission Type');
     }
 }
+//# sourceMappingURL=privacy-settings.js.map

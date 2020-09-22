@@ -10,7 +10,7 @@ export function saveSitePerm(_url: string, allowed: boolean, permission: Permiss
 export function getSitePerm(_url: string, permission: Permissions) {
     let url: URL = new URL(_url)
     let allowed: boolean = false
-    
+
     if (store.has('perm-site-' + url.hostname + '-' + getPermTypeAsString(permission))) {
         allowed = Boolean(store.get('perm-site-' + url.hostname + '-' + getPermTypeAsString(permission)))
     } else {
@@ -39,7 +39,7 @@ export function clearSitePerms() {
         try {
             store.delete(basekey + 'mediakeysys')
         } catch {
-            
+
         }
         try {
             store.delete(basekey + 'location')
@@ -69,7 +69,7 @@ export function clearSitePerms() {
         try {
             store.delete(basekey + 'openexternal')
         } catch {
-            
+
         }
     }
 }
@@ -102,7 +102,7 @@ function getPermTypeAsString(permission: Permissions) {
 
         case Permissions.OpenExternal:
             return 'openexternal'
-    
+
         default:
             throw new Error('Invalid Permission Type')
     }
