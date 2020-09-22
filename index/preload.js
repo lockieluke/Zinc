@@ -5,11 +5,11 @@ document.addEventListener('contextmenu', async (event) => {
     event.preventDefault();
     const element = event.target;
     if (element.hasAttribute('href') || event.target instanceof HTMLAnchorElement) {
-        ipcRenderer.send('anchorcontextmenu', [mouseX, mouseY]);
+        ipcRenderer.send('anchorcontextmenu', [mouseX, mouseY, element.getAttribute('href').toString()]);
     }
     else {
         if (element.className === 'LC20lb DKV0Md') {
-            ipcRenderer.send('anchorcontextmenu', [mouseX, mouseY]);
+            ipcRenderer.send('anchorcontextmenu', [mouseX, mouseY, element.parentElement.getAttribute('href').toString()]);
         }
         else if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement) {
             ipcRenderer.send('textcontextmenu', [mouseX, mouseY]);
