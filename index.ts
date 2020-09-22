@@ -1,6 +1,7 @@
 import {BrowserWindow, app, nativeTheme, ipcMain, BrowserView, shell} from 'electron';
 import * as isDev from 'electron-is-dev'
 import {closeMenu, openMenu} from './main/components/menu/index'
+import { sleep } from "./universal/utils/sleep/";
 require(__dirname + '/main/components/ipcEvents/index')
 
 let countup: number
@@ -34,29 +35,27 @@ function createWindow() {
         minHeight: 80,
         minWidth: 180,
         icon: __dirname + '/artwork/Zinc.png',
+        opacity: 0
     })
-
-    nativeTheme.themeSource = 'light'
-
-    app.setAsDefaultProtocolClient('zinc')
 
     nativeTheme.themeSource = 'light'
 
     app.setAsDefaultProtocolClient('zinc')
     win.loadFile('index/index.html')
     win.setMenu(null)
+    win.setSkipTaskbar(true)
 
     win.webContents.on('did-finish-load', async () => {
         await win.show()
         require('./main/components/shortcuts/index')
-        win.webContents.setFrameRate(60)
-        win.on('resize', ()=>{
-            win.webContents.setFrameRate(60)
-        })
-
-        win.on('will-resize', ()=>{
-            win.webContents.setFrameRate(1)
-        })
+        win.setSkipTaskbar(false)
+        
+        let fadeIndex: number = 0
+        for (let i = 0; i < 10; i++) {
+            win.setOpacity(fadeIndex)
+            fadeIndex++
+            sleep(500)
+        }
 
         win.once('show', ()=>{
             if (isDev) {
