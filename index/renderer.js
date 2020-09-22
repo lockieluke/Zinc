@@ -77,10 +77,15 @@ ipcRenderer.on('inspect-eli-cu', async (_event, args) => {
     currentview.webContents.inspectElement(args[0], args[1])
 })
 
-ipcRenderer.on('open-img-newtab', async (_event, args) => {
+ipcRenderer.on('open-newtab', async (_event, args) => {
     const BrowserView = require('electron').remote.BrowserView
+    const {validURL} = require('../universal/utils/urls/index')
     const currentview = BrowserView.fromId(webviewids[tabprocessesindentifier['tab-' + focusedtab]])
-    newTabOperation(args)
+    if (validURL(args)) {
+        newTabOperation(args)
+    } else {
+        newTabOperation(currentview.webContents.getURL() + args)
+    }
 })
 
 ipcRenderer.on('saveimg', async (_event, args) => {
@@ -201,7 +206,7 @@ async function printPage() {
     currentview.webContents.print({});
 }
 
-async function newTabOperation(url) {
+function newTabOperation(url) {
     let newtab = document.createElement('div');
     newtab.className = 'tab';
     newtab.id = 'tab-' + tabcount;
