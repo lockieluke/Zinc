@@ -22,7 +22,7 @@ function init() {
         show: false,
         title: "Zinc",
         frame: false,
-        backgroundColor: '#ffffff',
+        backgroundColor: '#e8eaed',
         webPreferences: {
             worldSafeExecuteJavaScript: true,
             nodeIntegration: true,
@@ -51,12 +51,6 @@ function init() {
         win.webContents.setFrameRate(60)
         require('./main/components/menubar')
 
-        let fadeIndex: number = 0
-        for (let i = 0; i < 10; i++) {
-            win.setOpacity(fadeIndex)
-            fadeIndex++
-            sleep(500)
-        }
         win.setSkipTaskbar(false)
 
         win.once('show', () => {

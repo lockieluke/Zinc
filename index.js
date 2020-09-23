@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const electron_1 = require("electron");
 const isDev = require("electron-is-dev");
 const index_1 = require("./main/components/menu/index");
-const sleep_1 = require("./universal/utils/sleep/");
 require(__dirname + '/main/components/ipcEvents/index');
 let countup;
 let timer;
@@ -21,7 +20,7 @@ function init() {
         show: false,
         title: "Zinc",
         frame: false,
-        backgroundColor: '#ffffff',
+        backgroundColor: '#e8eaed',
         webPreferences: {
             worldSafeExecuteJavaScript: true,
             nodeIntegration: true,
@@ -46,12 +45,6 @@ function init() {
         require('./main/components/shortcuts/index');
         win.webContents.setFrameRate(60);
         require('./main/components/menubar');
-        let fadeIndex = 0;
-        for (let i = 0; i < 10; i++) {
-            win.setOpacity(fadeIndex);
-            fadeIndex++;
-            sleep_1.sleep(500);
-        }
         win.setSkipTaskbar(false);
         win.once('show', () => {
             if (isDev) {
