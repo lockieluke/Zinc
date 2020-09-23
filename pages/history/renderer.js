@@ -1,8 +1,8 @@
-document.body.onload = async function () {
+document.getElementById('line-under-header').addEventListener('animationend', ()=>{
     const {readHistory} = require('../../index/components/history/index')
     console.log("Started reading histories")
 
-    await readHistory(function (title, url, time, date) {
+    readHistory(function (title, url, time, date) {
         let namelist = []
         let urllist = []
         let index = title.length - 1
@@ -39,7 +39,7 @@ document.body.onload = async function () {
         date = null
         date = null
     })
-}
+})
 
 const clearHistBtn = document.getElementById('clearhist')
 
