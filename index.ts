@@ -1,5 +1,4 @@
-import electron = require("electron");
-import { BrowserWindow, app, nativeTheme, ipcMain, BrowserView, shell, MenuItem, ipcRenderer } from 'electron';
+import { BrowserWindow, app, nativeTheme, ipcMain, BrowserView, shell, Menu } from 'electron';
 import * as isDev from 'electron-is-dev'
 import { closeMenu, openMenu } from './main/components/menu/index'
 import { sleep } from "./universal/utils/sleep/";
@@ -7,77 +6,6 @@ require(__dirname + '/main/components/ipcEvents/index')
 
 let countup: number
 let timer: NodeJS.Timeout;
-const menuTemplate = [
-    {
-        label: '&File',
-        submenu: [
-            {
-                accelerator: 'CmdOrCtrl+Q',
-                role: 'quit',
-            }
-        ]
-    },
-    {
-        label: '&Edit',
-        submenu: [
-            {
-                role: 'undo'
-            },
-            {
-                role: 'redo'
-            },
-            {
-                type: 'separator'
-            },
-            {
-                role: 'cut'
-            },
-            {
-                role: 'copy'
-            },
-            {
-                role: 'paste'
-            }
-        ]
-    },
-    {
-        label: '&View',
-        submenu: [
-            {
-                role: 'reload'
-            },
-            {
-                role: 'toggledevtools'
-            },
-            {
-                type: 'separator'
-            },
-            {
-                role: 'resetzoom'
-            },
-            {
-                role: 'zoomin'
-            },
-            {
-                role: 'zoomout'
-            },
-            {
-                type: 'separator'
-            },
-            {
-                role: 'togglefullscreen'
-            }
-        ]
-    },
-    {
-        role: '&Window',
-        submenu: [{role: 'minimize'}, {role: 'close'}]
-    },
-    {
-        role: '&Help',
-        submenu: [{label: 'Learn More'}]
-    }
-]
 
 if (isDev) {
     countup = 0
@@ -110,27 +38,18 @@ function init() {
         opacity: 0
     })
 
-    var menu = electron.Menu.buildFromTemplate(menuTemplate);
-
     nativeTheme.themeSource = 'dark';
 
     app.setAsDefaultProtocolClient('zinc')
     win.loadFile('index/index.html')
-    win.setMenu(menu);
     win.setSkipTaskbar(true)
+    win.setMenuBarVisibility(true)
 
-    win.webContents.on('did-finish-load', async () => {
+    win.webContents.on('did-finish-load', () => {
         win.show()
         require('./main/components/shortcuts/index')
         win.webContents.setFrameRate(60)
-        win.on('resize', () => {
-            win.webContents.setFrameRate(60)
-        })
-
-        win.on('will-resize', () => {
-            win.webContents.setFrameRate(1)
-        })
-        win.setSkipTaskbar(false)
+        require('./main/components/menubar')
 
         let fadeIndex: number = 0
         for (let i = 0; i < 10; i++) {
@@ -138,6 +57,7 @@ function init() {
             fadeIndex++
             sleep(500)
         }
+        win.setSkipTaskbar(false)
 
         win.once('show', () => {
             if (isDev) {

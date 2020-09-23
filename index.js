@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const electron = require("electron");
 const electron_1 = require("electron");
 const isDev = require("electron-is-dev");
 const index_1 = require("./main/components/menu/index");
@@ -8,77 +7,6 @@ const sleep_1 = require("./universal/utils/sleep/");
 require(__dirname + '/main/components/ipcEvents/index');
 let countup;
 let timer;
-const menuTemplate = [
-    {
-        label: '&File',
-        submenu: [
-            {
-                accelerator: 'CmdOrCtrl+Q',
-                role: 'quit',
-            }
-        ]
-    },
-    {
-        label: '&Edit',
-        submenu: [
-            {
-                role: 'undo'
-            },
-            {
-                role: 'redo'
-            },
-            {
-                type: 'separator'
-            },
-            {
-                role: 'cut'
-            },
-            {
-                role: 'copy'
-            },
-            {
-                role: 'paste'
-            }
-        ]
-    },
-    {
-        label: '&View',
-        submenu: [
-            {
-                role: 'reload'
-            },
-            {
-                role: 'toggledevtools'
-            },
-            {
-                type: 'separator'
-            },
-            {
-                role: 'resetzoom'
-            },
-            {
-                role: 'zoomin'
-            },
-            {
-                role: 'zoomout'
-            },
-            {
-                type: 'separator'
-            },
-            {
-                role: 'togglefullscreen'
-            }
-        ]
-    },
-    {
-        role: '&Window',
-        submenu: [{ role: 'minimize' }, { role: 'close' }]
-    },
-    {
-        role: '&Help',
-        submenu: [{ label: 'Learn More' }]
-    }
-];
 if (isDev) {
     countup = 0;
     timer = setInterval(() => {
@@ -108,29 +36,23 @@ function init() {
         icon: __dirname + '/artwork/Zinc.png',
         opacity: 0
     });
-    var menu = electron.Menu.buildFromTemplate(menuTemplate);
     electron_1.nativeTheme.themeSource = 'dark';
     electron_1.app.setAsDefaultProtocolClient('zinc');
     win.loadFile('index/index.html');
-    win.setMenu(menu);
     win.setSkipTaskbar(true);
-    win.webContents.on('did-finish-load', async () => {
+    win.setMenuBarVisibility(true);
+    win.webContents.on('did-finish-load', () => {
         win.show();
         require('./main/components/shortcuts/index');
         win.webContents.setFrameRate(60);
-        win.on('resize', () => {
-            win.webContents.setFrameRate(60);
-        });
-        win.on('will-resize', () => {
-            win.webContents.setFrameRate(1);
-        });
-        win.setSkipTaskbar(false);
+        require('./main/components/menubar');
         let fadeIndex = 0;
         for (let i = 0; i < 10; i++) {
             win.setOpacity(fadeIndex);
             fadeIndex++;
             sleep_1.sleep(500);
         }
+        win.setSkipTaskbar(false);
         win.once('show', () => {
             if (isDev) {
                 console.log("Launched Zinc in  " + String(countup));
