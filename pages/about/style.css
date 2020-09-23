@@ -11,10 +11,38 @@
     animation: expandLine 0.3s;
 }
 
+#background {
+    overflow-x: hidden;
+    display: flex;
+    justify-content: center;
+}
+
 #icon {
+    width: 150px;
+    height: 150px;
+    animation: fadeIn 0.3s;
+    margin-top: 10%;
+    pointer-events: none;
+}
+
+#appname, #madeby {
+    animation: fadeIn 0.3s;
+    z-index: 99;
+    margin: 0 auto;
+    text-align: center;
+    font-family: sans-serif;
+    margin: 40px;
+}
+
+#madeby {
+    color: #8d8d91;
+    font-size: medium;
+}
+
+#madeby img {
     width: 50px;
     height: 50px;
-    animation: fadeIn 0.3s;
+    margin: 0;
 }
 
 @keyframes fadeIn {
