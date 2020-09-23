@@ -5,6 +5,9 @@ function getURL(term) {
 
         case 'history':
             return 'pages/history/index.html'
+
+        case 'about':
+            return 'pages/about/index.html'
     }
 }
 
