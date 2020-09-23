@@ -108,13 +108,7 @@ ipcMain.on('quit', (_event, args) => {
 
 ipcMain.on('about', (_event, _args) => {
     closeMenu()
-    app.setAboutPanelOptions({
-        applicationName: "Zinc",
-        applicationVersion: '0.1.0',
-        authors: ["Zinc DevTeam"],
-        iconPath: __dirname + '/artwork/Zinc.png',
-    })
-    app.showAboutPanel()
+    BrowserWindow.getAllWindows()[0].webContents.send('new-tab', 'zinc://about')
 })
 
 ipcMain.on('reloadpage', (_event, args) => {
