@@ -46,6 +46,7 @@ function init() {
         win.webContents.setFrameRate(60);
         require('./main/components/menubar');
         win.setSkipTaskbar(false);
+        win.setOpacity(1);
         win.once('show', () => {
             if (isDev) {
                 console.log("Launched Zinc in  " + String(countup));
@@ -93,13 +94,7 @@ electron_1.ipcMain.on('quit', (_event, args) => {
 });
 electron_1.ipcMain.on('about', (_event, _args) => {
     index_1.closeMenu();
-    electron_1.app.setAboutPanelOptions({
-        applicationName: "Zinc",
-        applicationVersion: '0.1.0',
-        authors: ["Zinc DevTeam"],
-        iconPath: __dirname + '/artwork/Zinc.png',
-    });
-    electron_1.app.showAboutPanel();
+    electron_1.BrowserWindow.getAllWindows()[0].webContents.send('new-tab', 'zinc://about');
 });
 electron_1.ipcMain.on('reloadpage', (_event, args) => {
     index_1.closeMenu();

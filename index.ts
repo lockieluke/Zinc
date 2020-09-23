@@ -52,6 +52,7 @@ function init() {
         require('./main/components/menubar')
 
         win.setSkipTaskbar(false)
+        win.setOpacity(1)
 
         win.once('show', () => {
             if (isDev) {
