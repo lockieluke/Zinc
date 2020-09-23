@@ -58,11 +58,11 @@ document.body.addEventListener('keyup', (event)=>{
 const homeBtn = document.getElementById('home')
 
 homeBtn.addEventListener('click', ()=>{
-    ipcRenderer.send('home')
+    ipcRenderer.send('home', false)
 })
 
-const newtabBtn = document.getElementById('newtab')
+const appBtn = document.getElementById('apps')
 
-newtabBtn.addEventListener('click', ()=>{
-    ipcRenderer.send('home', true)
+appBtn.addEventListener('click', ()=>{
+    ipcRenderer.send('apps')
 })

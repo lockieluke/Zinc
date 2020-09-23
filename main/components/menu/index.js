@@ -12,7 +12,7 @@ function openMenu() {
             skipTaskbar: true,
             parent: 'top',
             width: 300,
-            height: 300,
+            height: 700,
             center: false,
             transparent: true,
             frame: false,

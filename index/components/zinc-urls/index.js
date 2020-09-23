@@ -8,6 +8,9 @@ function getURL(term) {
 
         case 'about':
             return 'pages/about/index.html'
+
+        case 'apps':
+            return 'pages/apps/index.html'
     }
 }
 
