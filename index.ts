@@ -1,7 +1,6 @@
 import { BrowserWindow, app, nativeTheme, ipcMain, BrowserView, shell, Menu } from 'electron';
 import * as isDev from 'electron-is-dev'
 import { closeMenu, openMenu } from './main/components/menu/index'
-import { sleep } from "./universal/utils/sleep/";
 require(__dirname + '/main/components/ipcEvents/index')
 
 let countup: number
