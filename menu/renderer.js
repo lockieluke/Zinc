@@ -60,3 +60,9 @@ const homeBtn = document.getElementById('home')
 homeBtn.addEventListener('click', ()=>{
     ipcRenderer.send('home')
 })
+
+const newtabBtn = document.getElementById('newtab')
+
+newtabBtn.addEventListener('click', ()=>{
+    ipcRenderer.send('home', true)
+})

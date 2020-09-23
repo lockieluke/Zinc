@@ -73,7 +73,11 @@ function init() {
 
     ipcMain.on('home', async (_event, _args) => {
         closeMenu()
-        BrowserWindow.getAllWindows()[0].webContents.send('home')
+        if (_args) {
+            BrowserWindow.getAllWindows()[0].webContents.send('new-tab', 'zinc://newtab')
+        } else {
+            BrowserWindow.getAllWindows()[0].webContents.send('home')
+        }
     })
 }
 
