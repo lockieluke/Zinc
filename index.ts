@@ -55,13 +55,13 @@ function init() {
 
         win.once('show', () => {
             if (isDev) {
-                console.log("Launched Zinc in  " + String(countup))
+                process.stdout.write(`Launched Zinc in ${String(countup)}s\n`)
             }
         })
     })
 
     ipcMain.on('webtitlechange', async (_event, args) => {
-        win.title = "Zinc - " + String(args)
+        win.title = `Zinc - ${String(args)}`
     })
 
     ipcMain.on('webview:load', async (_event, args) => {

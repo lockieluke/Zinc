@@ -49,12 +49,12 @@ function init() {
         win.setOpacity(1);
         win.once('show', () => {
             if (isDev) {
-                console.log("Launched Zinc in  " + String(countup));
+                process.stdout.write(`Launched Zinc in ${String(countup)}s\n`);
             }
         });
     });
     electron_1.ipcMain.on('webtitlechange', async (_event, args) => {
-        win.title = "Zinc - " + String(args);
+        win.title = `Zinc - ${String(args)}`;
     });
     electron_1.ipcMain.on('webview:load', async (_event, args) => {
         electron_1.BrowserView.fromId(args).webContents.on('new-window', (event, url) => {
