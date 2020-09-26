@@ -1,0 +1,14 @@
+{
+    "configurations": [
+    {
+        "name": "Electron Main",
+        "program": "${workspaceFolder}/index.js",
+        "request": "launch",
+        "runtimeExecutable": "/usr/lib/electron10/electron",
+        "skipFiles": [
+            "<node_internals>/**"
+        ],
+        "type": "pwa-node"
+    }
+    ]
+}
