@@ -97,7 +97,7 @@ ipcMain.on('about', (_event, _args) => {
     closeMenu()
     app.setAboutPanelOptions({
         applicationName: "Zinc",
-        applicationVersion: '0.1.0',
+        applicationVersion: '0.2.0',
         authors: "Zinc DevTeam",
         iconPath: __dirname + '/artwork/Zinc.png',
     })
