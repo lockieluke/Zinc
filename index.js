@@ -91,14 +91,24 @@ function init() {
         win.setOpacity(1);
         win.once('show', function () {
             if (isDev) {
-                console.log("Launched Zinc in  " + String(countup));
+                process.stdout.write(`Launched Zinc in ${String(countup)}s\n`);
             }
         });
     });
+<<<<<<< HEAD
     electron_1.ipcMain.on('webtitlechange', function (_event, args) { return __awaiter(_this, void 0, void 0, function () {
         return __generator(this, function (_a) {
             win.title = "Zinc - " + String(args);
             return [2 /*return*/];
+=======
+    electron_1.ipcMain.on('webtitlechange', async (_event, args) => {
+        win.title = `Zinc - ${String(args)}`;
+    });
+    electron_1.ipcMain.on('webview:load', async (_event, args) => {
+        electron_1.BrowserView.fromId(args).webContents.on('new-window', (event, url) => {
+            event.preventDefault();
+            electron_1.BrowserWindow.getAllWindows()[0].webContents.send('new-tab', url);
+>>>>>>> cc8285608e4801bc1231ca0e15f7a7868eb2e35d
         });
     }); });
     electron_1.ipcMain.on('webview:load', function (_event, args) { return __awaiter(_this, void 0, void 0, function () {
