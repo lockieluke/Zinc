@@ -10,6 +10,11 @@ require('./components/wincontrols/index');
 ipcRenderer.on('navi-history', async () => {
     newTabOperation('zinc://history');
 });
+
+ipcRenderer.on('apps', ()=>{
+    newTabOperation('zinc://apps')
+})
+
 ipcRenderer.on('new-tab', async (_event, args) => {
     newTabOperation(args)
     // addEventListenerToTabs()

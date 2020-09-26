@@ -1,14 +1,15 @@
 {
+    "version": "0.2.0",
     "configurations": [
-    {
-        "name": "Electron Main",
-        "program": "${workspaceFolder}/index.js",
-        "request": "launch",
-        "runtimeExecutable": "/usr/lib/electron10/electron",
-        "skipFiles": [
-            "<node_internals>/**"
-        ],
-        "type": "pwa-node"
-    }
+        {
+            "name": "Electron Main",
+            "program": "${workspaceFolder}/index.js",
+            "request": "launch",
+            "runtimeExecutable": "/usr/lib/electron10/electron",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "pwa-node"
+        }
     ]
 }
