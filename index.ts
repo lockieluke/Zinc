@@ -37,6 +37,13 @@ function init() {
         opacity: 0
     })
 
+    app.commandLine.appendSwitch('--disable-backing-store-limit')
+    app.commandLine.appendSwitch('--disable-gpu-memory-buffer-compositor-resources')
+
+    if (process.platform === 'linux') {
+        app.commandLine.appendSwitch('--enable-transparent-visuals --disable-gpu') //Disable gpu in order to ensure transparent windows work on Linux
+    }
+
     nativeTheme.themeSource = 'dark';
 
     app.setAsDefaultProtocolClient('zinc')
