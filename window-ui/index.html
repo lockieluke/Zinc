@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <title>Zinc</title>
+</head>
+<body>
+    <div class="syscontrols">
+        <div id="titlebar">
+            <div id="closebtn" class="titlebarbtns" title="Close"><span>&times;</span></div>
+            <div id="maxbtn" class="titlebarbtns" title="Resize"><span>&square;</span></div>
+            <div id="minBtn" class="titlebarbtns" title="Minimize"><span>&minus;</span></div>
+            <div class="titlebarbtns" id="newtab" title="New Tab"><span>&plus;</span></div>
+            <div class="titlebarbtns" id="closetab" title="Close Tab"><span>&times;</span></div>
+            <div id="menuBtn" class="titlebarbtns" title="More..."><span>⋮</span></div>
+            <div id="backBtn" class="titlebarbtns" title="Back"><span>&leftarrow;</span></div>
+            <div id="forwardBtn" class="titlebarbtns" title="Forward"><span>&rightarrow;</span></div>
+        </div>
+
+        <div id="extendbar">
+            <div id="tabs">
+            </div>
+        </div>
+    </div>
+
+    <div class="content">
+
+    </div>
+    <script>const exports = {};</script>
+    <script>
+        require('./../dist/window/window')
+    </script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+{
+  "name": "Zinc",
+  "version": "1.0.0",
+  "dependencies": {
+    "electron": "^10.1.5",
+    "electron-is-dev": "^1.2.0"
+  },
+  "main": "dist/index.js"
+}
