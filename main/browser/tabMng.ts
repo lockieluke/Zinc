@@ -1,7 +1,7 @@
 import {BrowserView, BrowserWindow, ipcMain} from 'electron'
 import * as path from 'path'
 import {registerLocalKeyStroke} from '../keystrokes'
-import * as fs from "fs";
+import initCtxService from '../ctxMenus'
 
 let totaltab: number = 0;
 let lifetimetabs: number = 0;
@@ -97,11 +97,12 @@ ipcMain.on('tabmng-setinfo', function (event, args: string[]) {
 })
 
 ipcMain.on('tabmng-focus', function (event, args) {
-    focusedtabs = parseInt(args);
-    const bv: BrowserView = BrowserView.fromId(webviewids['tab-' + focusedtabs]);
+    const bv: BrowserView = BrowserView.fromId(webviewids['tab-' + args]);
     currentwin.setBrowserView(bv);
+    initCtxService(bv, currentwin);
     if (focusedtabs == parseInt(args))
         currentwin.setTitle("Zinc - " + bv.webContents.getTitle());
+    focusedtabs = args;
 })
 
 ipcMain.on('tabmng-close', function (event, args) {

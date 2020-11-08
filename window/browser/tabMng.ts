@@ -39,12 +39,14 @@ export class TabMng {
                 for (let i = 0; i < tabNode.children.length; i++) {
                     tabNode.children.item(i).id = 'tab-' + i;
                 }
+
                 const elTab = document.getElementById('tab-' + (focusedtab - 1));
                 if (elTab) {
                     self.focusOnToTab(elTab.id);
                 } else {
                     self.focusOnToTab(closingTabDom.id);
                 }
+
                 ipcRenderer.send('tabmng-close', closingTabDom.id);
                 self.closeLocked = false;
             })
@@ -55,6 +57,7 @@ export class TabMng {
     }
 
     public static focusOnToTab(tabdomid: string): void {
+        console.log("Focusing to tab " + tabdomid);
         ipcRenderer.send('tabmng-focus', parseInt(tabdomid.replace('tab-', '')));
         document.getElementById(tabdomid).style.color = 'lightblue';
     }

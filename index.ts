@@ -1,7 +1,6 @@
-import {BrowserWindow, app} from 'electron';
+import {app, BrowserWindow} from 'electron';
 import * as electronIsDev from "electron-is-dev";
 import registerKeyStrokes from './main/keystrokes';
-import initCtxMenuService from './main/ctxMenus'
 import initLoggerService from './main/logger'
 import * as path from 'path';
 
@@ -34,7 +33,6 @@ function createWindow(): void {
         require('./main/browser/winCtrls')
         require('./main/browser/tabMng')
         registerKeyStrokes(win);
-        initCtxMenuService(win);
         initLoggerService();
     }
 }
