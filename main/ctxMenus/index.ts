@@ -2,7 +2,7 @@ import {Menu, MenuItem} from "electron";
 import getLinkActionsCTX from "./linkActions";
 import getImgActionsCTX from "./imgActions";
 import addMenuItems from "./batchMenuItems";
-import getTFActions from "./getTFActions";
+import getTfActions from "./tfActions";
 
 export default function main(bv: Electron.BrowserView, window: Electron.BrowserWindow) {
     bv.webContents.on('context-menu', function (event, param) {
@@ -15,7 +15,7 @@ export default function main(bv: Electron.BrowserView, window: Electron.BrowserW
             getImgActionsCTX(menu);
         } else if (param.isEditable) {
             //TextField Actions
-            getTFActions(menu);
+            getTfActions(menu);
         } else if (!param.isEditable && param.selectionText !== '') {
             //Just Copy Actions
             menu.append(new MenuItem({
@@ -23,7 +23,7 @@ export default function main(bv: Electron.BrowserView, window: Electron.BrowserW
             }))
         } else if (param.selectionText !== '') {
             //Selected Text Actions
-            getTFActions(menu, param.selectionText);
+            getTfActions(menu, param.selectionText);
         } else if (!param.hasImageContents && param.linkURL === '' && param.selectionText === '' && !param.isEditable) {
             //Other Actions
         }

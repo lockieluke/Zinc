@@ -1,7 +1,7 @@
 import {Menu, MenuItem} from "electron";
 import addMenuItems from "./batchMenuItems";
 
-export default function getTFActions(menu: Menu, textContent: string = "") {
+export default function getTfActions(menu: Menu, textContent: string = "") {
     addMenuItems(menu, [
         new MenuItem({
             label: "Emoji"
