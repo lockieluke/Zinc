@@ -3,6 +3,7 @@ import getLinkActionsCTX from "./linkActions";
 import getImgActionsCTX from "./imgActions";
 import addMenuItems from "./batchMenuItems";
 import getTfActions from "./tfActions";
+import getOtherActions from "./otherActions";
 
 export default function main(bv: Electron.BrowserView, window: Electron.BrowserWindow) {
     bv.webContents.on('context-menu', function (event, param) {
@@ -26,6 +27,7 @@ export default function main(bv: Electron.BrowserView, window: Electron.BrowserW
             getTfActions(menu, param.selectionText);
         } else if (!param.hasImageContents && param.linkURL === '' && param.selectionText === '' && !param.isEditable) {
             //Other Actions
+            getOtherActions(menu);
         }
         addMenuItems(menu, [
             new MenuItem({
