@@ -34,7 +34,8 @@ export default function main(bv: Electron.BrowserView, window: Electron.BrowserW
                 type: 'separator'
             }),
             new MenuItem({
-                label: "Inspect Element"
+                label: "Inspect Element",
+                accelerator: "CommandOrControl+Shift+I"
             })
         ])
         menu.on('menu-will-close', function () {
