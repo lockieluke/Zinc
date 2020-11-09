@@ -12,22 +12,26 @@ export default function getOtherActions(menu: Menu) {
             accelerator: "Alt+Left"
         }),
         new MenuItem({
-            label: "Reload"
+            label: "Reload",
+            accelerator: "CommandOrControl+R"
         }),
         new MenuItem({
             type: 'separator'
         }),
         new MenuItem({
-            label: "Save as..."
+            label: "Save as...",
+            accelerator: "CommandOrControl+S"
         }),
         new MenuItem({
-            label: "Print..."
+            label: "Print...",
+            accelerator: "CommandOrControl+P"
         }),
         new MenuItem({
             type: 'separator'
         }),
         new MenuItem({
-            label: "View page source"
+            label: "View page source",
+            accelerator: "CommandOrControl+U"
         })
     ])
 }
