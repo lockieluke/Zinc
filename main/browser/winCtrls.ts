@@ -1,9 +1,11 @@
-import {BrowserWindow, ipcMain} from 'electron'
+import {app, BrowserWindow, ipcMain} from 'electron'
 
 const currentwin: BrowserWindow = BrowserWindow.getFocusedWindow();
 
 ipcMain.on('win-close', function () {
     currentwin.close();
+    if (BrowserWindow.getAllWindows().length == 0 && process.platform !== 'darwin')
+        app.quit();
 })
 
 ipcMain.on('win-max', function () {
