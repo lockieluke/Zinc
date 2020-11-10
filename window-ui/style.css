@@ -10,15 +10,12 @@ body {
 #titlebar {
     height: 30px;
     width: 100%;
-    background-color: rgb(232,234,237);
+    background-color: rgb(232, 234, 237);
     display: table-row;
-    margin: 0;
-}
-
-#titlebar {
+    margin: 1px auto;
     float: right;
-    -webkit-app-region: drag;
     -webkit-user-select: none;
+    -webkit-app-region: drag;
 }
 
 .titlebarbtns {
