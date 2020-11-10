@@ -3,5 +3,5 @@
 /.vscode/
 /dist/
 /scripts/build.py
-window-ui/*.css
-window-ui/*.css.map
+*.css
+*.css.map
