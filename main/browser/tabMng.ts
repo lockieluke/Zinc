@@ -100,12 +100,15 @@ ipcMain.on('tabmng-focus', function (event, args) {
     const bv: BrowserView = BrowserView.fromId(webviewids['tab-' + args]);
     currentwin.setBrowserView(bv);
     initCtxService(bv, currentwin);
-    if (focusedtabs == parseInt(args))
-        currentwin.setTitle("Zinc - " + bv.webContents.getTitle());
+    currentwin.setTitle("Zinc - " + bv.webContents.getTitle());
     focusedtabs = args;
 })
 
 ipcMain.on('tabmng-close', function (event, args) {
+    let handlingBV: BrowserView = BrowserView.fromId(webviewids[args]);
+    currentwin.removeBrowserView(handlingBV);
+    handlingBV.destroy();
+    handlingBV = null;
     delete webviewids[args];
     let tempwebviewids: object = {};
     for (let i = 0; i < Object.keys(webviewids).length; i++) {
