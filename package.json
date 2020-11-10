@@ -2,7 +2,8 @@
   "name": "Zinc",
   "version": "1.0.0",
   "scripts": {
-    "start": "tsc && electron ."
+    "start": "tsc && electron .",
+    "dev-script": "cd scripts && py main.py"
   },
   "dependencies": {
     "electron": "^10.1.5",
