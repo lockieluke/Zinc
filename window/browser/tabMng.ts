@@ -35,19 +35,19 @@ export class TabMng {
             const closingTabDom = document.getElementById('tab-' + focusedtab);
             closingTabDom.style.animation = 'close-tab 0.3s forwards ease-out';
             closingTabDom.addEventListener('animationend', function () {
+                ipcRenderer.send('tabmng-close', closingTabDom.id);
                 closingTabDom.remove();
                 for (let i = 0; i < tabNode.children.length; i++) {
                     tabNode.children.item(i).id = 'tab-' + i;
-                }
 
+                }
                 const elTab = document.getElementById('tab-' + (focusedtab - 1));
                 if (elTab) {
                     self.focusOnToTab(elTab.id);
                 } else {
                     self.focusOnToTab(closingTabDom.id);
-                }
 
-                ipcRenderer.send('tabmng-close', closingTabDom.id);
+                }
                 self.closeLocked = false;
             })
         } else {
