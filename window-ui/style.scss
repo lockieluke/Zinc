@@ -1,0 +1,159 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.syscontrols {
+  overflow-y: hidden;
+}
+
+#titlebar {
+  height: 30px;
+  width: 100%;
+  background-color: rgb(232, 234, 237);
+  display: table-row;
+  margin: 1px auto;
+  float: right;
+  -webkit-user-select: none;
+  -webkit-app-region: drag;
+
+  .titlebarbtns {
+    float: right;
+    width: 50px;
+    height: 30px;
+    color: black;
+    text-align: center;
+    cursor: default;
+    padding-top: 5px;
+    position: relative;
+    display: table-cell;
+    -webkit-app-region: no-drag;
+    transition: background-color 0.3s;
+  }
+
+  .titlebarbtns:hover {
+    background-color: rgb(191, 195, 198);
+  }
+
+  h5 {
+    position: relative;
+    display: table-cell;
+  }
+
+  #menuBtn, #backBtn, #forwardBtn {
+    float: left;
+    height: 20px;
+    -webkit-app-region: no-drag;
+  }
+
+  #closetab, #newtab {
+    transform: translateX(-10px);
+  }
+
+  #closetab {
+    color: red;
+  }
+
+  #closebtn:hover {
+    background-color: rgb(232, 17, 35);
+    color: white;
+  }
+}
+
+.content {
+  position: absolute;
+  top: 65px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+#extendbar {
+  position: absolute;
+  top: 30px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgb(232, 234, 237);
+}
+
+.syscontrols {
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+#tabs {
+  width: 80%;
+  display: flex;
+  align-items: center;
+  justify-content: left;
+}
+
+.tab {
+  position: relative;
+  height: 25px;
+  background-color: white;
+  border-radius: 7px;
+  margin: 0 5px;
+  flex-grow: 0;
+  flex-basis: 75px;
+  max-width: 300px;
+  transition: background-color 0.3s;
+  animation: newtab 0.6s forwards ease-out;
+  -webkit-user-drag: auto;
+  transform: translate(0%, -10%);
+  -webkit-box-shadow: 3px 2px 235px -103px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 3px 2px 235px -103px rgba(0, 0, 0, 0.75);
+  box-shadow: 3px 2px 235px -103px rgba(0, 0, 0, 0.75);
+  z-index: 0;
+
+  h6 {
+    z-index: 2;
+    position: absolute;
+    transform: translate(10px, -20px);
+    font-family: sans-serif;
+    font-weight: normal;
+    text-align: left;
+    float: left;
+    margin-right: 50px;
+    text-overflow: fade;
+    overflow: hidden;
+    white-space: nowrap;
+    width: 80%;
+  }
+}
+
+.tab-close {
+  animation: close-tab 0.3s forwards ease-out;
+}
+
+@keyframes newtab {
+  0% {
+    flex-grow: 0;
+    min-width: 20px;
+  }
+
+  100% {
+    flex-grow: 1;
+    min-width: 80px;
+  }
+}
+
+@keyframes close-tab {
+  0% {
+    flex-grow: 1;
+    min-width: 80px;
+  }
+
+  100% {
+    flex-grow: 0;
+    min-width: 20px;
+  }
+}
+
+.tab:hover {
+  background-color: #d7d7d7;
+}
