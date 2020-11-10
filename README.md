@@ -19,7 +19,7 @@ Option 2: Downloading Zinc from releases page and extract
 1. Clone the repository
 
    ```bash
-   git clone https://github.com/lockieluke/Zinc.git
+   git clone --single-branch --branch Rewrite https://github.com/lockieluke/Zinc.git # This is needed because we are currently performing a rewrite in another branch
    ```
 
 2. Navigate into the directory
@@ -34,12 +34,16 @@ Option 2: Downloading Zinc from releases page and extract
    npm install
    ```
 
-4. Run build scripts (Run the appropriate script for you platform)
+
+#### How to use Zinc Development Script? (Requires Python)
+
+1. Run script to download the other required scripts
 
    ```bash
-   cd install
-   ./build-win.bat
+   npm run dev-script
    ```
+
+2. Run again to navigate to the menu
 
 #### What convince me to use Zinc?
 
