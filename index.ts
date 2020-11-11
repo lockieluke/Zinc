@@ -2,6 +2,8 @@ import {app, BrowserWindow} from 'electron';
 import * as electronIsDev from "electron-is-dev";
 import registerKeyStrokes from './main/keystrokes';
 import initLoggerService from './main/logger'
+import initWinControls from './main/browser/winCtrls'
+import initTabMNG from './main/browser/tabMng'
 import * as path from 'path';
 
 function createWindow(): void {
@@ -30,8 +32,8 @@ function createWindow(): void {
     requireInitScripts();
 
     function requireInitScripts() {
-        require('./main/browser/winCtrls')
-        require('./main/browser/tabMng')
+        initWinControls();
+        initTabMNG();
         registerKeyStrokes(win);
         initLoggerService();
     }
