@@ -1,3 +1,5 @@
+@use "standards/dimensionStandard";
+
 body {
   margin: 0;
   padding: 0;
@@ -8,7 +10,7 @@ body {
 }
 
 #titlebar {
-  height: 30px;
+  height: dimensionStandard.$sysControlHeight;
   width: 100%;
   background-color: rgb(232, 234, 237);
   display: table-row;
@@ -17,10 +19,14 @@ body {
   -webkit-user-select: none;
   -webkit-app-region: drag;
 
+  &:hover {
+    margin: 0 auto;
+  }
+
   .titlebarbtns {
     float: right;
-    width: 50px;
-    height: 30px;
+    width: dimensionStandard.$sysControlWidth;
+    height: dimensionStandard.$sysControlHeight;
     color: black;
     text-align: center;
     cursor: default;
