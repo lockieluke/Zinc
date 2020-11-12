@@ -1,5 +1,7 @@
 import {ipcRenderer} from "electron";
 
-window.addEventListener('mousemove', function (event) {
-    ipcRenderer.send('send-mouse-pos', [event.pageX, event.pageY]);
-})
+export default function main() {
+    window.addEventListener('mousemove', function (event) {
+        ipcRenderer.send('send-mouse-pos', [event.pageX, event.pageY]);
+    })
+}
