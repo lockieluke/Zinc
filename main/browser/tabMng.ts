@@ -1,7 +1,7 @@
 import {BrowserView, BrowserWindow, ipcMain} from 'electron'
 import * as path from 'path'
 import {registerLocalKeyStroke} from '../keystrokes'
-import initCtxService from '../ctxMenus'
+import showCtxMenu from '../ctxMenus'
 
 export default function main() {
     let totaltab: number = 0;
@@ -59,6 +59,10 @@ export default function main() {
 
         const domid: string = 'tab-' + totaltab;
 
+        webview.webContents.on('context-menu', function (event, param) {
+            showCtxMenu(currentwin, param);
+        })
+
         webview.webContents.on('page-title-updated', function (event, title, explicitSet) {
             currentwin.webContents.send('tabmng-browser-titleupdated', [domid, title]);
             if (focusedtabs == parseInt(domid.replace('tab-', '')))
@@ -101,7 +105,6 @@ export default function main() {
     ipcMain.on('tabmng-focus', function (event, args) {
         const bv: BrowserView = BrowserView.fromId(webviewids['tab-' + args]);
         currentwin.setBrowserView(bv);
-        initCtxService(bv, currentwin);
         currentwin.setTitle("Zinc - " + bv.webContents.getTitle());
         focusedtabs = args;
     })
