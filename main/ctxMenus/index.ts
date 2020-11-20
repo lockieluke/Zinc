@@ -4,9 +4,10 @@ import getImgActionsCTX from "./imgActions";
 import addMenuItems from "./batchMenuItems";
 import getTfActions from "./tfActions";
 import getOtherActions from "./otherActions";
+import {mouseEvent} from "../browser/mouseEvent";
 
 
-export default function main(window: Electron.BrowserWindow, param: Electron.ContextMenuParams) {
+export default function main(window: Electron.BrowserWindow, bv: Electron.BrowserView, param: Electron.ContextMenuParams) {
     let menu: Menu = new Menu();
     if (param.linkURL !== '') {
         //Link Actions
@@ -35,7 +36,10 @@ export default function main(window: Electron.BrowserWindow, param: Electron.Con
         }),
         new MenuItem({
             label: "Inspect Element",
-            accelerator: "CommandOrControl+Shift+I"
+            accelerator: "CommandOrControl+Shift+I",
+            click: function () {
+                bv.webContents.inspectElement(mouseEvent.getMouseX(), mouseEvent.getMouseY());
+            }
         })
     ])
     menu.popup({

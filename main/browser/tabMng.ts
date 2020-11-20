@@ -60,7 +60,7 @@ export default function main() {
         const domid: string = 'tab-' + totaltab;
 
         webview.webContents.on('context-menu', function (event, param) {
-            showCtxMenu(currentwin, param);
+            showCtxMenu(currentwin, webview, param);
         })
 
         webview.webContents.on('page-title-updated', function (event, title, explicitSet) {
@@ -69,9 +69,6 @@ export default function main() {
                 currentwin.setTitle("Zinc - " + title);
         })
         webview.webContents.on('did-finish-load', function () {
-            // webview.webContents.insertCSS(fs.readFileSync(path.join(__dirname, '..', '..', '..', 'window', 'ui', 'native-scrollbar.css'), {encoding: 'utf8'}), {
-            //     cssOrigin: 'author'
-            // })
             currentwin.webContents.send('tabmng-browser-backforward', [webview.webContents.canGoBack(), webview.webContents.canGoForward()]);
         })
         webviewids[domid] = webview.id;
