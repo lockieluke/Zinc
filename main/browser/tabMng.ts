@@ -27,7 +27,8 @@ export default function main() {
                 nodeIntegration: false,
                 enableRemoteModule: false,
                 contextIsolation: true,
-                preload: path.join(__dirname, '../../window/preloads/preload.js')
+                preload: path.join(__dirname, '../../window/preloads/preload.js'),
+                nativeWindowOpen: true
             }
         })
 
@@ -39,21 +40,28 @@ export default function main() {
             })
 
             function resizeWebView() {
-                if (process.platform === 'win32' && currentwin.isMaximized()) {
-                    webview.setBounds({
-                        width: currentwin.getSize()[0] - 10,
-                        height: currentwin.getSize()[1] - 77,
-                        y: 65,
-                        x: 0
-                    })
-                } else {
-                    webview.setBounds({
-                        width: currentwin.getSize()[0],
-                        height: currentwin.getSize()[1] - 63,
-                        y: 63,
-                        x: 0
-                    })
-                }
+                // if (process.platform === 'win32' && currentwin.isMaximized()) {
+                //     webview.setBounds({
+                //         width: currentwin.getSize()[0] - 10,
+                //         height: currentwin.getSize()[1] - 77,
+                //         y: 65,
+                //         x: 0
+                //     })
+                // } else {
+                //     webview.setBounds({
+                //         width: currentwin.getSize()[0],
+                //         height: currentwin.getSize()[1] - 63,
+                //         y: 63,
+                //         x: 0
+                //     })
+                // }
+                const {width, height} = currentwin.getContentBounds();
+                webview.setBounds({
+                    width: width,
+                    height: height - 60,
+                    x: 0,
+                    y: 60
+                })
             }
         });
 
