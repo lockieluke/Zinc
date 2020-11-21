@@ -3,14 +3,14 @@ import * as path from 'path'
 import {registerLocalKeyStroke} from '../keystrokes'
 import showCtxMenu from '../ctxMenus'
 
-export default function main() {
+export default function main(window: BrowserWindow) {
     let totaltab: number = 0;
     let lifetimetabs: number = 0;
     let focusedtabs: number = 0;
 
     let webviewids: object = {};
 
-    const currentwin: BrowserWindow = BrowserWindow.getFocusedWindow();
+    const currentwin: BrowserWindow = window;
 
     registerLocalKeyStroke('CommandOrControl+Shift+I', currentwin, function () {
         BrowserView.fromId(webviewids['tab-' + focusedtabs]).webContents.openDevTools({
