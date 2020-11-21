@@ -1,32 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <link href="style.css" rel="stylesheet" type="text/css">
     <title>Zinc</title>
 </head>
 <body>
-    <div class="syscontrols">
-        <div id="titlebar">
-            <div id="closebtn" class="titlebarbtns" title="Close"><span>&times;</span></div>
-            <div id="maxbtn" class="titlebarbtns" title="Resize"><span>&square;</span></div>
-            <div id="minBtn" class="titlebarbtns" title="Minimize"><span>&minus;</span></div>
-            <div class="titlebarbtns" id="newtab" title="New Tab"><span>&plus;</span></div>
-            <div class="titlebarbtns" id="closetab" title="Close Tab"><span>&times;</span></div>
-            <div id="menuBtn" class="titlebarbtns" title="More..."><span>⋮</span></div>
-        </div>
-
-        <div id="extendbar">
-            <div id="tabs">
-            </div>
-        </div>
+<div class="syscontrols">
+    <div class="win-titlebar">
+        <button class="win-titlebar-btns" id="closebtn" title="Close">
+            <svg height="100%" shape-rendering="crispEdges" width="100%">
+                <line stroke="black" x1="18" x2="27" y1="10" y2="19"></line>
+                <line stroke="black" x1="27" x2="18" y1="10" y2="19"></line>
+            </svg>
+        </button>
+        <button class="win-titlebar-btns" id="maxbtn" title="Resize">
+            <svg height="100%" shape-rendering="crispEdges" width="100%">
+                <rect fill="none" height="9" stroke="black" width="9" x="18" y="10"></rect>
+            </svg>
+        </button>
+        <button class="win-titlebar-btns" id="minBtn" title="Minimize">
+            <svg height="100%" shape-rendering="crispEdges" width="100%">
+                <line stroke="black" x1="17" x2="27" y1="14" y2="14"></line>
+            </svg>
+        </button>
+        <button class="win-titlebar-btns" id="menuBtn" title="More..."><span>⋮</span></button>
+        <button class="win-titlebar-btns" id="closetab" title="Close Tab"><span>&times;</span></button>
+        <button class="win-titlebar-btns win-titlebar-left-btns" id="newtab" title="New Tab"><span>&plus;</span>
+        </button>
     </div>
 
-    <div class="content">
-
+    <div id="extendbar">
+        <div id="tabs">
+        </div>
     </div>
-    <script>const exports = {};</script>
-    <script>
-        require('./../dist/window/window')
-    </script>
+</div>
+
+<div class="content">
+
+</div>
+<script>const exports = {};</script>
+<script>
+    require('./../dist/window/window')
+</script>
 </body>
 </html>
