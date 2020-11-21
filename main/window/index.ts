@@ -1,8 +1,7 @@
 import {BrowserWindow} from "electron";
 
-export default function main() {
-    const currenwin = BrowserWindow.getFocusedWindow();
-    currenwin.on('resize', function () {
-        currenwin.webContents.send('win-resize-updated');
+export default function main(window: BrowserWindow) {
+    window.on('resize', function () {
+        window.webContents.send('win-resize-updated');
     })
 }

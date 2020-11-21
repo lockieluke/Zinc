@@ -4,6 +4,7 @@ import registerKeyStrokes from './main/keystrokes';
 import initLoggerService from './main/logger'
 import initWinControls from './main/browser/winCtrls'
 import initTabMNG from './main/browser/tabMng'
+import initWinEvents from './main/window'
 import * as path from 'path';
 
 function createWindow(): void {
@@ -36,6 +37,7 @@ function createWindow(): void {
         initTabMNG();
         registerKeyStrokes(win);
         initLoggerService();
+        initWinEvents(win);
     }
 }
 
