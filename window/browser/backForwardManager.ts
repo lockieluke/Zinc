@@ -16,13 +16,13 @@ export default function main() {
 
         const backbtn = document.createElement('div');
         backbtn.id = 'backBtn';
-        backbtn.className = 'titlebarbtns';
+        backbtn.className = 'win-titlebar-btns win-titlebar-left-btns';
         backbtn.title = 'Back';
         backbtn.innerHTML = backBtnHTML;
 
         const forwardbtn = document.createElement('div');
         forwardbtn.id = 'forwardBtn';
-        forwardbtn.className = 'titlebarbtns';
+        forwardbtn.className = 'win-titlebar-btns win-titlebar-left-btns'
         forwardbtn.title = 'Forward';
         forwardbtn.innerHTML = forwardBtnHTML;
 
