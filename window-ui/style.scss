@@ -30,7 +30,7 @@ body {
       color: white;
 
       &:hover {
-        background-color: colorStandard.$darkModeTitlebarHoverd;
+        background-color: colorStandard.$darkModeTitlebarHover;
       }
 
       svg {
@@ -110,7 +110,7 @@ body {
   }
 
   &:hover {
-
+    background-color: colorStandard.$tabBackgroundColorHover;
   }
 }
 
