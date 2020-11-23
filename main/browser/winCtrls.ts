@@ -1,7 +1,7 @@
 import {app, BrowserWindow, ipcMain} from 'electron'
 
-export default function main() {
-    const currentwin: BrowserWindow = BrowserWindow.getFocusedWindow();
+export default function main(window: BrowserWindow) {
+    const currentwin: BrowserWindow = window;
 
     ipcMain.on('win-close', function () {
         currentwin.close();

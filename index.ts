@@ -33,7 +33,7 @@ function createWindow(): void {
     requireInitScripts();
 
     function requireInitScripts() {
-        initWinControls();
+        initWinControls(win);
         initTabMNG(win);
         registerKeyStrokes(win);
         initLoggerService();
