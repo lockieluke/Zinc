@@ -17,14 +17,13 @@ function createWindow(): void {
         minHeight: 60,
         minWidth: 180,
         icon: path.join(__dirname, '..', 'artwork', 'Zinc.png'),
-        show: false,
+        show: true,
         webPreferences: {
             nodeIntegration: true,
             enableRemoteModule: false,
-            devTools: electronIsDev
+            devTools: electronIsDev,
         }
     })
-    win.show();
 
     win.setMenu(null);
 
