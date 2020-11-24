@@ -3,6 +3,8 @@ import * as path from 'path'
 import {registerLocalKeyStroke} from '../keystrokes'
 import showCtxMenu from '../ctxMenus'
 
+let currentBV: BrowserView = null;
+
 export default function main(window: BrowserWindow) {
     let totaltab: number = 0;
     let lifetimetabs: number = 0;
@@ -112,6 +114,7 @@ export default function main(window: BrowserWindow) {
         currentwin.setBrowserView(bv);
         currentwin.setTitle("Zinc - " + bv.webContents.getTitle());
         focusedtabs = args;
+        currentBV = bv;
     })
 
     ipcMain.on('tabmng-close', function (event, args) {
@@ -136,5 +139,13 @@ export default function main(window: BrowserWindow) {
     ipcMain.on('tabmng-forward', function () {
         const currentWebView: BrowserView = BrowserView.fromId(webviewids['tab-' + focusedtabs]);
         currentWebView.webContents.goForward();
+    })
+
+    ipcMain.on('tabmng-getcurrentbv', function (event, args) {
+        event.returnValue = currentBV;
+    })
+
+    ipcMain.on('tabmng-getcurrentwin', function (event, args) {
+        event.returnValue = currentwin;
     })
 }
