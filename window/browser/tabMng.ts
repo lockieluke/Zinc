@@ -68,6 +68,14 @@ export class TabMng {
             currentLoopTab.style.color = 'black';
         }
     }
+
+    public static getCurrentBV(): Electron.BrowserView {
+        return ipcRenderer.sendSync('tabmng-getcurrentbv');
+    }
+
+    public static getCurrentWin(): Electron.BrowserWindow {
+        return ipcRenderer.sendSync('tabmng-getcurrentwin');
+    }
 }
 
 ipcRenderer.on('tabmng-browser-titleupdated', function (event, args) {
