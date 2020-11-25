@@ -21,19 +21,15 @@ export default function main(window: Electron.BrowserWindow, bv: Electron.Browse
         //Image Actions
         getImgActionsCTX(menu, param);
     }
-    if (param.isEditable) {
+    if (param.isEditable || param.selectionText !== '') {
         //TextField Actions
-        getTfActions(menu);
+        getTfActions(menu, param);
     }
     if (!param.isEditable && param.selectionText !== '') {
         //Just Copy Actions
         menu.append(new MenuItem({
             label: "Copy"
         }))
-    }
-    if (param.selectionText !== '') {
-        //Selected Text Actions
-        getTfActions(menu, param.selectionText);
     }
     if (!param.hasImageContents && param.linkURL === '' && param.selectionText === '' && !param.isEditable) {
         //Other Actions
