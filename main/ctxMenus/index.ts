@@ -11,22 +11,31 @@ export default function main(window: Electron.BrowserWindow, bv: Electron.Browse
     let menu: Menu = new Menu();
     if (param.linkURL !== '') {
         //Link Actions
-        getLinkActionsCTX(menu)
-    } else if (param.hasImageContents) {
+        getLinkActionsCTX(menu);
+    }
+    if (param.hasImageContents) {
+        if (param.linkURL !== '')
+            menu.append(new MenuItem({
+                type: 'separator'
+            }));
         //Image Actions
-        getImgActionsCTX(menu);
-    } else if (param.isEditable) {
+        getImgActionsCTX(menu, param);
+    }
+    if (param.isEditable) {
         //TextField Actions
         getTfActions(menu);
-    } else if (!param.isEditable && param.selectionText !== '') {
+    }
+    if (!param.isEditable && param.selectionText !== '') {
         //Just Copy Actions
         menu.append(new MenuItem({
             label: "Copy"
         }))
-    } else if (param.selectionText !== '') {
+    }
+    if (param.selectionText !== '') {
         //Selected Text Actions
         getTfActions(menu, param.selectionText);
-    } else if (!param.hasImageContents && param.linkURL === '' && param.selectionText === '' && !param.isEditable) {
+    }
+    if (!param.hasImageContents && param.linkURL === '' && param.selectionText === '' && !param.isEditable) {
         //Other Actions
         getOtherActions(menu);
     }
