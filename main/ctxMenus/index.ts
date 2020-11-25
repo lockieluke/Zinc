@@ -11,7 +11,7 @@ export default function main(window: Electron.BrowserWindow, bv: Electron.Browse
     let menu: Menu = new Menu();
     if (param.linkURL !== '') {
         //Link Actions
-        getLinkActionsCTX(menu);
+        getLinkActionsCTX(menu, param);
     }
     if (param.hasImageContents) {
         if (param.linkURL !== '')
