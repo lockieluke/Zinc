@@ -76,6 +76,10 @@ export default class TabMng {
     public static getCurrentWin(): Electron.BrowserWindow {
         return ipcRenderer.sendSync('tabmng-getcurrentwin');
     }
+
+    public static isCloseLocked(): boolean {
+        return TabMng.closeLocked;
+    }
 }
 
 ipcRenderer.on('tabmng-browser-titleupdated', function (event, args) {
