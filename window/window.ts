@@ -5,12 +5,14 @@ import initWinControls from './browser/winCtrls'
 import initTitleManager from './browser/titleManager'
 import initBackForwardManager from './browser/backForwardManager'
 import initMouseEvent from './browser/mouseEvent'
+import initTabWrapperService from './browser/tabWrapper'
 
 window.onload = function () {
     initWinControls();
     initTitleManager();
     initBackForwardManager();
     initMouseEvent();
+    initTabWrapperService();
 
     newTabBtn.addEventListener('click', function () {
         TabMng.newTab(zincProtocolHandler('zinc://newtab'));
