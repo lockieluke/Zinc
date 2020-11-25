@@ -3,7 +3,7 @@ import * as path from 'path'
 import {registerLocalKeyStroke} from '../keystrokes'
 import showCtxMenu from '../ctxMenus'
 
-let currentBV: BrowserView = null;
+export let currentBV: BrowserView = null;
 
 export default function main(window: BrowserWindow) {
     let totaltab: number = 0;
