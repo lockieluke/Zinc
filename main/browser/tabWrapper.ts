@@ -1,7 +1,7 @@
 import {getCurrentWindow} from "./winCtrls";
 import {currentBV} from "./tabMng";
 
-export class TabWrapper {
+export default class TabWrapper {
     public static newTab(url: string): void {
         getCurrentWindow().webContents.send('tabwrapper-newtab', url);
     }
