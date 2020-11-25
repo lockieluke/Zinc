@@ -31,6 +31,11 @@ function createWindow(): void {
 
     requireInitScripts();
 
+    win.on('close', function () {
+        if (BrowserWindow.getAllWindows().length < 1)
+            app.quit();
+    })
+
     function requireInitScripts() {
         initWinControls(win);
         initTabMNG(win);
