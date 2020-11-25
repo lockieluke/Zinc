@@ -112,11 +112,15 @@ export default function main(window: BrowserWindow) {
     })
 
     ipcMain.on('tabmng-focus', function (event, args) {
+        if (currentBV != null)
+            changeWebpageVisibilty(false);
+
         const bv: BrowserView = BrowserView.fromId(webviewids['tab-' + args]);
         currentwin.setBrowserView(bv);
         currentwin.setTitle("Zinc - " + bv.webContents.getTitle());
         focusedtabs = args;
         currentBV = bv;
+        changeWebpageVisibilty(true);
     })
 
     ipcMain.on('tabmng-close', function (event, args) {
@@ -150,4 +154,24 @@ export default function main(window: BrowserWindow) {
     ipcMain.on('tabmng-getcurrentwin', function (event, args) {
         event.returnValue = currentwin;
     })
+
+    currentwin.on('focus', function () {
+        changeWebpageVisibilty(true);
+    })
+
+    currentwin.on('blur', function () {
+        changeWebpageVisibilty(false);
+    })
+
+    function changeWebpageVisibilty(visible: boolean) {
+        if (currentBV != null) {
+            if (visible) {
+                currentBV.webContents.executeJavaScript('document.body.style.visiblity = "visible"').then(result => {
+                });
+            } else {
+                currentBV.webContents.executeJavaScript('document.body.style.visiblity = "hidden"').then(result => {
+                });
+            }
+        }
+    }
 }
