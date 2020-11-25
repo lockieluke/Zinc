@@ -34,6 +34,8 @@ export default function main(window: BrowserWindow) {
             }
         })
 
+        webview.setBackgroundColor('#ffffff');
+
         currentwin.setBrowserView(webview);
         webview.webContents.loadURL(args[0]).then(function () {
             resizeWebView();
