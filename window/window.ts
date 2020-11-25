@@ -1,4 +1,4 @@
-import {TabMng} from './browser/tabMng'
+import TabMng from './browser/tabMng'
 import {closeTabBtn, newTabBtn} from './browser/controls'
 import zincProtocolHandler from './protocol'
 import initWinControls from './browser/winCtrls'
@@ -17,7 +17,7 @@ window.onload = function () {
     })
 
     closeTabBtn.addEventListener('click', function () {
-        if (!TabMng.closeLocked) {
+        if (!TabMng.isCloseLocked()) {
             TabMng.closeTab();
         }
     })
