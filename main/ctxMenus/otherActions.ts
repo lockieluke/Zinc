@@ -1,8 +1,9 @@
-import {app, dialog, Menu, MenuItem} from "electron";
+import {dialog, Menu, MenuItem} from "electron";
 import {currentBV} from './../browser/tabMng'
 import addMenuItems from "./batchMenuItems";
 import {getCurrentWindow} from "../browser/winCtrls";
 import * as path from "path";
+import TabWrapper from "../browser/tabWrapper";
 
 export default function getOtherActions(menu: Menu) {
     addMenuItems(menu, [
@@ -35,17 +36,19 @@ export default function getOtherActions(menu: Menu) {
         new MenuItem({
             label: "Save as...",
             accelerator: "CommandOrControl+S",
-            click: function () {
-                dialog.showSaveDialog(getCurrentWindow(), {
-                    title: "Save Page",
-                    defaultPath: path.join(app.getPath('documents'), 'index.html'),
-                    filters: [{
-                        name: "HTML (Complete Webpage)",
-                        extensions: ['html']
-                    }]
-                }).then(result => {
-                    currentBV.webContents.savePage(result.filePath, "HTMLComplete");
-                })
+            click: async function () {
+                const {canceled, filePath} = await dialog.showSaveDialog(getCurrentWindow(), {
+                    defaultPath: currentBV.webContents.getTitle(),
+                    filters: [
+                        {name: "Webpage, Complete", extensions: ['html', 'htm']},
+                        {name: "Webpage, HTML Only", extensions: ['html', 'htm']}
+                    ],
+                    title: "Save As"
+                });
+
+                if (canceled) return;
+
+                currentBV.webContents.savePage(filePath, path.extname(filePath) === '.htm' ? 'HTMLOnly' : 'HTMLComplete');
             }
         }),
         new MenuItem({
@@ -65,7 +68,7 @@ export default function getOtherActions(menu: Menu) {
             label: "View page source",
             accelerator: "CommandOrControl+U",
             click: function () {
-
+                TabWrapper.newTab('view-source:' + currentBV.webContents.getURL());
             }
         })
     ])
