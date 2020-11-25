@@ -1,9 +1,9 @@
 import {ipcRenderer} from "electron";
 import {tabNode} from './controls'
 
-export class TabMng {
+export default class TabMng {
 
-    public static closeLocked: boolean = false;
+    private static closeLocked: boolean = false;
 
     public static newTab(url: string): void {
         this.resetTabStates();
