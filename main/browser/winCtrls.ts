@@ -1,7 +1,10 @@
 import {app, BrowserWindow, ipcMain} from 'electron'
 
+let win: BrowserWindow = null;
+
 export default function main(window: BrowserWindow) {
     const currentwin: BrowserWindow = window;
+    win = currentwin;
 
     ipcMain.on('win-close', function () {
         currentwin.close();
@@ -20,4 +23,8 @@ export default function main(window: BrowserWindow) {
     ipcMain.on('win-min', function () {
         currentwin.minimize();
     })
+}
+
+export function getCurrentWindow(): BrowserWindow {
+    return win;
 }
