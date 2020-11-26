@@ -19,7 +19,7 @@ Option 2: Downloading Zinc from releases page and extract
 1. Clone the repository
 
    ```bash
-   git clone --single-branch --branch Rewrite https://github.com/lockieluke/Zinc.git # This is needed because we are currently performing a rewrite in another branch
+   git clone --single-branch --branch master https://github.com/lockieluke/Zinc.git
    ```
 
 2. Navigate into the directory
