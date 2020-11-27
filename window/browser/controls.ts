@@ -8,6 +8,6 @@ export const backBtn = document.getElementById('backBtn');
 export const forwardBtn = document.getElementById('forwardBtn');
 export const menuBtn = document.getElementById('menuBtn');
 
-export const newTabBtn = document.getElementById('newtab');
+//export const newTabBtn = document.getElementById('newtab-btn');
 export const closeTabBtn = document.getElementById('closetab');
 export const tabNode = document.getElementById('tabs');
