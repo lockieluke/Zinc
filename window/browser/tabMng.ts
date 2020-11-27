@@ -1,14 +1,15 @@
 import {ipcRenderer} from "electron";
 import {tabNode} from './controls'
+import zincProtocolHandler from './../protocol'
 
 export default class TabMng {
 
     private static closeLocked: boolean = false;
+    public static newTabButton: HTMLElement = null;
 
     public static newTab(url: string): void {
         this.resetTabStates();
         const totaltab: number = ipcRenderer.sendSync('tabmng-new', [url]);
-
         const newtab = document.createElement('div');
         newtab.className = 'tab';
         newtab.id = 'tab-' + (totaltab);
@@ -19,6 +20,8 @@ export default class TabMng {
         tabNode.appendChild(newtab);
 
         this.focusOnToTab(newtab.id);
+
+        this.addNewTabButton();
 
         const self = this;
         newtab.addEventListener('click', function () {
@@ -38,8 +41,8 @@ export default class TabMng {
                 ipcRenderer.send('tabmng-close', closingTabDom.id);
                 closingTabDom.remove();
                 for (let i = 0; i < tabNode.children.length; i++) {
-                    tabNode.children.item(i).id = 'tab-' + i;
-
+                    if (tabNode.children.item(i).id !== 'newtab-btn')
+                        tabNode.children.item(i).id = 'tab-' + i;
                 }
                 const elTab = document.getElementById('tab-' + (focusedtab - 1));
                 if (elTab) {
@@ -79,6 +82,21 @@ export default class TabMng {
 
     public static isCloseLocked(): boolean {
         return TabMng.closeLocked;
+    }
+
+    public static addNewTabButton(): void {
+        if (document.getElementById('newtab-btn'))
+            document.getElementById('newtab-btn').remove();
+        const newTabButton: HTMLElement = document.createElement('button');
+        newTabButton.id = 'newtab-btn';
+        newTabButton.innerText = "+";
+        tabNode.appendChild(<Node>newTabButton);
+        this.newTabButton = newTabButton;
+
+        const self = this;
+        this.newTabButton.addEventListener('click', function () {
+            self.newTab(zincProtocolHandler('zinc://newtab'));
+        })
     }
 }
 
