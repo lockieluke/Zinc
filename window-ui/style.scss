@@ -75,6 +75,19 @@ body {
   display: flex;
   align-items: center;
   justify-content: left;
+
+  #newtab-btn {
+    color: white;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    font-size: large;
+
+    &:hover {
+      background-color: #262626;
+      border-radius: 10px;
+    }
+  }
 }
 
 .tab {
