@@ -2,24 +2,32 @@
 
 
 
-Zinc is a browser that focuses on performance and privacy while keeping itself running with low resource usage.  The browser is written in TypeScript and JavaScript and plan to transition to C++ and it is based on Chromium and Electron framework(not to be scared).  *Depending on Electron doesn't mean its performance is bad.*
+Zinc is a browser that focuses on performance and privacy while keeping itself running with low resource usage.  The browser is written in TypeScript and it is based on Chromium and Electron framework(not to be scared).  *Depending on Electron doesn't mean its performance is bad.*
 
+#### Different use case of languages in Zinc
 
+`TypeScript` The language used the most in this browser which is used to make functions and the browser works properly.
+
+`JavaScript` Yes, we are going to ditch JavaScript in this browser.  The language is used to make things in pages like New Tab work.
+
+`SCSS` SCSS is used to easily styling the UI of this browser.
+
+`HTML` HTML is used to construct most UI page and UI elements are added by TypeScript after page is fully loaded.
+
+`Python` Python is used in Zinc Development Script to make the development much more easier.
 
 #### How to install Zinc
 
-Option 1: Using the [Zinc Installer](https://github.com/lockieluke/ZincInstaller)(Currently developing, planned to release at the end of October)
+Option 1: Using the [Zinc Installer](https://github.com/lockieluke/ZincInstaller)(Currently developing)
 
 Option 2: Downloading Zinc from releases page and extract
-
-
 
 #### How to fork Zinc
 
 1. Clone the repository
 
    ```bash
-   git clone --single-branch --branch master https://github.com/lockieluke/Zinc.git
+   git clone https://github.com/lockieluke/Zinc.git
    ```
 
 2. Navigate into the directory
@@ -35,15 +43,19 @@ Option 2: Downloading Zinc from releases page and extract
    ```
 
 
-#### How to use Zinc Development Script? (Requires Python)
-
-1. Run script to download the other required scripts
+4. Compile all TypeScript files
 
    ```bash
-   npm run dev-script
+   tsc
    ```
 
-2. Run again to navigate to the menu
+5. Compile SCSS files with `sass` manually
+
+6. Start Zinc!
+
+   ```bash
+   npm start
+   ```
 
 #### What convince me to use Zinc?
 
