@@ -124,10 +124,13 @@ export default function main(window: BrowserWindow) {
     })
 
     ipcMain.on('tabmng-close', function (event, args) {
-        let handlingBV: BrowserView = BrowserView.fromId(webviewids[args]);
-        currentwin.removeBrowserView(handlingBV);
-        handlingBV.destroy();
-        handlingBV = null;
+        try {
+            let handlingBV: BrowserView = BrowserView.fromId(webviewids[args]);
+            currentwin.removeBrowserView(handlingBV);
+            handlingBV.destroy();
+            handlingBV = null;
+        } catch {
+        }
         delete webviewids[args];
         let tempwebviewids: object = {};
         for (let i = 0; i < Object.keys(webviewids).length; i++) {
@@ -164,14 +167,17 @@ export default function main(window: BrowserWindow) {
     })
 
     function changeWebpageVisibilty(visible: boolean) {
-        if (currentBV != null) {
-            if (visible) {
-                currentBV.webContents.executeJavaScript('document.body.style.visiblity = "visible"').then(result => {
-                });
-            } else {
-                currentBV.webContents.executeJavaScript('document.body.style.visiblity = "hidden"').then(result => {
-                });
+        try {
+            if (currentBV != null) {
+                if (visible) {
+                    currentBV.webContents.executeJavaScript('document.body.style.visiblity = "visible"').then(result => {
+                    });
+                } else {
+                    currentBV.webContents.executeJavaScript('document.body.style.visiblity = "hidden"').then(result => {
+                    });
+                }
             }
+        } catch {
         }
     }
 }
