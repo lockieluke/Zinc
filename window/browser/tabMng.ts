@@ -7,6 +7,7 @@ export default class TabMng {
     private static closeLocked: boolean = false;
     public static newTabButton: HTMLElement = null;
     public static closeTabButton: HTMLElement = null;
+    private static focusedTab: HTMLElement = document.getElementById('tab-' + ipcRenderer.sendSync('tabmng-getinfo')[2]);
 
     public static newTab(url: string): void {
         this.resetTabStates();
@@ -23,7 +24,7 @@ export default class TabMng {
         this.focusOnToTab(newtab.id);
 
         this.addNewTabButton();
-        this.addCloseTabButton(newtab);
+        this.addCloseTabButton();
 
         const self = this;
         newtab.addEventListener('click', function () {
@@ -36,6 +37,7 @@ export default class TabMng {
         this.closeLocked = true;
         const self = this;
         if (ipcRenderer.sendSync('tabmng-getinfo')[0] > 1) {
+            this.closeTabButton.remove();
             const focusedtab = ipcRenderer.sendSync('tabmng-getinfo')[2];
             const closingTabDom = document.getElementById('tab-' + focusedtab);
             closingTabDom.style.animation = 'close-tab 0.3s forwards ease-out';
@@ -51,8 +53,8 @@ export default class TabMng {
                     self.focusOnToTab(elTab.id);
                 } else {
                     self.focusOnToTab(closingTabDom.id);
-
                 }
+                self.addCloseTabButton();
                 self.closeLocked = false;
             })
         } else {
@@ -65,6 +67,7 @@ export default class TabMng {
         console.log("Focusing to tab " + tabdomid);
         ipcRenderer.send('tabmng-focus', parseInt(tabdomid.replace('tab-', '')));
         document.getElementById(tabdomid).style.color = 'lightblue';
+        this.focusedTab = document.getElementById(tabdomid);
     }
 
     public static resetTabStates(): void {
@@ -87,8 +90,8 @@ export default class TabMng {
     }
 
     public static addNewTabButton(): void {
-        if (document.getElementById('newtab-btn'))
-            document.getElementById('newtab-btn').remove();
+        if (this.newTabButton != null)
+            this.newTabButton.remove();
         const newTabButton: HTMLElement = document.createElement('button');
         newTabButton.id = 'newtab-btn';
         newTabButton.innerText = "+";
@@ -102,15 +105,21 @@ export default class TabMng {
         })
     }
 
-    public static addCloseTabButton(tab: HTMLElement): void {
+    public static addCloseTabButton(): void {
         if (this.closeTabButton != null)
-            document.getElementById('closetab-btn').remove();
+            this.closeTabButton.remove();
         const closeTabButton: HTMLElement = document.createElement('button');
         closeTabButton.id = 'closetab-btn';
         closeTabButton.innerHTML = "<span>&times;</span>";
         closeTabButton.title = "Close tab"
-        tab.appendChild(<Node>closeTabButton);
+        this.focusedTab.appendChild(<Node>closeTabButton);
         this.closeTabButton = closeTabButton;
+
+        const self = this;
+        this.closeTabButton.addEventListener('click', function () {
+            if (!self.closeLocked)
+                self.closeTab();
+        })
     }
 }
 
