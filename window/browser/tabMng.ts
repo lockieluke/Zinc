@@ -6,6 +6,7 @@ export default class TabMng {
 
     private static closeLocked: boolean = false;
     public static newTabButton: HTMLElement = null;
+    public static closeTabButton: HTMLElement = null;
 
     public static newTab(url: string): void {
         this.resetTabStates();
@@ -22,6 +23,7 @@ export default class TabMng {
         this.focusOnToTab(newtab.id);
 
         this.addNewTabButton();
+        this.addCloseTabButton(newtab);
 
         const self = this;
         newtab.addEventListener('click', function () {
@@ -68,7 +70,7 @@ export default class TabMng {
     public static resetTabStates(): void {
         for (let i = 0; i < tabNode.children.length; i++) {
             const currentLoopTab = <HTMLElement>tabNode.children.item(i);
-            currentLoopTab.style.color = 'black';
+            currentLoopTab.style.color = 'white';
         }
     }
 
@@ -90,6 +92,7 @@ export default class TabMng {
         const newTabButton: HTMLElement = document.createElement('button');
         newTabButton.id = 'newtab-btn';
         newTabButton.innerText = "+";
+        newTabButton.title = "New tab";
         tabNode.appendChild(<Node>newTabButton);
         this.newTabButton = newTabButton;
 
@@ -97,6 +100,17 @@ export default class TabMng {
         this.newTabButton.addEventListener('click', function () {
             self.newTab(zincProtocolHandler('zinc://newtab'));
         })
+    }
+
+    public static addCloseTabButton(tab: HTMLElement): void {
+        if (this.closeTabButton != null)
+            document.getElementById('closetab-btn').remove();
+        const closeTabButton: HTMLElement = document.createElement('button');
+        closeTabButton.id = 'closetab-btn';
+        closeTabButton.innerHTML = "<span>&times;</span>";
+        closeTabButton.title = "Close tab"
+        tab.appendChild(<Node>closeTabButton);
+        this.closeTabButton = closeTabButton;
     }
 }
 

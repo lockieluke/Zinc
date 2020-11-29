@@ -9,5 +9,5 @@ export const forwardBtn = document.getElementById('forwardBtn');
 export const menuBtn = document.getElementById('menuBtn');
 
 //export const newTabBtn = document.getElementById('newtab-btn');
-export const closeTabBtn = document.getElementById('closetab');
+export const closeTabBtn = document.getElementById('closetab-btn');
 export const tabNode = document.getElementById('tabs');

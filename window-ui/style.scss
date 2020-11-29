@@ -125,6 +125,19 @@ body {
   &:hover {
     background-color: colorStandard.$tabBackgroundColorHover;
   }
+
+  #closetab-btn {
+    position: absolute;
+    outline: none;
+    border: none;
+    background-color: transparent;
+    color: white;
+    right: 2px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+  }
 }
 
 .tab-close {

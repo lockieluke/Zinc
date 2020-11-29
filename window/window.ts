@@ -1,5 +1,4 @@
 import TabMng from './browser/tabMng'
-import {closeTabBtn} from './browser/controls'
 import zincProtocolHandler from './protocol'
 import initWinControls from './browser/winCtrls'
 import initTitleManager from './browser/titleManager'
@@ -15,10 +14,4 @@ window.onload = function () {
     initTabWrapperService();
 
     TabMng.newTab(zincProtocolHandler('zinc://newtab'));
-
-    closeTabBtn.addEventListener('click', function () {
-        if (!TabMng.isCloseLocked()) {
-            TabMng.closeTab();
-        }
-    })
 }
