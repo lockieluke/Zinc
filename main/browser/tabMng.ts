@@ -2,6 +2,7 @@ import {BrowserView, BrowserWindow, ipcMain} from 'electron'
 import * as path from 'path'
 import {registerLocalKeyStroke} from '../keystrokes'
 import showCtxMenu from '../ctxMenus'
+import TabWrapper from "./tabWrapper";
 
 export let currentBV: BrowserView = null;
 
@@ -66,6 +67,10 @@ export default function main(window: BrowserWindow) {
             currentwin.webContents.send('tabmng-browser-titleupdated', [domid, title]);
             if (focusedtabs == parseInt(domid.replace('tab-', '')))
                 currentwin.setTitle("Zinc - " + title);
+        })
+        webview.webContents.on('new-window', function (event: Electron.NewWindowWebContentsEvent, url: string, frameName: string, disposition) {
+            event.preventDefault();
+            TabWrapper.newTab(url);
         })
         webview.webContents.on('did-finish-load', function () {
             currentwin.webContents.send('tabmng-browser-backforward', [webview.webContents.canGoBack(), webview.webContents.canGoForward()]);
