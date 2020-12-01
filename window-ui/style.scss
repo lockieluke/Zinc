@@ -20,6 +20,16 @@ body {
     bottom: calc(100% - 40px);
     background-color: colorStandard.$darkModeTitlebar;
 
+    #closebtn {
+      &:hover {
+        background: #E81123;
+      }
+
+      &:active {
+        background: #bf101c;
+      }
+    }
+
     .win-titlebar-btns {
       float: right;
       -webkit-app-region: no-drag;
@@ -33,6 +43,10 @@ body {
 
       &:hover {
         background-color: colorStandard.$darkModeTitlebarHover;
+      }
+
+      &:active {
+        background-color: colorStandard.$darkModeTitlebarHold;
       }
 
       svg {
