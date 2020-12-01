@@ -24,7 +24,6 @@ export default class TabMng {
         this.focusOnToTab(newtab.id);
 
         this.addNewTabButton();
-        this.addCloseTabButton();
 
         const self = this;
         newtab.addEventListener('click', function () {
@@ -68,6 +67,7 @@ export default class TabMng {
         ipcRenderer.send('tabmng-focus', parseInt(tabdomid.replace('tab-', '')));
         document.getElementById(tabdomid).style.color = 'lightblue';
         this.focusedTab = document.getElementById(tabdomid);
+        this.addCloseTabButton();
     }
 
     public static resetTabStates(): void {
