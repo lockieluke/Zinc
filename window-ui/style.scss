@@ -8,6 +8,8 @@ body {
 }
 
 .syscontrols {
+  user-select: none;
+  -webkit-user-drag: none;
 
   .win-titlebar {
     -webkit-app-region: drag;
@@ -15,7 +17,7 @@ body {
     left: 0;
     right: 0;
     top: 0;
-    bottom: calc(100% - 30px);
+    bottom: calc(100% - 40px);
     background-color: colorStandard.$darkModeTitlebar;
 
     .win-titlebar-btns {
@@ -38,40 +40,18 @@ body {
         margin: auto;
       }
     }
-
-    .win-titlebar-left-btns {
-      float: left;
-    }
   }
 }
 
-.content {
-  position: absolute;
-  top: 65px;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: white;
-  max-width: 100%;
-  max-height: 100%;
-}
-
 #extendbar {
-  position: absolute;
-  top: 30px;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: colorStandard.$darkModeTitlebar
-}
-
-.syscontrols {
-  user-select: none;
-  -webkit-user-drag: none;
+  width: calc(100% - 50px * 3);
+  height: 40px;
+  margin: 10px 0;
+  -webkit-app-region: drag;
 }
 
 #tabs {
-  width: 80%;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: left;
@@ -82,6 +62,7 @@ body {
     outline: none;
     background-color: transparent;
     font-size: large;
+    -webkit-app-region: no-drag;
 
     &:hover {
       background-color: #262626;
@@ -106,6 +87,7 @@ body {
   -moz-box-shadow: 3px 2px 235px -103px rgba(0, 0, 0, 0.75);
   box-shadow: 3px 2px 235px -103px rgba(0, 0, 0, 0.75);
   z-index: 0;
+  -webkit-app-region: no-drag;
 
   h6 {
     z-index: 2;
