@@ -27,7 +27,7 @@ Option 2: Downloading Zinc from releases page and extract
 1. Clone the repository
 
    ```bash
-   git clone https://github.com/lockieluke/Zinc.git
+   git clone --depth=1 https://github.com/lockieluke/Zinc.git
    ```
 
 2. Navigate into the directory
