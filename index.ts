@@ -1,12 +1,12 @@
 import {app, BrowserWindow} from 'electron';
 import * as electronIsDev from "electron-is-dev";
-import registerKeyStrokes from './main/keystrokes';
 import initLoggerService from './main/logger'
 import initWinControls from './main/browser/winCtrls'
 import initTabMNG from './main/browser/tabMng'
 import initWinEvents from './main/window'
 import initDevService from './main/dev'
 import * as path from 'path';
+import registerTabActionsKeystrokes from "./main/keystrokes/tabActions";
 
 function createWindow(): void {
     const win: BrowserWindow = new BrowserWindow({
@@ -40,9 +40,9 @@ function createWindow(): void {
     function requireInitScripts() {
         initWinControls(win);
         initTabMNG(win);
-        registerKeyStrokes(win);
         initLoggerService();
         initWinEvents(win);
+        registerTabActionsKeystrokes(win);
         if (!app.isPackaged)
             initDevService(win);
     }

@@ -1,36 +1,33 @@
 import {BrowserWindow, globalShortcut} from 'electron'
 
-export default function main(window: BrowserWindow) {
-    register();
-    window.on('focus', function () {
-        register();
-    })
+export default class electronLocalKeystroke {
+    private static registeredKeystrokes: string[] = [];
+    private static registeredKeystrokesFn: Function[] = [];
+    private static registeredKeystrokesWnd: BrowserWindow[] = [];
 
-    window.on('blur', function () {
-        globalShortcut.unregisterAll();
-    })
+    public static registerLocalKeyStroke(keystroke: string, window: BrowserWindow, callback: Function): void {
+        this.registeredKeystrokes.push(keystroke);
+        this.registeredKeystrokesFn.push(callback);
+        this.registeredKeystrokesWnd.push(window);
 
-    function register() {
-        globalShortcut.register('CommandOrControl+Alt+Shift+I', function () {
-            window.webContents.openDevTools({
-                mode: 'undocked'
-            })
-        });
+        this.repeatRegisteringLocalKeystrokes();
+
+        const self = this;
+        window.on('blur', function () {
+            globalShortcut.unregisterAll();
+        })
+        window.on('focus', function () {
+            self.repeatRegisteringLocalKeystrokes();
+        })
     }
-}
 
-export function registerLocalKeyStroke(keystroke: string, window: BrowserWindow, callback: Function) {
-    globalShortcut.register(keystroke, function () {
-        callback();
-    });
-
-    window.on('focus', function () {
-        globalShortcut.register(keystroke, function () {
-            callback();
-        });
-    })
-
-    window.on('blur', function () {
-        globalShortcut.unregisterAll();
-    })
+    private static repeatRegisteringLocalKeystrokes(): void {
+        for (let i = 0; i < this.registeredKeystrokes.length; i++) {
+            const self = this;
+            globalShortcut.register(this.registeredKeystrokes[i], function () {
+                if (self.registeredKeystrokesWnd[i].isFocused())
+                    self.registeredKeystrokesFn[i]();
+            })
+        }
+    }
 }

@@ -1,8 +1,8 @@
 import {BrowserView, BrowserWindow, ipcMain} from 'electron'
 import * as path from 'path'
-import {registerLocalKeyStroke} from '../keystrokes'
 import showCtxMenu from '../ctxMenus'
 import TabWrapper from "./tabWrapper";
+import electronLocalKeystroke from "../keystrokes";
 
 export let currentBV: BrowserView = null;
 
@@ -15,7 +15,7 @@ export default function main(window: BrowserWindow) {
 
     const currentwin: BrowserWindow = window;
 
-    registerLocalKeyStroke('CommandOrControl+Shift+I', currentwin, function () {
+    electronLocalKeystroke.registerLocalKeyStroke('CommandOrControl+Shift+I', currentwin, function () {
         BrowserView.fromId(webviewids['tab-' + focusedtabs]).webContents.openDevTools({
             mode: 'right'
         })
