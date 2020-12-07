@@ -1,8 +1,8 @@
 import {BrowserView, BrowserWindow, ipcMain} from 'electron'
-import * as path from 'path'
 import showCtxMenu from '../ctxMenus'
 import TabWrapper from "./tabWrapper";
 import electronLocalKeystroke from "../keystrokes";
+import {WebView} from "./webView";
 
 export let currentBV: BrowserView = null;
 
@@ -16,7 +16,7 @@ export default function main(window: BrowserWindow) {
     const currentwin: BrowserWindow = window;
 
     electronLocalKeystroke.registerLocalKeyStroke('CommandOrControl+Shift+I', currentwin, function () {
-        BrowserView.fromId(webviewids['tab-' + focusedtabs]).webContents.openDevTools({
+        WebView.fromId(webviewids['tab-' + focusedtabs]).webContents.openDevTools({
             mode: 'right'
         })
     })
@@ -25,37 +25,7 @@ export default function main(window: BrowserWindow) {
 
         focusedtabs = totaltab;
 
-        const webview: BrowserView = new BrowserView({
-            webPreferences: {
-                nodeIntegration: false,
-                enableRemoteModule: false,
-                contextIsolation: true,
-                preload: path.join(__dirname, '../../window/preloads/preload.js'),
-                nativeWindowOpen: true
-            }
-        })
-
-        webview.setBackgroundColor('#ffffff');
-
-        currentwin.setBrowserView(webview);
-        webview.webContents.loadURL(args[0]).then(function () {
-            resizeWebView();
-            currentwin.on('resize', function () {
-                resizeWebView();
-            })
-
-            function resizeWebView() {
-                const {width, height} = currentwin.getContentBounds();
-                if (webview != null && webview != undefined && !webview.isDestroyed()) {
-                    webview.setBounds({
-                        width: width,
-                        height: height - 40,
-                        x: 0,
-                        y: 40
-                    })
-                }
-            }
-        });
+        const webview: WebView = new WebView(currentwin, args[0]);
 
         const domid: string = 'tab-' + totaltab;
 
@@ -75,7 +45,7 @@ export default function main(window: BrowserWindow) {
         webview.webContents.on('did-finish-load', function () {
             currentwin.webContents.send('tabmng-browser-backforward', [webview.webContents.canGoBack(), webview.webContents.canGoForward()]);
         })
-        webviewids[domid] = webview.id;
+        webviewids[domid] = webview.webContents.id;
 
         event.returnValue = totaltab;
 
@@ -104,7 +74,7 @@ export default function main(window: BrowserWindow) {
     })
 
     ipcMain.on('tabmng-focus', function (event, args) {
-        const bv: BrowserView = BrowserView.fromId(webviewids['tab-' + args]);
+        const bv: WebView = WebView.fromId(webviewids['tab-' + args]);
         currentwin.setBrowserView(bv);
         currentwin.setTitle("Zinc - " + bv.webContents.getTitle());
         focusedtabs = args;
@@ -112,13 +82,10 @@ export default function main(window: BrowserWindow) {
     })
 
     ipcMain.on('tabmng-close', function (event, args) {
-        try {
-            let handlingBV: BrowserView = BrowserView.fromId(webviewids[args]);
-            currentwin.removeBrowserView(handlingBV);
-            handlingBV.destroy();
-            handlingBV = null;
-        } catch {
-        }
+        let handlingBV: WebView = WebView.fromId(webviewids[args]);
+        currentwin.removeBrowserView(handlingBV);
+        WebView.destroyWebView(handlingBV);
+        handlingBV = null;
         delete webviewids[args];
         let tempwebviewids: object = {};
         for (let i = 0; i < Object.keys(webviewids).length; i++) {
@@ -129,12 +96,12 @@ export default function main(window: BrowserWindow) {
     })
 
     ipcMain.on('tabmng-back', function () {
-        const currentWebView: BrowserView = BrowserView.fromId(webviewids['tab-' + focusedtabs]);
+        const currentWebView: BrowserView = WebView.fromId(webviewids['tab-' + focusedtabs]);
         currentWebView.webContents.goBack();
     })
 
     ipcMain.on('tabmng-forward', function () {
-        const currentWebView: BrowserView = BrowserView.fromId(webviewids['tab-' + focusedtabs]);
+        const currentWebView: BrowserView = WebView.fromId(webviewids['tab-' + focusedtabs]);
         currentWebView.webContents.goForward();
     })
 
