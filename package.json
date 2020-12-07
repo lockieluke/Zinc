@@ -6,8 +6,10 @@
     "dev-script": "cd scripts && py main.py"
   },
   "dependencies": {
-    "electron": "^10.1.5",
     "electron-is-dev": "^1.2.0"
   },
-  "main": "dist/index.js"
+  "main": "dist/index.js",
+  "devDependencies": {
+    "electron": "^11.0.3"
+  }
 }
