@@ -10,7 +10,7 @@ export function getJavaPath(appModule: Electron.App): string {
 }
 
 export function runJar(javaPath: string, jarPath: string, argument?: string, callback?: (stdout: string, stderr: string) => any): void {
-    child_process.exec(`${javaPath} -jar ${jarPath} ${argument}`, {
+    child_process.exec(`${javaPath} -jar ${jarPath}` + (argument == undefined ? '' : ` ${argument}`), {
         cwd: path.join(require.main.path, '..'),
         env: process.env,
     }, function (error, stdout, stderr) {
