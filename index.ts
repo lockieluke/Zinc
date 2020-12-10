@@ -8,6 +8,8 @@ import initDevService from './main/dev'
 import * as path from 'path';
 import registerTabActionsKeystrokes from "./main/keystrokes/tabActions";
 import NativeCommunication from "./main/native/communication";
+import {getJavaPath, runJar} from "./main/native";
+import getAppRoot from "./main/utils/appPath";
 
 function createWindow(): void {
 
@@ -40,12 +42,17 @@ function createWindow(): void {
         if (BrowserWindow.getAllWindows().length < 1) {
             app.quit();
             nativeCommunication.close();
+            nativeCommunication.getWS().send('QuitZinc');
         }
     })
 
     function requireInitScripts() {
         nativeCommunication = new NativeCommunication('8000', 'localhost');
         nativeCommunication.initialize();
+        if (!Boolean(process.env.NO_NATIVE_JAR) || app.isPackaged)
+            runJar(getJavaPath(app), path.join(getAppRoot(), 'native', 'ZincNative.jar'), '', function (stdout, stderr) {
+                console.log(stdout, stderr);
+            })
         initWinControls(win);
         initTabMNG(win);
         initLoggerService();

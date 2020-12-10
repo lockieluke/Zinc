@@ -15,8 +15,12 @@ export default class NativeCommunication {
         this.websocket = new WebSocket(`ws://${this.hostname}:${this.port}`)
 
         this.websocket.on('open', function () {
-            this.send('zinc');
+            this.send('InitializeZinc');
         })
+    }
+
+    public getWS(): WebSocket {
+        return this.websocket;
     }
 
     public close(): void {
