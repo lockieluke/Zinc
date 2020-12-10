@@ -7,8 +7,12 @@ import initWinEvents from './main/window'
 import initDevService from './main/dev'
 import * as path from 'path';
 import registerTabActionsKeystrokes from "./main/keystrokes/tabActions";
+import NativeCommunication from "./main/native/communication";
 
 function createWindow(): void {
+
+    let nativeCommunication: NativeCommunication = null;
+
     const win: BrowserWindow = new BrowserWindow({
         width: 1280,
         height: 720,
@@ -33,11 +37,15 @@ function createWindow(): void {
     requireInitScripts();
 
     win.on('close', function () {
-        if (BrowserWindow.getAllWindows().length < 1)
+        if (BrowserWindow.getAllWindows().length < 1) {
             app.quit();
+            nativeCommunication.close();
+        }
     })
 
     function requireInitScripts() {
+        nativeCommunication = new NativeCommunication('8000', 'localhost');
+        nativeCommunication.initialize();
         initWinControls(win);
         initTabMNG(win);
         initLoggerService();
