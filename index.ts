@@ -47,14 +47,14 @@ function createWindow(): void {
     })
 
     function requireInitScripts() {
-        nativeCommunication = new NativeCommunication('8000', 'localhost');
-        nativeCommunication.initialize();
         if (!Boolean(process.env.NO_NATIVE_JAR) || app.isPackaged) {
             console.log("[Zinc Native] Starting bundled Zinc Native");
             runJar(getJavaPath(app), path.join(getAppRoot(), 'native', 'ZincNative.jar'), '', function (stdout, stderr) {
                 console.log(stdout, stderr);
             })
         }
+        nativeCommunication = new NativeCommunication('8000', 'localhost');
+        nativeCommunication.initialize();
         initWinControls(win);
         initTabMNG(win);
         initLoggerService();
