@@ -26,7 +26,6 @@ export class WebView extends BrowserView {
         const self = this;
         this.webContents.loadURL(url).then(resizeWebView);
         const resizingCondition = process.env.RESPONSIVE_RESIZING === 'true' ? 'resize' : 'resized';
-        console.log(`Responsive resizing condition: ${resizingCondition}`);
         window.on(<any>resizingCondition, resizeWebView);
         if (resizingCondition === 'resized') {
             window.on('maximize', resizeWebView);
