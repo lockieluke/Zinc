@@ -8,6 +8,12 @@ import {mouseEvent} from "../browser/mouseEvent";
 
 
 export default function main(window: Electron.BrowserWindow, bv: Electron.BrowserView, param: Electron.ContextMenuParams) {
+    if (bv.webContents.isDevToolsOpened()) {
+        bv.webContents.openDevTools({
+            mode: 'undocked'
+        });
+        bv.webContents.closeDevTools();
+    }
     let menu: Menu = new Menu();
     if (param.linkURL !== '') {
         //Link Actions
