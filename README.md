@@ -8,13 +8,17 @@ Zinc is a browser that focuses on performance and privacy while keeping itself r
 
 `TypeScript` The language used the most in this browser which is used to make functions and the browser works properly.
 
-`JavaScript` Yes, we are going to ditch JavaScript in this browser.  The language is used to make things in pages like New Tab work.
+`JavaScript` Yes, we are going to ditch JavaScript in this browser. The language is used to make things in pages like
+New Tab work.
 
 `SCSS` SCSS is used to easily styling the UI of this browser.
 
 `HTML` HTML is used to construct most UI page and UI elements are added by TypeScript after page is fully loaded.
 
 `Python` Python is used in Zinc Development Script to make the development much more easier.
+
+`Java` Java is used in Zinc Native which makes some operations even faster and enables Multithreading capability. Native
+Communication is conducted with WebSockets.
 
 #### How to install Zinc
 
