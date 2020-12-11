@@ -11,10 +11,11 @@ export default class TabMng {
 
     public static newTab(url: string): void {
         this.resetTabStates();
-        const totaltab: number = ipcRenderer.sendSync('tabmng-new', [url]);
         const newtab = document.createElement('div');
         newtab.className = 'tab';
+        const totaltab: number = parseInt(ipcRenderer.sendSync('tabmng-getinfo')[0]);
         newtab.id = 'tab-' + (totaltab);
+        ipcRenderer.send('tabmng-new', [url, newtab.id]);
         const tabtitle = document.createElement('h6');
         tabtitle.innerText = "Loading...";
         tabtitle.id = 'tabtitle-' + (totaltab);
@@ -44,8 +45,10 @@ export default class TabMng {
                 ipcRenderer.send('tabmng-close', closingTabDom.id);
                 closingTabDom.remove();
                 for (let i = 0; i < tabNode.children.length; i++) {
-                    if (tabNode.children.item(i).id !== 'newtab-btn')
+                    if (tabNode.children.item(i).id !== 'newtab-btn') {
                         tabNode.children.item(i).id = 'tab-' + i;
+                        tabNode.children.item(i).children.item(i).id = 'tabtitle-' + i;
+                    }
                 }
                 const elTab = document.getElementById('tab-' + (focusedtab - 1));
                 if (elTab) {
