@@ -20,7 +20,14 @@ export default function main(window: BrowserWindow) {
     const currentwin: BrowserWindow = window;
 
     electronLocalKeystroke.registerLocalKeyStroke('CommandOrControl+Shift+I', currentwin, function () {
-        WebView.fromId(webviewids['tab-' + focusedtabs]).webContents.openDevTools({
+        const focusedBV: WebView = WebView.fromId(webviewids['tab-' + focusedtabs]);
+        if (!focusedBV.webContents.isDevToolsOpened()) {
+            focusedBV.webContents.openDevTools({
+                mode: 'undocked'
+            });
+            focusedBV.webContents.closeDevTools();
+        }
+        focusedBV.webContents.openDevTools({
             mode: 'right'
         })
     })
