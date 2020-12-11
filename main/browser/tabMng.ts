@@ -41,7 +41,7 @@ export default function main(window: BrowserWindow) {
             currentwin.webContents.send('tabmng-browser-titleupdated', [domid, title]);
             if (focusedtabs == parseInt(domid.replace('tab-', ''))) {
                 currentwin.setTitle("Zinc - " + title);
-                zincNative.changeRPCDescription(`Looking at ${title}`);
+                updateRPCDescription(nativeCommunication.isReady);
             }
         })
         webview.webContents.on('new-window', function (event: Electron.NewWindowWebContentsEvent, url: string, frameName: string, disposition) {
@@ -83,7 +83,6 @@ export default function main(window: BrowserWindow) {
         const bv: WebView = WebView.fromId(webviewids['tab-' + args]);
         currentwin.setBrowserView(bv);
         currentwin.setTitle("Zinc - " + bv.webContents.getTitle());
-        zincNative.changeRPCDescription(`Looking at ${bv.webContents.getTitle()}`);
         focusedtabs = args;
         currentBV = bv;
     })
@@ -119,4 +118,12 @@ export default function main(window: BrowserWindow) {
     ipcMain.on('tabmng-getcurrentwin', function (event, args) {
         event.returnValue = currentwin;
     })
+
+    function updateRPCDescription(condition: boolean) {
+        if (nativeCommunication.isReady)
+            zincNative.changeRPCDescription(currentBV.webContents.getTitle());
+
+        if (!condition)
+            setTimeout(updateRPCDescription, 500);
+    }
 }
