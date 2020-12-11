@@ -6,6 +6,7 @@ export default class NativeCommunication {
     private websocket: WebSocket = null;
     private readonly port: string = null;
     private readonly hostname: string = null;
+    public isReady: boolean = false;
 
     public constructor(port: string, hostname: string) {
         this.port = port;
@@ -14,18 +15,23 @@ export default class NativeCommunication {
 
     public initialize(): void {
         this.websocket = new WebSocket(`ws://${this.hostname}:${this.port}`)
+        const self = this;
+
         this.websocket.on('close', function () {
+            self.isReady = false;
             console.log("[Zinc Native] Connection lost");
         })
 
         this.websocket.on('open', function () {
+            console.log("[Zinc Native] Connected with Zinc Native");
             this.send('InitializeZinc');
         })
-
         this.websocket.on('message', function (data) {
-            switch (ReceiveMessageTypes[String(data)]) {
+            console.log(`[Zinc Native] Message from server ${data}`);
+            switch (ReceiveMessageTypes[data.toString()]) {
                 case ReceiveMessageTypes.JavaLoaded:
-                    console.log("[Zinc Native] Zinc Native loaded");
+                    self.isReady = true;
+                    console.log("[Zinc Native] Checked the connection to Zinc Native");
                     break;
             }
         })
