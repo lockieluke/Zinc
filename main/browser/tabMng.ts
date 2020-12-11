@@ -3,6 +3,8 @@ import showCtxMenu from '../ctxMenus'
 import TabWrapper from "./tabWrapper";
 import electronLocalKeystroke from "../keystrokes";
 import {WebView} from "./webView";
+import NativeCommunication from "../native/communication";
+import {ZincNative} from "../native/zincNative";
 
 export let currentBV: BrowserView = null;
 
@@ -12,6 +14,8 @@ export default function main(window: BrowserWindow) {
     let focusedtabs: number = 0;
 
     let webviewids: object = {};
+    const nativeCommunication: NativeCommunication = (global as any).nativeCommunication;
+    const zincNative: ZincNative = new ZincNative(nativeCommunication);
 
     const currentwin: BrowserWindow = window;
 
@@ -35,8 +39,10 @@ export default function main(window: BrowserWindow) {
 
         webview.webContents.on('page-title-updated', function (event, title, explicitSet) {
             currentwin.webContents.send('tabmng-browser-titleupdated', [domid, title]);
-            if (focusedtabs == parseInt(domid.replace('tab-', '')))
+            if (focusedtabs == parseInt(domid.replace('tab-', ''))) {
                 currentwin.setTitle("Zinc - " + title);
+                zincNative.changeRPCDescription(`Looking at ${title}`);
+            }
         })
         webview.webContents.on('new-window', function (event: Electron.NewWindowWebContentsEvent, url: string, frameName: string, disposition) {
             event.preventDefault();
@@ -77,6 +83,7 @@ export default function main(window: BrowserWindow) {
         const bv: WebView = WebView.fromId(webviewids['tab-' + args]);
         currentwin.setBrowserView(bv);
         currentwin.setTitle("Zinc - " + bv.webContents.getTitle());
+        zincNative.changeRPCDescription(`Looking at ${bv.webContents.getTitle()}`);
         focusedtabs = args;
         currentBV = bv;
     })
