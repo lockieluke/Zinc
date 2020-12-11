@@ -49,6 +49,7 @@ function createWindow(): void {
     function requireInitScripts() {
         nativeCommunication = new NativeCommunication('8000', 'localhost');
         nativeCommunication.initialize();
+        (global as any).nativeCommunication = nativeCommunication;
         if (process.env.NO_NATIVE_JAR !== 'true') {
             console.log("[Zinc Native] Starting bundled Zinc Native");
             runJar(getJavaPath(app), path.join(getAppRoot(), 'native', 'ZincNative.jar'), '', function (stdout, stderr) {
