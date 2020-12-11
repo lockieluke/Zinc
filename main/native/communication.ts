@@ -1,4 +1,5 @@
 import WebSocket = require('ws');
+import {ReceiveMessageTypes} from "./communicationData";
 
 export default class NativeCommunication {
 
@@ -16,6 +17,14 @@ export default class NativeCommunication {
 
         this.websocket.on('open', function () {
             this.send('InitializeZinc');
+        })
+
+        this.websocket.on('message', function (data) {
+            switch (ReceiveMessageTypes[String(data)]) {
+                case ReceiveMessageTypes.JavaLoaded:
+                    console.log("[Zinc Native] Zinc Native loaded");
+                    break;
+            }
         })
     }
 
