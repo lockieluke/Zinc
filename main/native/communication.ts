@@ -14,6 +14,9 @@ export default class NativeCommunication {
 
     public initialize(): void {
         this.websocket = new WebSocket(`ws://${this.hostname}:${this.port}`)
+        this.websocket.on('close', function () {
+            console.log("[Zinc Native] Connection lost");
+        })
 
         this.websocket.on('open', function () {
             this.send('InitializeZinc');
