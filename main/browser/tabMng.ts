@@ -98,6 +98,8 @@ export default function main(window: BrowserWindow) {
         let handlingBV: WebView = WebView.fromId(webviewids[args]);
         currentwin.removeBrowserView(handlingBV);
         WebView.destroyWebView(handlingBV);
+        handlingBV.webContents.loadURL('about:blank');
+        handlingBV.webContents.forcefullyCrashRenderer();
         handlingBV = null;
         delete webviewids[args];
         let tempwebviewids: object = {};
