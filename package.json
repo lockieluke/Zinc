@@ -1,11 +1,13 @@
 {
   "name": "Zinc",
   "version": "1.0.0",
+  "license": "UNLICENSE",
   "scripts": {
     "start": "tsc && electron .",
     "dev-script": "cd scripts && py main.py"
   },
   "dependencies": {
+    "@types/node": "^14.14.13",
     "@types/ws": "^7.4.0",
     "electron-is-dev": "^1.2.0",
     "http": "0.0.1-security",
