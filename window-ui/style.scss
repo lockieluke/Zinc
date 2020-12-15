@@ -170,3 +170,23 @@ body {
     min-width: 20px;
   }
 }
+
+@keyframes url-tab {
+  from {
+    max-width: 300px;
+  }
+
+  to {
+    max-width: 500px;
+  }
+}
+
+@keyframes url-tab-re {
+  from {
+    max-width: 500px;
+  }
+
+  to {
+    max-width: 300px;
+  }
+}
