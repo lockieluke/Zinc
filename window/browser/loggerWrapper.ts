@@ -1,5 +1,5 @@
-import {ipcRenderer} from "electron";
+import {ipcRenderer} from 'electron';
 
 export default function logToMain(message: string) {
-    ipcRenderer.send('logger-print-main', message);
+	ipcRenderer.send('logger-print-main', message);
 }

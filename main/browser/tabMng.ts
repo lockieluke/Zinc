@@ -1,17 +1,17 @@
-import {BrowserView, BrowserWindow, ipcMain} from 'electron'
-import showCtxMenu from '../ctxMenus'
-import TabWrapper from "./tabWrapper";
-import electronLocalKeystroke from "../keystrokes";
-import {WebView} from "./webView";
-import NativeCommunication from "../native/communication";
-import {ZincNative} from "../native/zincNative";
+import {BrowserView, BrowserWindow, ipcMain} from 'electron';
+import showCtxMenu from '../ctxMenus';
+import TabWrapper from './tabWrapper';
+import electronLocalKeystroke from '../keystrokes';
+import {WebView} from './webView';
+import NativeCommunication from '../native/communication';
+import {ZincNative} from '../native/zincNative';
 
 export let currentBV: BrowserView = null;
 
 export default function main(window: BrowserWindow) {
-    let totaltab: number = 0;
-    let lifetimetabs: number = 0;
-    let focusedtabs: number = 0;
+    let totaltab = 0;
+    let lifetimetabs = 0;
+    let focusedtabs = 0;
 
     let webviewids: object = {};
     const nativeCommunication: NativeCommunication = (global as any).nativeCommunication;
@@ -29,8 +29,8 @@ export default function main(window: BrowserWindow) {
         }
         focusedBV.webContents.openDevTools({
             mode: 'right'
-        })
-    })
+        });
+    });
 
     ipcMain.on('tabmng-new', function (event, args: string[]) {
 
@@ -42,39 +42,39 @@ export default function main(window: BrowserWindow) {
 
         webview.webContents.on('context-menu', function (event, param) {
             showCtxMenu(currentwin, webview, param);
-        })
+        });
 
         webview.webContents.on('page-title-updated', function (event, title, explicitSet) {
             currentwin.webContents.send('tabmng-browser-titleupdated', [domid, title]);
             if (focusedtabs == parseInt(domid.replace('tab-', ''))) {
-                currentwin.setTitle("Zinc - " + title);
+                currentwin.setTitle('Zinc - ' + title);
                 updateRPCDescription(nativeCommunication.isReady);
             }
-        })
+        });
         webview.webContents.on('new-window', function (event: Electron.NewWindowWebContentsEvent, url: string, frameName: string, disposition) {
             event.preventDefault();
             TabWrapper.newTab(url);
-        })
+        });
         webview.webContents.on('did-finish-load', function () {
             currentwin.webContents.send('tabmng-browser-backforward', [webview.webContents.canGoBack(), webview.webContents.canGoForward()]);
-        })
+        });
         webviewids[domid] = webview.webContents.id;
 
         event.returnValue = totaltab;
 
         totaltab += 1;
         lifetimetabs += 1;
-    })
+    });
 
     ipcMain.on('tabmng-getinfo', function (event, args) {
         event.returnValue = [totaltab, lifetimetabs, focusedtabs];
-    })
+    });
 
     ipcMain.on('tabmng-setinfo', function (event, args: string[]) {
         switch (args[0]) {
             case 'total':
                 totaltab = parseInt(args[1]);
-                break
+                break;
 
             case 'focus':
                 focusedtabs = parseInt(args[1]);
@@ -82,17 +82,17 @@ export default function main(window: BrowserWindow) {
 
             case 'lifetime':
                 lifetimetabs = parseInt(args[1]);
-                break
+                break;
         }
-    })
+    });
 
     ipcMain.on('tabmng-focus', function (event, args) {
         const bv: WebView = WebView.fromId(webviewids['tab-' + args]);
         currentwin.setBrowserView(bv);
-        currentwin.setTitle("Zinc - " + bv.webContents.getTitle());
+        currentwin.setTitle('Zinc - ' + bv.webContents.getTitle());
         focusedtabs = args;
         currentBV = bv;
-    })
+    });
 
     ipcMain.on('tabmng-close', function (event, args) {
         let handlingBV: WebView = WebView.fromId(webviewids[args]);
@@ -102,31 +102,31 @@ export default function main(window: BrowserWindow) {
         (handlingBV.webContents as any).destroy();
         handlingBV = null;
         delete webviewids[args];
-        let tempwebviewids: object = {};
+        const tempwebviewids: object = {};
         for (let i = 0; i < Object.keys(webviewids).length; i++) {
-            tempwebviewids["tab-" + i] = webviewids[Object.keys(webviewids)[i]];
+            tempwebviewids['tab-' + i] = webviewids[Object.keys(webviewids)[i]];
         }
         webviewids = tempwebviewids;
         totaltab -= 1;
-    })
+    });
 
     ipcMain.on('tabmng-back', function () {
         const currentWebView: BrowserView = WebView.fromId(webviewids['tab-' + focusedtabs]);
         currentWebView.webContents.goBack();
-    })
+    });
 
     ipcMain.on('tabmng-forward', function () {
         const currentWebView: BrowserView = WebView.fromId(webviewids['tab-' + focusedtabs]);
         currentWebView.webContents.goForward();
-    })
+    });
 
     ipcMain.on('tabmng-getcurrentbv', function (event, args) {
         event.returnValue = currentBV;
-    })
+    });
 
     ipcMain.on('tabmng-getcurrentwin', function (event, args) {
         event.returnValue = currentwin;
-    })
+    });
 
     function updateRPCDescription(condition: boolean) {
         if (nativeCommunication.isReady)
