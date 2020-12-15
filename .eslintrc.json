@@ -17,7 +17,7 @@
     ],
     "rules": {
         "indent": [
-            "error",
+            "off",
             "tab"
         ],
         "linebreak-style": [
@@ -31,6 +31,10 @@
         "semi": [
             "error",
             "always"
+        ],
+        "no-mixed-spaces-and-tabs": [
+            0,
+            "smart-tabs"
         ]
     }
 }
