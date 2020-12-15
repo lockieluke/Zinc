@@ -1,0 +1,8 @@
+node_modules
+dist
+scripts
+native
+java
+artwork
+.vscode
+.idea
