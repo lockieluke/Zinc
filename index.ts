@@ -25,6 +25,7 @@ function createWindow(): void {
         minWidth: 180,
         icon: path.join(__dirname, '..', 'artwork', 'Zinc.png'),
         show: true,
+        transparent: true,
         webPreferences: {
             nodeIntegration: true,
             enableRemoteModule: false,
