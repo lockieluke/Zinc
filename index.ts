@@ -11,6 +11,8 @@ import NativeCommunication from "./main/native/communication";
 import {getJavaPath, runJar} from "./main/native";
 import getAppRoot from "./main/utils/appPath";
 
+app.setPath('userData', path.join(app.getPath('appData'), 'Zinc', 'User Session Data'));
+
 function createWindow(): void {
 
     let nativeCommunication: NativeCommunication = null;
@@ -68,7 +70,9 @@ function createWindow(): void {
     }
 }
 
-app.whenReady().then(createWindow);
+app.on('ready', function () {
+    createWindow();
+});
 
 app.on('window-all-closed', function () {
     if (process.platform !== 'darwin')
