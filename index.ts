@@ -1,3 +1,5 @@
+require('v8-compile-cache');
+
 import {app, BrowserWindow} from 'electron';
 import * as electronIsDev from 'electron-is-dev';
 import initLoggerService from './main/logger';
