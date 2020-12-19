@@ -1,5 +1,4 @@
-require('v8-compile-cache');
-
+import {ZincNative} from './main/native/zincNative';
 import {app, BrowserWindow} from 'electron';
 import * as electronIsDev from 'electron-is-dev';
 import initLoggerService from './main/logger';
@@ -11,7 +10,6 @@ import * as path from 'path';
 import registerTabActionsKeystrokes from './main/keystrokes/tabActions';
 import NativeCommunication from './main/native/communication';
 import {getJavaPath, runJar} from './main/native';
-import getAppRoot from './main/utils/appPath';
 
 app.setPath('userData', path.join(app.getPath('appData'), 'Zinc', 'User Session Data'));
 
@@ -56,11 +54,12 @@ function createWindow(): void {
 		console.log('[Zinc Native] Communication with Zinc Native on port 8000');
 		(global as any).nativeCommunication = nativeCommunication;
 		if (process.env.NO_NATIVE_JAR !== 'true') {
-			console.log('[Zinc Native] Starting bundled Zinc Native');
-			runJar(getJavaPath(app), path.join(getAppRoot(), 'native', 'ZincNative.jar'), '', function (stdout, stderr) {
-				console.log(stdout, stderr);
-			});
-		}
+            const zincNative: ZincNative = new ZincNative(nativeCommunication, app);
+            console.log(`[Zinc Native] Starting bundled Zinc Native which is placed in ${zincNative.getJarPath()} with JVM in ${getJavaPath(app)}`);
+            runJar(getJavaPath(app), zincNative.getJarPath(), '', function (stdout, stderr) {
+                console.log(stdout, stderr);
+            });
+        }
 		initWinControls(win);
 		initTabMNG(win);
 		initLoggerService();

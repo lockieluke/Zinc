@@ -1,4 +1,4 @@
-import {BrowserView, BrowserWindow, ipcMain} from 'electron';
+import {app, BrowserView, BrowserWindow, ipcMain} from 'electron';
 import showCtxMenu from '../ctxMenus';
 import TabWrapper from './tabWrapper';
 import electronLocalKeystroke from '../keystrokes';
@@ -15,7 +15,7 @@ export default function main(window: BrowserWindow) {
 
     let webviewids: object = {};
     const nativeCommunication: NativeCommunication = (global as any).nativeCommunication;
-    const zincNative: ZincNative = new ZincNative(nativeCommunication);
+    const zincNative: ZincNative = new ZincNative(nativeCommunication, app);
 
     const currentwin: BrowserWindow = window;
 

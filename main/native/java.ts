@@ -1,11 +1,11 @@
-import * as path from "path";
-import * as child_process from "child_process";
+import * as path from 'path';
+import * as child_process from 'child_process';
 
 export function getJavaPath(appModule: Electron.App): string {
     if (!appModule.isPackaged) {
         return path.join(require.main.path, '..', 'java', 'bin', 'java.exe');
     } else {
-        return path.join(Electron.app.getPath('exe'), 'java');
+        return path.join(path.dirname(appModule.getPath('exe')), 'java', 'bin', 'java.exe');
     }
 }
 
