@@ -1,85 +1,93 @@
-import {ZincNative} from './main/native/zincNative';
-import {app, BrowserWindow} from 'electron';
-import * as electronIsDev from 'electron-is-dev';
-import initLoggerService from './main/logger';
-import initWinControls from './main/browser/winCtrls';
-import initTabMNG from './main/browser/tabMng';
-import initWinEvents from './main/window';
-import initDevService from './main/dev';
-import * as path from 'path';
-import registerTabActionsKeystrokes from './main/keystrokes/tabActions';
-import NativeCommunication from './main/native/communication';
-import {getJavaPath, runJar} from './main/native';
+import { ZincNative } from "./main/native/zincNative";
+import { app, BrowserWindow } from "electron";
+import * as electronIsDev from "electron-is-dev";
+import initLoggerService from "./main/logger";
+import initWinControls from "./main/browser/winCtrls";
+import initTabMNG from "./main/browser/tabMng";
+import initWinEvents from "./main/window";
+import initDevService from "./main/dev";
+import * as path from "path";
+import registerTabActionsKeystrokes from "./main/keystrokes/tabActions";
+import NativeCommunication from "./main/native/communication";
+import { getJavaPath, runJar } from "./main/native";
 
-app.setPath('userData', path.join(app.getPath('appData'), 'Zinc', 'User Session Data'));
+app.setPath(
+  'userData',
+  path.join(app.getPath('appData'), 'Zinc', 'User Session Data'),
+);
 
 function createWindow(): void {
+  let nativeCommunication: NativeCommunication = null;
 
-	let nativeCommunication: NativeCommunication = null;
+  const win: BrowserWindow = new BrowserWindow({
+    width: 1280,
+    height: 720,
+    title: 'Zinc',
+    frame: false,
+    backgroundColor: '#ffffff',
+    minHeight: 60,
+    minWidth: 180,
+    icon: path.join(__dirname, '..', 'artwork', 'Zinc.png'),
+    show: true,
+    webPreferences: {
+      nodeIntegration: true,
+      enableRemoteModule: false,
+      devTools: electronIsDev,
+    },
+  });
 
-	const win: BrowserWindow = new BrowserWindow({
-		width: 1280,
-		height: 720,
-		title: 'Zinc',
-		frame: false,
-		backgroundColor: '#ffffff',
-		minHeight: 60,
-		minWidth: 180,
-		icon: path.join(__dirname, '..', 'artwork', 'Zinc.png'),
-		show: true,
-		webPreferences: {
-			nodeIntegration: true,
-			enableRemoteModule: false,
-			devTools: electronIsDev,
-		}
-	});
+  win.setMenu(null);
 
-	win.setMenu(null);
+  win.loadFile('window-ui/index.html');
 
-	win.loadFile('window-ui/index.html');
+  requireInitScripts();
 
-	requireInitScripts();
+  win.on('close', function () {
+    if (BrowserWindow.getAllWindows().length < 1) {
+      app.quit();
+      nativeCommunication.getWS().send('QuitZinc');
+      nativeCommunication.close();
+    }
+  });
 
-	win.on('close', function () {
-		if (BrowserWindow.getAllWindows().length < 1) {
-			app.quit();
-			nativeCommunication.getWS().send('QuitZinc');
-			nativeCommunication.close();
-		}
-	});
-
-	function requireInitScripts() {
-		nativeCommunication = new NativeCommunication('8000', 'localhost');
-		nativeCommunication.initialize();
-		console.log('[Zinc Native] Communication with Zinc Native on port 8000');
-		(global as any).nativeCommunication = nativeCommunication;
-		if (process.env.NO_NATIVE_JAR !== 'true') {
-            const zincNative: ZincNative = new ZincNative(nativeCommunication, app);
-            console.log(`[Zinc Native] Starting bundled Zinc Native which is placed in ${zincNative.getJarPath()} with JVM in ${getJavaPath(app)}`);
-            runJar(getJavaPath(app), zincNative.getJarPath(), '', function (stdout, stderr) {
-                console.log(stdout, stderr);
-            });
-        }
-		initWinControls(win);
-		initTabMNG(win);
-		initLoggerService();
-		initWinEvents(win);
-		registerTabActionsKeystrokes(win);
-		if (!app.isPackaged)
-			initDevService(win);
-	}
+  function requireInitScripts() {
+    nativeCommunication = new NativeCommunication('8000', 'localhost');
+    nativeCommunication.initialize();
+    console.log('[Zinc Native] Communication with Zinc Native on port 8000');
+    (global as any).nativeCommunication = nativeCommunication;
+    if (process.env.NO_NATIVE_JAR !== 'true') {
+      const zincNative: ZincNative = new ZincNative(nativeCommunication, app);
+      console.log(
+        `[Zinc Native] Starting bundled Zinc Native which is placed in ${zincNative.getJarPath()} with JVM in ${getJavaPath(
+          app,
+        )}`,
+      );
+      runJar(
+        getJavaPath(app),
+        zincNative.getJarPath(),
+        '',
+        function (stdout, stderr) {
+          console.log(stdout, stderr);
+        },
+      );
+    }
+    initWinControls(win);
+    initTabMNG(win);
+    initLoggerService();
+    initWinEvents(win);
+    registerTabActionsKeystrokes(win);
+    if (!app.isPackaged) initDevService(win);
+  }
 }
 
 app.on('ready', function () {
-	createWindow();
+  createWindow();
 });
 
 app.on('window-all-closed', function () {
-	if (process.platform !== 'darwin')
-		app.quit();
+  if (process.platform !== 'darwin') app.quit();
 });
 
 app.on('activate', function () {
-	if (BrowserWindow.getAllWindows().length == 0)
-		createWindow();
+  if (BrowserWindow.getAllWindows().length == 0) createWindow();
 });

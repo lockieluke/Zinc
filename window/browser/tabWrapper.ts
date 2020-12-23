@@ -1,12 +1,12 @@
-import {ipcRenderer} from 'electron';
-import TabMng from './tabMng';
+import { ipcRenderer } from "electron";
+import TabMng from "./tabMng";
 
 export default function main() {
-    ipcRenderer.on('tabwrapper-newtab', function (event, args) {
-        TabMng.newTab(args);
-    });
+  ipcRenderer.on('tabwrapper-newtab', function (event, args) {
+    TabMng.newTab(args);
+  });
 
-    ipcRenderer.on('tabwrapper-closetab', function () {
-        TabMng.closeTab();
-    });
+  ipcRenderer.on('tabwrapper-closetab', function () {
+    TabMng.closeTab();
+  });
 }

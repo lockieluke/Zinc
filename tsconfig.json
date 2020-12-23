@@ -2,10 +2,7 @@
   "compilerOptions": {
     "outDir": "dist",
     "target": "ESNext",
-    "lib": [
-      "DOM",
-      "ES2015.Core"
-    ],
+    "lib": ["DOM", "ES2015.Core"],
     "module": "CommonJS",
     "sourceMap": true,
     "removeComments": true,

@@ -1,38 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <link href="style.css" rel="stylesheet" type="text/css">
+  <head>
+    <link href="style.css" rel="stylesheet" type="text/css" />
     <title>Zinc</title>
-</head>
-<body>
-<div class="syscontrols">
-    <div class="win-titlebar" id="titlebar">
+  </head>
+  <body>
+    <div class="syscontrols">
+      <div class="win-titlebar" id="titlebar">
         <button class="win-titlebar-btns" id="closebtn" title="Close">
-            <svg height="100%" shape-rendering="crispEdges" width="100%">
-                <line stroke="white" x1="18" x2="27" y1="10" y2="19"></line>
-                <line stroke="white" x1="27" x2="18" y1="10" y2="19"></line>
-            </svg>
+          <svg height="100%" shape-rendering="crispEdges" width="100%">
+            <line stroke="white" x1="18" x2="27" y1="10" y2="19"></line>
+            <line stroke="white" x1="27" x2="18" y1="10" y2="19"></line>
+          </svg>
         </button>
         <button class="win-titlebar-btns" id="maxbtn" title="Resize">
-            <svg height="100%" shape-rendering="crispEdges" width="100%">
-                <rect fill="none" height="9" stroke="white" width="9" x="18" y="10"></rect>
-            </svg>
+          <svg height="100%" shape-rendering="crispEdges" width="100%">
+            <rect
+              fill="none"
+              height="9"
+              stroke="white"
+              width="9"
+              x="18"
+              y="10"
+            ></rect>
+          </svg>
         </button>
         <button class="win-titlebar-btns" id="minBtn" title="Minimize">
-            <svg height="100%" shape-rendering="crispEdges" width="100%">
-                <line stroke="white" x1="17" x2="27" y1="14" y2="14"></line>
-            </svg>
+          <svg height="100%" shape-rendering="crispEdges" width="100%">
+            <line stroke="white" x1="17" x2="27" y1="14" y2="14"></line>
+          </svg>
         </button>
 
         <div id="extendbar">
-            <div id="tabs">
-            </div>
+          <div id="tabs"></div>
         </div>
+      </div>
     </div>
-</div>
-<script>
-    const exports = {};
-    require('./../dist/window/window');
-</script>
-</body>
+    <script>
+      const exports = {};
+      require('./../dist/window/window');
+    </script>
+  </body>
 </html>
