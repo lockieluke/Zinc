@@ -44,9 +44,17 @@ Option 2: Downloading Zinc from releases page and extract
    yarn install
    ```
 
-5. Compile SCSS files with `sass` manually
+4. Download OpenJDK 15, and keep `bin` and `lib` folders.
 
-6. Start Zinc! (It compiles TypeScript files automatically now)
+5. Move those two folders into a subdirectory named `java` under `Zinc` project directory
+
+6. Compile SCSS files with `sass`
+
+   ```bash
+   sass .
+   ```
+
+7. Start Zinc! (It compiles TypeScript files automatically now)
 
    ```bash
    yarn start
