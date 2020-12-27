@@ -38,24 +38,18 @@ Option 2: Downloading Zinc from releases page and extract
    cd Zinc
    ```
 
-3. Install all dependencies
+3. Install all dependencies(Zinc has switched to **Yarn** package manager!)
 
    ```bash
-   npm install
-   ```
-
-4. Compile all TypeScript files
-
-   ```bash
-   tsc
+   yarn install
    ```
 
 5. Compile SCSS files with `sass` manually
 
-6. Start Zinc!
+6. Start Zinc! (It compiles TypeScript files automatically now)
 
    ```bash
-   npm start
+   yarn start
    ```
 
 #### What convince me to use Zinc?
