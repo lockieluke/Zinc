@@ -1,4 +1,6 @@
-import { isURL, prefixHttp } from "./url";
+declare const isURL: (input: string) => boolean;
+declare const prefixHttp: (url: string) => string;
+declare const validURL: (str: string) => boolean;
 
 document.body.onload = function() {
   document.body.style.display = "block";
@@ -24,29 +26,28 @@ searchfield.addEventListener("input", (event) => {
     if (!document.getElementById("autocomplete")) {
       document.getElementById("locationbox").appendChild(autocompletefield);
     }
-    const suggestionChildren = document.getElementById("autocomplete");
+    const suggestionChildren: HTMLDivElement = <HTMLDivElement>document.getElementById("autocomplete");
     suggestionChildren.innerHTML = "";
     readGoogleSuggestion();
     if (validURL(searchfield.value)) {
-      const suggestionItem = document.createElement("h6");
+      const suggestionItem: HTMLHeadingElement = document.createElement("h6");
       suggestionItem.innerText = searchfield.value;
       suggestionItem.className = "autocomplete-item";
       document.getElementById("autocomplete").appendChild(suggestionItem);
     }
-
+    addSuggestions();
     focusedSuggestion = -1;
     resetAutoSuggestions();
     initListenersForSuggestions();
     hightlightURLs();
   } else {
-    const suggestionChildren = document.getElementById("autocomplete");
+    const suggestionChildren: HTMLDivElement = <HTMLDivElement>document.getElementById("autocomplete");
     suggestionChildren.innerHTML = "";
     document.getElementById("autocomplete").remove();
   }
 });
 
 searchfield.addEventListener("keydown", (event) => {
-  const focusedSuggestionElement: HTMLElement = <HTMLElement>document.getElementById("autocomplete").children.item(focusedSuggestion);
   if (event.key === "ArrowUp") {
     event.preventDefault();
     if (focusedSuggestion == 0) {
@@ -55,6 +56,7 @@ searchfield.addEventListener("keydown", (event) => {
       focusedSuggestion--;
     }
     resetAutoSuggestions();
+    const focusedSuggestionElement: HTMLElement = <HTMLElement>document.getElementById("autocomplete").children.item(focusedSuggestion);
     focusedSuggestionElement.style.backgroundColor = "#bebebe";
     searchfield.value = focusedSuggestionElement.innerText;
     hightlightURLs();
@@ -66,6 +68,7 @@ searchfield.addEventListener("keydown", (event) => {
       focusedSuggestion++;
     }
     resetAutoSuggestions();
+    const focusedSuggestionElement: HTMLElement = <HTMLElement>document.getElementById("autocomplete").children.item(focusedSuggestion);
     focusedSuggestionElement.style.backgroundColor = "#bebebe";
     searchfield.value = focusedSuggestionElement.innerText;
     hightlightURLs();
@@ -95,7 +98,7 @@ function initListenersForSuggestions() {
 }
 
 function resetAutoSuggestions() {
-  const suggestionChildren = document.getElementById("autocomplete");
+  const suggestionChildren: HTMLDivElement = <HTMLDivElement>document.getElementById("autocomplete");
   suggestionChildren.innerHTML = "";
   addSuggestions();
 }
@@ -109,7 +112,7 @@ function hightlightURLs(): void {
 }
 
 function readGoogleSuggestion() {
-  const request = new XMLHttpRequest();
+  const request: XMLHttpRequest = new XMLHttpRequest();
   request.open(
     "GET",
     "https://clients1.google.com/complete/search?hl=en&output=toolbar&q=" +
@@ -142,22 +145,9 @@ function readGoogleSuggestion() {
   request.send(null);
 }
 
-function validURL(str: string): boolean {
-  const pattern = new RegExp(
-    "^(https?:\\/\\/)?" + // protocol
-    "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
-    "((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address
-    "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
-    "(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
-    "(\\#[-a-z\\d_]*)?$",
-    "i"
-  ); // fragment locator
-  return !!pattern.test(str);
-}
-
 function addSuggestions(): void {
   for (let i = 0; i < suggestions.length; i++) {
-    const suggestionItem = document.createElement("h6");
+    const suggestionItem: HTMLHeadingElement = document.createElement("h6");
     suggestionItem.innerText = suggestions[i];
     suggestionItem.className = "autocomplete-item";
     suggestionItem.tabIndex = i;
