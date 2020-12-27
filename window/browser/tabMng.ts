@@ -1,7 +1,6 @@
 import { ipcRenderer } from "electron";
 import { tabNode } from "./controls";
 import zincProtocolHandler from "./../protocol";
-import logFromBrowserFrame from "./logger";
 
 export default class TabMng {
   private static closeLocked = false;
@@ -84,7 +83,6 @@ export default class TabMng {
   }
 
   public static focusOnToTab(tabdomid: string): void {
-    logFromBrowserFrame(`Focusing to tab ${tabdomid}`);
     ipcRenderer.send("tabmng-focus", parseInt(tabdomid.replace("tab-", "")));
     document.getElementById(tabdomid).style.color = 'lightblue';
     this.focusedTab = document.getElementById(tabdomid);
