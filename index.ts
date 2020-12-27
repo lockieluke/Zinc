@@ -10,6 +10,7 @@ import registerTabActionsKeystrokes from "./main/keystrokes/tabActions";
 import NativeCommunication from "./main/native/communication";
 import { getJavaPath, runJar } from "./main/native";
 import defaultLogger, { LogLevel, LogTypes } from "./main/logger/";
+import initLoggerService from "./main/logger/loggerService";
 
 app.setPath(
   'userData',
@@ -72,6 +73,7 @@ function createWindow(): void {
     initWinControls(win);
     initTabMNG(win);
     initWinEvents(win);
+    initLoggerService();
     registerTabActionsKeystrokes(win);
     if (!app.isPackaged) initDevService(win);
   }
