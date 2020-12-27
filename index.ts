@@ -1,7 +1,6 @@
 import ZincNative from "./main/native/zincNative";
 import { app, BrowserWindow } from "electron";
 import * as electronIsDev from "electron-is-dev";
-import initLoggerService from "./main/logger";
 import initWinControls from "./main/browser/winCtrls";
 import initTabMNG from "./main/browser/tabMng";
 import initWinEvents from "./main/window";
@@ -73,7 +72,6 @@ function createWindow(): void {
     }
     initWinControls(win);
     initTabMNG(win);
-    initLoggerService();
     initWinEvents(win);
     registerTabActionsKeystrokes(win);
     if (!app.isPackaged) initDevService(win);
