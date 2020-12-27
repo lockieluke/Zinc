@@ -59,7 +59,7 @@ function createWindow(): void {
 
   win.webContents.once("did-finish-load", function() {
     launchPerformanceTimer.finishedStartup(function(startupTime: number) {
-      defaultLogger(LogTypes.MainProcess, `Startup time: ${startupTime} ms`, LogLevel.DevLog, app);
+      defaultLogger(LogTypes.MainProcess, `Zinc is fully started up in ${startupTime} ms`, LogLevel.DevLog, app);
     });
   });
 
@@ -75,7 +75,7 @@ function createWindow(): void {
 }
 
 function startZincNative() {
-  nativeCommunication = new NativeCommunication("8000", "localhost");
+  nativeCommunication = new NativeCommunication("8000", "127.0.0.1");
   nativeCommunication.initialize();
   defaultLogger(LogTypes.ZincNative, "Communication with Zinc Native on port 8000", LogLevel.Log);
   (global as any).nativeCommunication = nativeCommunication;
