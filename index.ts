@@ -12,6 +12,7 @@ import { getJavaPath, runJar } from "./main/native";
 import defaultLogger, { LogLevel, LogTypes } from "./main/logger/";
 import initLoggerService from "./main/logger/loggerService";
 import StartupPerformance from "./main/dev/startupPerformance";
+import Startup from "./main/dev/startup";
 
 const launchPerformanceTimer: StartupPerformance = new StartupPerformance();
 const zincNativePerformanceTimer: StartupPerformance = new StartupPerformance();
@@ -99,7 +100,13 @@ function startZincNative() {
 }
 
 app.on("ready", function() {
-  createWindow();
+  if (Startup.canStartup(app)) {
+    Startup.printStartupInfo(app);
+    createWindow();
+  } else {
+    Startup.printStartupErr(app);
+    app.quit();
+  }
 });
 
 app.on("window-all-closed", function() {
