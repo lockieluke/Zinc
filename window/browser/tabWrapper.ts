@@ -7,6 +7,7 @@ export default function main() {
   });
 
   ipcRenderer.on('tabwrapper-closetab', function () {
-    TabMng.closeTab();
+    if (!TabMng.isCloseLocked())
+      TabMng.closeTab();
   });
 }

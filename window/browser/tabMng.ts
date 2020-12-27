@@ -135,7 +135,8 @@ export default class TabMng {
 
     const self = this;
     this.closeTabButton.addEventListener('click', function () {
-      if (!self.closeLocked) self.closeTab();
+      if (!self.isCloseLocked())
+        self.closeTab();
     });
   }
 }

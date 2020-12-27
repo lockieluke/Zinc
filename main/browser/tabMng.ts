@@ -4,7 +4,7 @@ import TabWrapper from "./tabWrapper";
 import electronLocalKeystroke from "../keystrokes";
 import { WebView } from "./webView";
 import NativeCommunication from "../native/communication";
-import { ZincNative } from "../native/zincNative";
+import ZincNative from "../native/zincNative";
 
 export let currentBV: BrowserView = null;
 
@@ -157,7 +157,9 @@ export default function main(window: BrowserWindow) {
 
   function updateRPCDescription(condition: boolean) {
     if (nativeCommunication.isReady)
-      zincNative.changeRPCDescription(currentBV.webContents.getTitle());
+      zincNative.DiscordRPC.changeRPCDescription(
+        currentBV.webContents.getTitle()
+      );
 
     if (!condition) setTimeout(updateRPCDescription, 500);
   }
