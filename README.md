@@ -54,7 +54,19 @@ Option 2: Downloading Zinc from releases page and extract
    sass .
    ```
 
-7. Start Zinc! (It compiles TypeScript files automatically now)
+7. Create a development license named `devLicense.json` (If you don't make your own development license, you won't be
+   able to launch Zinc in development mode)
+
+8. Enter development information like this
+
+   ```json
+   {
+     "name": "Lockie Luke",
+     "gitRepo": "https://www.github.com/lockieluke"
+   }
+   ```
+
+9. Start Zinc! (It compiles TypeScript files automatically now)
 
    ```bash
    yarn start
