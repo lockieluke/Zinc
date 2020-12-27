@@ -1,5 +1,6 @@
-import WebSocket = require('ws');
-import {ReceiveMessageTypes} from "./communicationData";
+import WebSocket = require("ws");
+import { ReceiveMessageTypes } from "./communicationData";
+import defaultLogger, { LogLevel, LogTypes } from "../logger";
 
 export default class NativeCommunication {
 
@@ -19,19 +20,19 @@ export default class NativeCommunication {
 
         this.websocket.on('close', function () {
             self.isReady = false;
-            console.log("[Zinc Native] Connection lost");
+            defaultLogger(LogTypes.ZincNative, "Connection lost", LogLevel.Error);
         })
 
         this.websocket.on('open', function () {
-            console.log("[Zinc Native] Connected with Zinc Native");
-            this.send('InitializeZinc');
+            defaultLogger(LogTypes.ZincNative, "Connected with Zinc Native", LogLevel.Log);
+            this.send("InitializeZinc");
         })
         this.websocket.on('message', function (data) {
-            console.log(`[Zinc Native] Message from server ${data}`);
+            defaultLogger(LogTypes.ZincNative, `[Zinc Native] Message from server ${data}`, LogLevel.Info);
             switch (ReceiveMessageTypes[data.toString()]) {
                 case ReceiveMessageTypes.JavaLoaded:
                     self.isReady = true;
-                    console.log("[Zinc Native] Checked the connection to Zinc Native");
+                    defaultLogger(LogTypes.ZincNative, "[Zinc Native] Checked the connection to Zinc Native", LogLevel.Log);
                     break;
             }
         })

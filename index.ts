@@ -9,6 +9,7 @@ import * as path from "path";
 import registerTabActionsKeystrokes from "./main/keystrokes/tabActions";
 import NativeCommunication from "./main/native/communication";
 import { getJavaPath, runJar } from "./main/native";
+import defaultLogger, { LogLevel, LogTypes } from "./main/logger/";
 
 app.setPath(
   'userData',
@@ -52,22 +53,20 @@ function createWindow(): void {
   function requireInitScripts() {
     nativeCommunication = new NativeCommunication('8000', 'localhost');
     nativeCommunication.initialize();
-    console.log('[Zinc Native] Communication with Zinc Native on port 8000');
+    defaultLogger(LogTypes.ZincNative, "Communication with Zinc Native on port 8000", LogLevel.Log);
     (global as any).nativeCommunication = nativeCommunication;
     if (process.env.NO_NATIVE_JAR !== 'true') {
       const zincNative: ZincNative = new ZincNative(nativeCommunication, app);
-      console.log(
-        `[Zinc Native] Starting bundled Zinc Native which is placed in ${zincNative.getJarPath()} with JVM in ${getJavaPath(
-          app,
-        )}`,
-      );
+      const jarPath: string = zincNative.getJarPath(), javaPath: string = getJavaPath(app);
+      defaultLogger(LogTypes.ZincNative, `Starting bundled Zinc Native which is placed in ${jarPath} with JVM in ${javaPath}`, LogLevel.Log);
       runJar(
-        getJavaPath(app),
-        zincNative.getJarPath(),
-        '',
-        function (stdout, stderr) {
-          console.log(stdout, stderr);
-        },
+        javaPath,
+        jarPath,
+        "",
+        function(stdout, stderr) {
+          defaultLogger(LogTypes.ZincNative, stdout, LogLevel.Log);
+          defaultLogger(LogTypes.ZincNative, stderr, LogLevel.Error);
+        }
       );
     }
     initWinControls(win);
