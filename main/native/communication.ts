@@ -1,6 +1,7 @@
 import WebSocket = require("ws");
 import { ReceiveMessageTypes } from "./communicationData";
 import defaultLogger, { LogLevel, LogTypes } from "../logger";
+import StartupPerformance from "../dev/startupPerformance";
 
 export default class NativeCommunication {
 
@@ -33,6 +34,9 @@ export default class NativeCommunication {
                 case ReceiveMessageTypes.JavaLoaded:
                     self.isReady = true;
                     defaultLogger(LogTypes.ZincNative, "Checked the connection to Zinc Native", LogLevel.Log);
+                    ((global as any).zincNativePerformanceTimer as StartupPerformance).finishedStartup(function(startupTime) {
+                        defaultLogger(LogTypes.ZincNative, `Startup time: ${startupTime} ms`, LogLevel.Info);
+                    });
                     break;
             }
         })
