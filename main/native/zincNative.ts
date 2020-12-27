@@ -1,8 +1,13 @@
-import NativeCommunication from './communication';
-import * as path from 'path';
-import getAppRoot from '../utils/appPath';
+import NativeCommunication from "./communication";
+import * as path from "path";
+import getAppRoot from "../utils/appPath";
 
-export class ZincNative {
+interface DiscordRPC {
+    zincNative: ZincNative
+    changeRPCDescription: Function,
+}
+
+export default class ZincNative {
 
     private nativeCommunication: NativeCommunication;
     private app: Electron.App;
@@ -12,8 +17,11 @@ export class ZincNative {
         this.app = app;
     }
 
-    public changeRPCDescription(description: string): void {
-        this.nativeCommunication.getWS().send(`custom:ChangeRPCDescription:${description}`);
+    public DiscordRPC: DiscordRPC = {
+        zincNative: <ZincNative>(this as ZincNative),
+        changeRPCDescription: function (description: string): void {
+            this.zincNative.nativeCommunication.getWS().send(`custom:ChangeRPCDescription:${description}`);
+        }
     }
 
     public getJarPath(): string {

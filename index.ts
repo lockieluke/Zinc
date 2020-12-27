@@ -1,4 +1,4 @@
-import { ZincNative } from "./main/native/zincNative";
+import ZincNative from "./main/native/zincNative";
 import { app, BrowserWindow } from "electron";
 import * as electronIsDev from "electron-is-dev";
 import initLoggerService from "./main/logger";
