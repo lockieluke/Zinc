@@ -28,11 +28,11 @@ export default class NativeCommunication {
             this.send("InitializeZinc");
         })
         this.websocket.on('message', function (data) {
-            defaultLogger(LogTypes.ZincNative, `[Zinc Native] Message from server ${data}`, LogLevel.Info);
+            defaultLogger(LogTypes.ZincNative, `Message from server ${data}`, LogLevel.Info);
             switch (ReceiveMessageTypes[data.toString()]) {
                 case ReceiveMessageTypes.JavaLoaded:
                     self.isReady = true;
-                    defaultLogger(LogTypes.ZincNative, "[Zinc Native] Checked the connection to Zinc Native", LogLevel.Log);
+                    defaultLogger(LogTypes.ZincNative, "Checked the connection to Zinc Native", LogLevel.Log);
                     break;
             }
         })
