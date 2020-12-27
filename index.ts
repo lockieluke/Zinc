@@ -52,11 +52,22 @@ function createWindow(): void {
   });
 
   function requireInitScripts() {
-    nativeCommunication = new NativeCommunication('8000', 'localhost');
+    startZincNative();
+    initWinControls(win);
+    initTabMNG(win);
+    initWinEvents(win);
+    initLoggerService();
+    registerTabActionsKeystrokes(win);
+    if (!app.isPackaged) initDevService(win);
+  }
+
+  function startZincNative() {
+    nativeCommunication = new NativeCommunication("8000", "localhost");
     nativeCommunication.initialize();
     defaultLogger(LogTypes.ZincNative, "Communication with Zinc Native on port 8000", LogLevel.Log);
     (global as any).nativeCommunication = nativeCommunication;
-    if (process.env.NO_NATIVE_JAR !== 'true') {
+    // Windows is the only platform which supports Zinc Native for now
+    if (process.env.NO_NATIVE_JAR !== "true" && process.platform === "win32") {
       const zincNative: ZincNative = new ZincNative(nativeCommunication, app);
       const jarPath: string = zincNative.getJarPath(), javaPath: string = getJavaPath(app);
       defaultLogger(LogTypes.ZincNative, `Starting bundled Zinc Native which is placed in ${jarPath} with JVM in ${javaPath}`, LogLevel.Log);
@@ -70,12 +81,6 @@ function createWindow(): void {
         }
       );
     }
-    initWinControls(win);
-    initTabMNG(win);
-    initWinEvents(win);
-    initLoggerService();
-    registerTabActionsKeystrokes(win);
-    if (!app.isPackaged) initDevService(win);
   }
 }
 
