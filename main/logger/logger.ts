@@ -26,7 +26,7 @@ export function defaultLogger(logType: LogTypes, message: string, logLevel: LogL
       break;
   }
   compositionMsg += `] ${message}`;
-  logLevelTranslator(logLevel, compositionMsg);
+  logLevelTranslator(logLevel, compositionMsg, electronApp);
 }
 
 function logLevelTranslator(logLevel: LogLevel, message: string, electronApp?: Electron.App) {
@@ -48,7 +48,6 @@ function logLevelTranslator(logLevel: LogLevel, message: string, electronApp?: E
       break;
 
     case LogLevel.DevLog:
-      if (electronApp != undefined)
         if (!electronApp.isPackaged)
           console.log(message);
       break;
