@@ -1,11 +1,14 @@
 # Zinc - A browser that focuses on performance and privacy
 
-Zinc is a browser that focuses on performance and privacy while keeping itself running with low resource usage. The browser is written in TypeScript and it is based on Chromium and Electron framework(not to be scared). _Depending on Electron doesn't mean its performance is bad._
+Zinc is a browser that focuses on performance and privacy while keeping itself running with low resource usage. The
+browser is written in TypeScript and it is based on Chromium and Electron framework(not to be scared). _Depending on
+Electron doesn't mean its performance is bad._
 
 #### Different use case of languages in Zinc
 
-`TypeScript` The language used the most in this browser which is used to make functions and the browser works
-properly. *
+`TypeScript` The language used the most in this browser which is used to make functions and the browser works properly.
+
+~~`JavaScript` We have fully transitioned away from JavaScript~~
 
 `SCSS` SCSS is used to easily styling the UI of this browser.
 
@@ -15,8 +18,6 @@ properly. *
 
 `Java` Java is used in Zinc Native which makes some operations even faster and enables Multithreading capability. Native
 Communication is conducted with WebSockets.
-
-[^*]: We have fully transitioned to TypeScript
 
 #### How to install Zinc
 
@@ -44,9 +45,9 @@ Option 2: Downloading Zinc from releases page and extract
    yarn install
    ```
 
-4. Download OpenJDK 15, and keep `bin` and `lib` folders.
-
-5. Move those two folders into a subdirectory named `java` under `Zinc` project directory
+4. Build OpenJDK with this [guide](https://github.com/lockieluke/Zinc/wiki/Guide-on-building-OpenJDK-for-Zinc-Native) or
+   download OpenJDK yourself and put the `lib`, `bin` folders into the newly created `java` folder under the project
+   directory
 
 6. Compile SCSS files with `sass`
 
