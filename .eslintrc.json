@@ -15,11 +15,27 @@
   },
   "plugins": ["@typescript-eslint"],
   "rules": {
-    "indent": ["off", "tab"],
-    "linebreak-style": ["error", "windows"],
-    "quotes": ["error", "single"],
-    "semi": ["error", "always"],
-    "no-mixed-spaces-and-tabs": [0, "smart-tabs"],
-    "@typescript-eslint/no-var-requires": "off"
+    "indent": [
+      "off",
+      "tab"
+    ],
+    "linebreak-style": [
+      "error",
+      "windows"
+    ],
+    "quotes": [
+      "error",
+      "single"
+    ],
+    "semi": [
+      "error",
+      "always"
+    ],
+    "no-mixed-spaces-and-tabs": [
+      0,
+      "smart-tabs"
+    ],
+    "@typescript-eslint/no-var-requires": "off",
+    "@typescript-eslint/no-this-alias": "off"
   }
 }

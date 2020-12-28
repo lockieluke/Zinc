@@ -1,14 +1,14 @@
-import { BrowserWindow, globalShortcut } from "electron";
+import { BrowserWindow, globalShortcut } from 'electron';
 
 export default class electronLocalKeystroke {
   private static registeredKeystrokes: string[] = [];
-  private static registeredKeystrokesFn: Function[] = [];
+  private static registeredKeystrokesFn: (() => void)[] = [];
   private static registeredKeystrokesWnd: BrowserWindow[] = [];
 
   public static registerLocalKeyStroke(
     keystroke: string,
     window: BrowserWindow,
-    callback: Function,
+    callback: () => void,
   ): void {
     this.registeredKeystrokes.push(keystroke);
     this.registeredKeystrokesFn.push(callback);
