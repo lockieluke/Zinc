@@ -19,6 +19,7 @@
     "linebreak-style": ["error", "windows"],
     "quotes": ["error", "single"],
     "semi": ["error", "always"],
-    "no-mixed-spaces-and-tabs": [0, "smart-tabs"]
+    "no-mixed-spaces-and-tabs": [0, "smart-tabs"],
+    "@typescript-eslint/no-var-requires": "off"
   }
 }
