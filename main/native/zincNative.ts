@@ -1,9 +1,9 @@
-import NativeCommunication from "./communication";
-import * as path from "path";
-import getAppRoot from "../utils/appPath";
-import { getJavaPath, runJar } from "./java";
-import defaultLogger from "../logger/";
-import { LogLevel, LogTypes } from "../logger";
+import NativeCommunication from './communication';
+import * as path from 'path';
+import getAppRoot from '../utils/appPath';
+import { getJavaPath, runJar } from './java';
+import defaultLogger from '../logger/';
+import { LogLevel, LogTypes } from '../logger';
 
 interface DiscordRPC {
     zincNative: ZincNative
@@ -25,12 +25,12 @@ export default class ZincNative {
         if (process.env.NO_NATIVE_JAR !== "true" && process.platform === "win32") {
             const jarPath: string = this.getJarPath(), javaPath: string = getJavaPath(this.app);
             defaultLogger(LogTypes.ZincNative, `Starting bundled Zinc Native which is placed in ${jarPath} with JVM in ${javaPath}`, LogLevel.Log);
-            runJar(javaPath, jarPath, "", function(stderr) {
+            runJar(javaPath, jarPath, this.app, '', function(stderr) {
                 defaultLogger(LogTypes.ZincNativeServer, stderr, LogLevel.Error);
             }, function(stdout) {
-              defaultLogger(LogTypes.ZincNativeServer, stdout);
+                defaultLogger(LogTypes.ZincNativeServer, stdout);
             }, function(exitcode) {
-              defaultLogger(LogTypes.ZincNativeServer, exitcode.toString(), LogLevel.Info);
+                defaultLogger(LogTypes.ZincNativeServer, exitcode.toString(), LogLevel.Info);
             });
         } else {
             defaultLogger(LogTypes.ZincNative, "Zinc Native is currently not supported on other platforms", LogLevel.Info);
