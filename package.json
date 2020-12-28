@@ -7,7 +7,7 @@
     "dev-script": "cd scripts && py main.py",
     "lint": "eslint . --ext .ts",
     "fix": "eslint . --ext .ts --fix",
-    "build": "electron-builder build --win --x64",
+    "build": "electron-packager . Zinc --platform=win32 --arch=x64 --icon=\"./artwork/Zinc.ico\" --out=\"./builds\"",
     "prettier": "yarn prettier --write ."
   },
   "dependencies": {
@@ -25,6 +25,7 @@
     "@typescript-eslint/eslint-plugin": "^4.10.0",
     "@typescript-eslint/parser": "^4.10.0",
     "electron": "^11.0.3",
+    "electron-packager": "^15.2.0",
     "eslint": "^7.15.0",
     "eslint-config-prettier": "^7.1.0",
     "prettier": "2.2.1"
