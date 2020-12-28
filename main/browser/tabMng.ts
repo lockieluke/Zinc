@@ -58,8 +58,8 @@ export default function main(window: BrowserWindow) {
           title,
         ]);
         if (focusedtabs == parseInt(domid.replace('tab-', ''))) {
-          currentwin.setTitle('Zinc - ' + title);
-          updateRPCDescription(nativeCommunication.isReady);
+          currentwin.setTitle("Zinc - " + title);
+          updateTabInfoToRPC();
         }
       },
     );
@@ -155,12 +155,12 @@ export default function main(window: BrowserWindow) {
     event.returnValue = currentwin;
   });
 
-  function updateRPCDescription(condition: boolean) {
+  function updateTabInfoToRPC() {
     if (nativeCommunication.isReady)
       zincNative.DiscordRPC.changeRPCDescription(
         currentBV.webContents.getTitle()
       );
 
-    if (!condition) setTimeout(updateRPCDescription, 500);
+    if (!nativeCommunication.isReady) setTimeout(updateTabInfoToRPC, 500);
   }
 }
