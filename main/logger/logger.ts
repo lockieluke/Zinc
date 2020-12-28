@@ -18,6 +18,9 @@ export function defaultLogger(logType: LogTypes, message: string, logLevel: LogL
     case LogTypes.ZincNative:
       compositionMsg += "Zinc Native";
       break;
+    case LogTypes.ZincNativeServer:
+      compositionMsg += "Zinc Native Server";
+      break;
     case LogTypes.Debugging:
       compositionMsg += "Debugging";
       break;

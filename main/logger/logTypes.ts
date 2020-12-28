@@ -4,6 +4,7 @@ export enum LogTypes {
   BrowserFrameProcess,
   Common,
   ZincNative,
+  ZincNativeServer,
   Debugging,
   NodeJS
 }

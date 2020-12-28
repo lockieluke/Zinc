@@ -26,11 +26,11 @@ export default class ZincNative {
             const jarPath: string = this.getJarPath(), javaPath: string = getJavaPath(this.app);
             defaultLogger(LogTypes.ZincNative, `Starting bundled Zinc Native which is placed in ${jarPath} with JVM in ${javaPath}`, LogLevel.Log);
             runJar(javaPath, jarPath, "", function(stderr) {
-                defaultLogger(LogTypes.ZincNative, stderr, LogLevel.Error);
+                defaultLogger(LogTypes.ZincNativeServer, stderr, LogLevel.Error);
             }, function(stdout) {
-                defaultLogger(LogTypes.ZincNative, stdout);
+              defaultLogger(LogTypes.ZincNativeServer, stdout);
             }, function(exitcode) {
-                defaultLogger(LogTypes.ZincNative, exitcode.toString(), LogLevel.Info);
+              defaultLogger(LogTypes.ZincNativeServer, exitcode.toString(), LogLevel.Info);
             });
         } else {
             defaultLogger(LogTypes.ZincNative, "Zinc Native is currently not supported on other platforms", LogLevel.Info);
