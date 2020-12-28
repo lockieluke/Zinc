@@ -8,7 +8,6 @@ import initDevService from "./main/dev";
 import * as path from "path";
 import registerTabActionsKeystrokes from "./main/keystrokes/tabActions";
 import NativeCommunication from "./main/native/communication";
-import { getJavaPath, runJar } from "./main/native";
 import defaultLogger, { LogLevel, LogTypes } from "./main/logger/";
 import initLoggerService from "./main/logger/loggerService";
 import StartupPerformance from "./main/dev/startupPerformance";
@@ -19,7 +18,11 @@ const zincNativePerformanceTimer: StartupPerformance = new StartupPerformance();
 (global as any).zincNativePerformanceTimer = zincNativePerformanceTimer;
 
 let nativeCommunication: NativeCommunication = null;
-startZincNative();
+nativeCommunication = new NativeCommunication("8000", "127.0.0.1");
+nativeCommunication.initialize();
+(global as any).nativeCommunication = nativeCommunication;
+const zincNative: ZincNative = new ZincNative(nativeCommunication, app);
+zincNative.startup();
 
 app.setPath(
   "userData",
@@ -72,30 +75,6 @@ function createWindow(): void {
     registerTabActionsKeystrokes(win);
     if (!app.isPackaged)
       initDevService(win);
-  }
-}
-
-function startZincNative() {
-  nativeCommunication = new NativeCommunication("8000", "127.0.0.1");
-  nativeCommunication.initialize();
-  defaultLogger(LogTypes.ZincNative, "Communication with Zinc Native on port 8000", LogLevel.Log);
-  (global as any).nativeCommunication = nativeCommunication;
-  // Windows is the only platform which supports Zinc Native for now
-  if (process.env.NO_NATIVE_JAR !== "true" && process.platform === "win32") {
-    const zincNative: ZincNative = new ZincNative(nativeCommunication, app);
-    const jarPath: string = zincNative.getJarPath(), javaPath: string = getJavaPath(app);
-    defaultLogger(LogTypes.ZincNative, `Starting bundled Zinc Native which is placed in ${jarPath} with JVM in ${javaPath}`, LogLevel.Log);
-    runJar(
-      javaPath,
-      jarPath,
-      "",
-      function(stdout, stderr) {
-        defaultLogger(LogTypes.ZincNative, stdout, LogLevel.Log);
-        defaultLogger(LogTypes.ZincNative, stderr, LogLevel.Error);
-      }
-    );
-  } else {
-    defaultLogger(LogTypes.ZincNative, "Zinc Native is currently not supported on other platforms", LogLevel.Info);
   }
 }
 
