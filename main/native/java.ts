@@ -11,7 +11,11 @@ export function getJavaPath(appModule: Electron.App): string {
 }
 
 export function runJar(javaPath: string, jarPath: string, argument?: string, errCallback?: (stderr: string) => void, outCallback?: (stdout: string) => void, quitCallback?: (exitcode: number | null) => void): void {
-  const javaProcess = child_process.exec(`${javaPath} -jar -Xmx20M ${jarPath}` + (argument == undefined ? "" : ` ${argument}`), {
+  const javaArgs: string[] = ['-jar', '-Xmx20M', jarPath];
+  if (argument != undefined || argument != '')
+    javaArgs.push(argument);
+
+  const javaProcess = child_process.spawn(javaPath, javaArgs, {
     env: process.env,
     cwd: getAppRoot()
   });
