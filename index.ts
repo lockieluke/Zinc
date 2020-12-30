@@ -1,32 +1,32 @@
-import ZincNative from "./main/native/zincNative";
-import { app, BrowserWindow } from "electron";
-import * as electronIsDev from "electron-is-dev";
-import initWinControls from "./main/browser/winCtrls";
-import initTabMNG from "./main/browser/tabMng";
-import initWinEvents from "./main/window";
-import initDevService from "./main/dev";
-import * as path from "path";
-import registerTabActionsKeystrokes from "./main/keystrokes/tabActions";
-import NativeCommunication from "./main/native/communication";
-import defaultLogger, { LogLevel, LogTypes } from "./main/logger/";
-import initLoggerService from "./main/logger/loggerService";
-import StartupPerformance from "./main/dev/startupPerformance";
-import Startup from "./main/dev/startup";
+import ZincNative from './main/native/zincNative';
+import { app, BrowserWindow } from 'electron';
+import * as electronIsDev from 'electron-is-dev';
+import initWinControls from './main/browser/winCtrls';
+import initTabMNG from './main/browser/tabMng';
+import initWinEvents from './main/window';
+import initDevService from './main/dev';
+import * as path from 'path';
+import registerTabActionsKeystrokes from './main/keystrokes/tabActions';
+import NativeCommunication from './main/native/communication';
+import defaultLogger, { LogLevel, LogTypes } from './main/logger/';
+import initLoggerService from './main/logger/loggerService';
+import StartupPerformance from './main/dev/startupPerformance';
+import Startup from './main/dev/startup';
 
 const launchPerformanceTimer: StartupPerformance = new StartupPerformance();
 const zincNativePerformanceTimer: StartupPerformance = new StartupPerformance();
 (global as any).zincNativePerformanceTimer = zincNativePerformanceTimer;
 
 let nativeCommunication: NativeCommunication = null;
-nativeCommunication = new NativeCommunication("8000", "127.0.0.1");
+nativeCommunication = new NativeCommunication('8000', '127.0.0.1');
 nativeCommunication.initialize();
 (global as any).nativeCommunication = nativeCommunication;
 const zincNative: ZincNative = new ZincNative(nativeCommunication, app);
 zincNative.startup();
 
 app.setPath(
-  "userData",
-  path.join(app.getPath("appData"), "Zinc", "User Session Data")
+  'userData',
+  path.join(app.getPath('appData'), 'Zinc', 'User Session Data'),
 );
 
 function createWindow(): void {
@@ -44,6 +44,7 @@ function createWindow(): void {
       nodeIntegration: true,
       enableRemoteModule: false,
       devTools: electronIsDev,
+      contextIsolation: false,
     },
   });
 
@@ -53,15 +54,15 @@ function createWindow(): void {
 
   requireInitScripts();
 
-  win.on("close", function() {
+  win.on('close', function() {
     if (BrowserWindow.getAllWindows().length < 1) {
       app.quit();
-      nativeCommunication.getWS().send("QuitZinc");
+      nativeCommunication.getWS().send('QuitZinc');
       nativeCommunication.close();
     }
   });
 
-  win.webContents.once("did-finish-load", function() {
+  win.webContents.once('did-finish-load', function() {
     launchPerformanceTimer.finishedStartup(function(startupTime: number) {
       defaultLogger(LogTypes.MainProcess, `Zinc is fully started up in ${startupTime} ms`, LogLevel.DevLog, app);
     });
@@ -78,7 +79,7 @@ function createWindow(): void {
   }
 }
 
-app.on("ready", function() {
+app.on('ready', function() {
   if (Startup.canStartup(app)) {
     Startup.printStartupInfo(app);
     createWindow();
@@ -88,10 +89,10 @@ app.on("ready", function() {
   }
 });
 
-app.on("window-all-closed", function() {
-  if (process.platform !== "darwin") app.quit();
+app.on('window-all-closed', function() {
+  if (process.platform !== 'darwin') app.quit();
 });
 
-app.on("activate", function() {
+app.on('activate', function() {
   if (BrowserWindow.getAllWindows().length == 0) createWindow();
 });
