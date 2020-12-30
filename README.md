@@ -27,10 +27,10 @@ Option 2: Downloading Zinc from releases page and extract
 
 #### How to fork Zinc
 
-1. Clone the repository
+1. Clone the repository(Recommended way to clone the repository without full history)
 
    ```bash
-   git clone --depth=1 https://github.com/lockieluke/Zinc.git
+   git clone --depth=1 https://github.com/lockieluke/Zinc.git 
    ```
 
 2. Navigate into the directory
