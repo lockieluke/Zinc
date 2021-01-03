@@ -11,5 +11,12 @@
     "pretty": true,
     "allowSyntheticDefaultImports": true
   },
-  "exclude": ["node_modules", "builds"]
+  "exclude": [
+    "node_modules",
+    "builds",
+    "scripts",
+    "artwork",
+    "native",
+    "java"
+  ]
 }
