@@ -11,7 +11,8 @@
     "build-win": "electron-packager . Zinc --platform=win32 --arch=x64 --icon=\"./artwork/Zinc.ico\" --out=\"./builds\"",
     "prettier": "yarn prettier --write .",
     "update-submodules": "git submodule update --recursive --remote",
-    "asar": "asar pack"
+    "asar": "asar pack",
+    "rmbuild": "pushd builds && rmdir Zinc-win32-x64 /s /q && popd"
   },
   "dependencies": {
     "@glitz/core": "^2.1.5",
