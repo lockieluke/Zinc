@@ -19,7 +19,6 @@ export function runJar(javaPath: string, jarPath: string, appModule: Electron.Ap
     env: process.env,
     cwd: appModule.isPackaged ? path.dirname(appModule.getPath('exe')) : getAppRoot(),
   });
-  console.log(appModule.isPackaged ? appModule.getAppPath() : getAppRoot());
   javaProcess.stdout.on('data', data => outCallback(data));
   javaProcess.stderr.on("data", data => errCallback(data));
   javaProcess.on("exit", exitcode => quitCallback(exitcode));
