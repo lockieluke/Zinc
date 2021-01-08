@@ -1,4 +1,4 @@
-import { BrowserView, BrowserWindow } from "electron";
+import { BrowserView, BrowserWindow } from 'electron';
 
 const lifetimeWebViews: object = {};
 
@@ -24,13 +24,15 @@ export class WebView extends BrowserView {
     window.setBrowserView(this);
     const self = this;
     this.webContents.loadURL(url).then(resizeWebView);
-    const resizingCondition =
+    const resizingCondition: string =
       process.env.RESPONSIVE_RESIZING === 'true' ? 'resize' : 'resized';
-    window.on(<any>resizingCondition, resizeWebView);
+    window.on(<never>resizingCondition, resizeWebView);
     if (resizingCondition === 'resized') {
       window.on('maximize', resizeWebView);
       window.on('unmaximize', resizeWebView);
     }
+    this.webContents.on('enter-html-full-screen', resizeWebView);
+    this.webContents.on('leave-html-full-screen', resizeWebView);
 
     function resizeWebView(): void {
       const { width, height } = self.window.getContentBounds();

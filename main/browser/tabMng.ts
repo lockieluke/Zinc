@@ -1,10 +1,10 @@
-import { app, BrowserView, BrowserWindow, ipcMain } from "electron";
-import showCtxMenu from "../ctxMenus";
-import TabWrapper from "./tabWrapper";
-import electronLocalKeystroke from "../keystrokes";
-import { WebView } from "./webView";
-import NativeCommunication from "../native/communication";
-import ZincNative from "../native/zincNative";
+import { app, BrowserView, BrowserWindow, ipcMain } from 'electron';
+import showCtxMenu from '../ctxMenus';
+import TabWrapper from './tabWrapper';
+import electronLocalKeystroke from '../keystrokes';
+import { WebView } from './webView';
+import NativeCommunication from '../native/communication';
+import ZincNative from '../native/zincNative';
 
 export let currentBV: BrowserView = null;
 
@@ -58,7 +58,7 @@ export default function main(window: BrowserWindow) {
           title,
         ]);
         if (focusedtabs == parseInt(domid.replace('tab-', ''))) {
-          currentwin.setTitle("Zinc - " + title);
+          currentwin.setTitle('Zinc - ' + title);
           updateTabInfoToRPC();
         }
       },
@@ -81,6 +81,7 @@ export default function main(window: BrowserWindow) {
         webview.webContents.canGoForward(),
       ]);
     });
+
     webviewids[domid] = webview.webContents.id;
 
     event.returnValue = totaltab;
