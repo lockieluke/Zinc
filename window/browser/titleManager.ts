@@ -1,4 +1,4 @@
-import { ipcRenderer } from "electron";
+import { ipcRenderer } from 'electron';
 
 export default function main() {
   ipcRenderer.on('tabmng-browser-titleupdated', function (event, args) {

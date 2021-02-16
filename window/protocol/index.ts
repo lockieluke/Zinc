@@ -1,4 +1,4 @@
-import * as path from "path";
+import * as path from 'path';
 
 export default function main(url: string): string {
   const rawURL: string = url.replace('zinc://', '');

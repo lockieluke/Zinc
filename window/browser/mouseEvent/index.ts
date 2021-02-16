@@ -1,4 +1,4 @@
-import { ipcRenderer } from "electron";
+import { ipcRenderer } from 'electron';
 
 export default function main() {
   document.addEventListener('mousemove', function (event) {

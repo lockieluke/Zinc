@@ -1,31 +1,31 @@
-import { LogLevel, LogTypes } from "./";
+import { LogLevel, LogTypes } from './';
 
 export function defaultLogger(logType: LogTypes, message: string, logLevel: LogLevel = LogLevel.Info, electronApp?: Electron.App) {
-  let compositionMsg: string = "[";
+  let compositionMsg: string = '[';
   switch (logType) {
     case LogTypes.MainProcess:
-      compositionMsg += "Main Process";
+      compositionMsg += 'Main Process';
       break;
     case LogTypes.WindowProcess:
-      compositionMsg += "Window Process";
+      compositionMsg += 'Window Process';
       break;
     case LogTypes.BrowserFrameProcess:
-      compositionMsg += "Browser Frame Process";
+      compositionMsg += 'Browser Frame Process';
       break;
     case LogTypes.Common:
-      compositionMsg += "Common";
+      compositionMsg += 'Common';
       break;
     case LogTypes.ZincNative:
-      compositionMsg += "Zinc Native";
+      compositionMsg += 'Zinc Native';
       break;
     case LogTypes.ZincNativeServer:
-      compositionMsg += "Zinc Native Server";
+      compositionMsg += 'Zinc Native Server';
       break;
     case LogTypes.Debugging:
-      compositionMsg += "Debugging";
+      compositionMsg += 'Debugging';
       break;
     case LogTypes.NodeJS:
-      compositionMsg += "NodeJS";
+      compositionMsg += 'NodeJS';
       break;
   }
   compositionMsg += `] ${message}`;

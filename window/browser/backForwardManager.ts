@@ -1,14 +1,15 @@
-import { ipcRenderer } from "electron";
-import { titleBarCtrls } from "./controls";
+import { ipcRenderer } from 'electron';
+import { titleBarCtrls } from './controls';
 
 export default function main() {
-  ipcRenderer.on('tabmng-browser-backforward', function (event, args) {
+  ipcRenderer.on('tabmng-browser-backforward', function(event, args) {
     const backBtnHTML = '<span>&leftarrow;</span>';
     const forwardBtnHTML = '<span>&rightarrow;</span>';
 
     try {
       document.getElementById('backBtn').remove();
-    } catch {}
+    } catch {
+    }
 
     try {
       document.getElementById('forwardBtn').remove();

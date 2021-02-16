@@ -1,7 +1,7 @@
-import { dialog } from "electron";
-import { getCurrentWindow } from "../browser/winCtrls";
-import { currentBV } from "../browser/tabMng";
-import * as path from "path";
+import { dialog } from 'electron';
+import { getCurrentWindow } from '../browser/winCtrls';
+import { currentBV } from '../browser/tabMng';
+import * as path from 'path';
 
 export async function saveAs() {
   const { canceled, filePath } = await dialog.showSaveDialog(

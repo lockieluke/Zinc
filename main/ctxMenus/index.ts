@@ -1,10 +1,10 @@
-import { Menu, MenuItem } from "electron";
-import getLinkActionsCTX from "./linkActions";
-import getImgActionsCTX from "./imgActions";
-import addMenuItems from "./batchMenuItems";
-import getTfActions from "./tfActions";
-import getOtherActions from "./otherActions";
-import { mouseEvent } from "../browser/mouseEvent";
+import { Menu, MenuItem } from 'electron';
+import getLinkActionsCTX from './linkActions';
+import getImgActionsCTX from './imgActions';
+import addMenuItems from './batchMenuItems';
+import getTfActions from './tfActions';
+import getOtherActions from './otherActions';
+import { mouseEvent } from '../browser/mouseEvent';
 
 export default function main(
   window: Electron.BrowserWindow,

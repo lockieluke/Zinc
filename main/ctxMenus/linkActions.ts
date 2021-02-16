@@ -1,7 +1,7 @@
-import { clipboard, Menu, MenuItem } from "electron";
-import addMenuItems from "./batchMenuItems";
-import TabWrapper from "../browser/tabWrapper";
-import { saveAs } from "./commonActions";
+import { clipboard, Menu, MenuItem } from 'electron';
+import addMenuItems from './batchMenuItems';
+import TabWrapper from '../browser/tabWrapper';
+import { saveAs } from './commonActions';
 
 export default function getLinkActionsCTX(
   menu: Menu,
@@ -10,7 +10,7 @@ export default function getLinkActionsCTX(
   addMenuItems(menu, [
     new MenuItem({
       label: 'Open link in new tab',
-      click: function () {
+      click: function() {
         TabWrapper.newTab(params.linkURL);
       },
     }),

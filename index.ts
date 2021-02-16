@@ -35,7 +35,7 @@ function createWindow(): void {
     height: 720,
     title: 'Zinc',
     frame: false,
-    backgroundColor: '#ffffff',
+    backgroundColor: '#373737',
     minHeight: 60,
     minWidth: 180,
     icon: path.join(__dirname, '..', 'artwork', 'Zinc.png'),

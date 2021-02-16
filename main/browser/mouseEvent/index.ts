@@ -1,4 +1,4 @@
-import { ipcMain } from "electron";
+import { ipcMain } from 'electron';
 
 let mouseX = 0;
 let mouseY = 0;

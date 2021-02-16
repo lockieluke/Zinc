@@ -1,5 +1,5 @@
-import { getCurrentWindow } from "./winCtrls";
-import { currentBV } from "./tabMng";
+import { getCurrentWindow } from './winCtrls';
+import { currentBV } from './tabMng';
 
 export default class TabWrapper {
   public static newTab(url: string): void {

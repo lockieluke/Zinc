@@ -1,7 +1,7 @@
-import { clipboard, Menu, MenuItem } from "electron";
-import addMenuItems from "./batchMenuItems";
-import TabWrapper from "../browser/tabWrapper";
-import { currentBV } from "../browser/tabMng";
+import { clipboard, Menu, MenuItem } from 'electron';
+import addMenuItems from './batchMenuItems';
+import TabWrapper from '../browser/tabWrapper';
+import { currentBV } from '../browser/tabMng';
 
 export default function getImgActionsCTX(
   menu: Menu,
@@ -10,7 +10,7 @@ export default function getImgActionsCTX(
   addMenuItems(menu, [
     new MenuItem({
       label: 'Open image in new tab',
-      click: function () {
+      click: function() {
         TabWrapper.newTab(params.srcURL);
       },
     }),

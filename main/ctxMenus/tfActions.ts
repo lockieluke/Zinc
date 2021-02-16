@@ -1,5 +1,5 @@
-import { app, Menu, MenuItem } from "electron";
-import addMenuItems from "./batchMenuItems";
+import { app, Menu, MenuItem } from 'electron';
+import addMenuItems from './batchMenuItems';
 
 export default function getTfActions(
   menu: Menu,

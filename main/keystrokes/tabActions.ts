@@ -1,6 +1,6 @@
-import electronLocalKeystroke from "./index";
-import TabWrapper from "../browser/tabWrapper";
-import zincProtocolHandler from "./../../window/protocol";
+import electronLocalKeystroke from './index';
+import TabWrapper from '../browser/tabWrapper';
+import zincProtocolHandler from './../../window/protocol';
 
 export default function registerTabActionsKeystrokes(
   window: Electron.BrowserWindow,
@@ -8,7 +8,7 @@ export default function registerTabActionsKeystrokes(
   electronLocalKeystroke.registerLocalKeyStroke(
     'CommandOrControl+Shift+Alt+I',
     window,
-    function () {
+    function() {
       window.webContents.openDevTools({
         mode: 'undocked',
       });

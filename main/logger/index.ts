@@ -1,5 +1,5 @@
-import { defaultLogger } from "./logger";
+import { defaultLogger } from './logger';
 
-export * from "./logTypes";
+export * from './logTypes';
 
 export default defaultLogger;

@@ -1,8 +1,8 @@
-import { Menu, MenuItem } from "electron";
-import { currentBV } from "./../browser/tabMng";
-import addMenuItems from "./batchMenuItems";
-import TabWrapper from "../browser/tabWrapper";
-import { saveAs } from "./commonActions";
+import { Menu, MenuItem } from 'electron';
+import { currentBV } from './../browser/tabMng';
+import addMenuItems from './batchMenuItems';
+import TabWrapper from '../browser/tabWrapper';
+import { saveAs } from './commonActions';
 
 export default function getOtherActions(menu: Menu) {
   addMenuItems(menu, [
@@ -10,7 +10,7 @@ export default function getOtherActions(menu: Menu) {
       label: 'Back',
       accelerator: 'Alt+Right',
       enabled: currentBV.webContents.canGoBack(),
-      click: function () {
+      click: function() {
         currentBV.webContents.goBack();
       },
     }),
