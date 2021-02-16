@@ -16,7 +16,7 @@ export default class Startup {
       defaultLogger(LogTypes.Debugging, `Zinc Development Build (${this.startupTime.toString()})`);
       defaultLogger(LogTypes.Debugging, `Forked build by ${this.developerName}`);
       defaultLogger(LogTypes.Debugging, `Developer Git Repository ${this.gitRepo}\n`);
-      defaultLogger(LogTypes.Debugging, `System Information ${os.cpus()[0].model} with architecture ${os.arch()}, RAM ${os.totalmem() / 1024 / 1024 / 1024} GB`);
+      defaultLogger(LogTypes.Debugging, `System Information ${os.cpus()[0].model} with architecture ${os.arch()}, RAM ${Number(os.totalmem() / 1024 / 1024 / 1024).toPrecision(2)} GB`);
     }
   }
 
